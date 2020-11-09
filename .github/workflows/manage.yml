@@ -1,4 +1,4 @@
-name: main
+name: Main
 
 on: [push]
 
@@ -7,7 +7,10 @@ env:
   flutter_version: '1.22.3'
 
 jobs:
-  flutter test:
+  flutter_test:
+
+    name: Test Flutter on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
@@ -19,14 +22,16 @@ jobs:
               ~/.gradle/caches
               ~/.gradle/wrapper
 
-    name: flutter test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: app/manage
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: cache java/gradle
+      - name: Cache Java/Gradle
         uses: actions/cache@v2
         with:
           path: ${{ matrix.gradle_path }}
@@ -34,11 +39,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: setup java
+      - name: Setup Java
         uses: actions/setup-java@v1
-        with: ${{ env.java_version }}
+        with:
+          java-version: ${{ env.java_version }}
 
-      - name: cache flutter
+      - name: Cache Flutter
         uses: actions/cache@v2
         with:
           path: ${{ matrix.flutter_path }}
@@ -47,23 +53,26 @@ jobs:
             ${{ runner.os }}-flutter-${{ env.flutter_version }}-
             ${{ runner.os }}-flutter-
 
-      - name: setup flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.flutter_version }}
 
-      - name: list versions
+      - name: List versions
         run: |
           java --version
           flutter --version
 
-      - name: get dependencies
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: start test
+      - name: Start tests
         run: flutter test
 
-  flutter build:
+  flutter_build:
+
+    name: Test Flutter on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
@@ -75,14 +84,16 @@ jobs:
               ~/.gradle/caches
               ~/.gradle/wrapper
 
-    name: flutter build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: app/manage
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: cache java/gradle
+      - name: Cache Java/Gradle
         uses: actions/cache@v2
         with:
           path: ${{ matrix.gradle_path }}
@@ -90,11 +101,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: setup java
+      - name: Setup Java
         uses: actions/setup-java@v1
-        with: ${{ env.java_version }}
+        with:
+          java-version: ${{ env.java_version }}
 
-      - name: cache flutter
+      - name: Cache Flutter
         uses: actions/cache@v2
         with:
           path: ${{ matrix.flutter_path }}
@@ -103,18 +115,18 @@ jobs:
             ${{ runner.os }}-flutter-${{ env.flutter_version }}-
             ${{ runner.os }}-flutter-
 
-      - name: setup flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.flutter_version }}
 
-      - name: list versions
+      - name: List versions
         run: |
           java --version
           flutter --version
 
-      - name: get dependencies
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: build apk
+      - name: Build APK
         run: flutter build apk
