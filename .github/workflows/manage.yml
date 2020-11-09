@@ -1,0 +1,120 @@
+name: main
+
+on: [push]
+
+env:
+  java_version: '14.x'
+  flutter_version: '1.22.3'
+
+jobs:
+  flutter test:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
+            gradle_path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+
+    name: flutter test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: cache java/gradle
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.gradle_path }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: setup java
+        uses: actions/setup-java@v1
+        with: ${{ env.java_version }}
+
+      - name cache flutter
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.flutter_path }}
+          key: ${{ runner.os }}-flutter-${{ env.flutter_version }}-${{ hashFiles('**/pubspec.*') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ env.flutter_version }}-
+            ${{ runner.os }}-flutter-
+
+      - name: setup flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.flutter_version }}
+
+      - name: list versions
+        run: |
+          java --version
+          flutter --version
+
+      - name: get dependencies
+        run: flutter pub get
+
+      - name: start test
+        run: flutter test
+
+  flutter build:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
+            gradle_path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+
+    name: flutter build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: cache java/gradle
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.gradle_path }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: setup java
+        uses: actions/setup-java@v1
+        with: ${{ env.java_version }}
+
+      - name cache flutter
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.flutter_path }}
+          key: ${{ runner.os }}-flutter-${{ env.flutter_version }}-${{ hashFiles('**/pubspec.*') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ env.flutter_version }}-
+            ${{ runner.os }}-flutter-
+
+      - name: setup flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.flutter_version }}
+
+      - name: list versions
+        run: |
+          java --version
+          flutter --version
+
+      - name: get dependencies
+        run: flutter pub get
+
+      - name: build apk
+        run: flutter build apk
