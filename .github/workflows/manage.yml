@@ -38,7 +38,7 @@ jobs:
         uses: actions/setup-java@v1
         with: ${{ env.java_version }}
 
-      - name cache flutter
+      - name: cache flutter
         uses: actions/cache@v2
         with:
           path: ${{ matrix.flutter_path }}
@@ -94,7 +94,7 @@ jobs:
         uses: actions/setup-java@v1
         with: ${{ env.java_version }}
 
-      - name cache flutter
+      - name: cache flutter
         uses: actions/cache@v2
         with:
           path: ${{ matrix.flutter_path }}
