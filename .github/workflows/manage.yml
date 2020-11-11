@@ -71,7 +71,7 @@ jobs:
 
   flutter_build:
 
-    name: Test Flutter on ${{ matrix.os }}
+    name: Build Flutter on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
