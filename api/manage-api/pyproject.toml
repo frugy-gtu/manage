@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "manage-api"
+version = "0.1.0"
+description = ""
+authors = ["ismltpn <ismltpn@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Flask = "^1.1.2"
+Flask-Caching = "^1.9.0"
+Flask-Cors = "^3.0.9"
+Flask-JWT-Extended = "^3.25.0"
+flask-restx = "^0.2.0"
+gunicorn = "^20.0.4"
+celery = "^5.0.2"
+redis = "^3.5.3"
+flask-accepts = {git = "https://github.com/ismltpn/flask_accepts.git"}
+SQLAlchemy-Utils = "^0.36.8"
+Flask-Migrate = "^2.5.3"
+passlib = "^1.7.4"
+psycopg2 = "^2.8.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^20.8b1"
+flake8 = "^3.8.4"
+flake8-mypy = "^17.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
