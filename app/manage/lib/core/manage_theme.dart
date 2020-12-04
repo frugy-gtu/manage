@@ -6,23 +6,15 @@ class ManageTheme {
   static final _light = ThemeData.light();
   static final _dark = ThemeData.dark();
 
-  static get light {
-    switch (_themeMode) {
-      case ThemeMode.system:
-      case ThemeMode.light:
-        return _light;
-      case ThemeMode.dark:
-        return _dark;
-    }
+  ManageTheme(ThemeMode mode) {
+    _themeMode = mode;
   }
 
-  static get dark {
-    switch (_themeMode) {
-      case ThemeMode.system:
-      case ThemeMode.dark:
-        return _dark;
-      case ThemeMode.light:
-        return _light;
-    }
-  }
+  static get light => _light;
+
+  static get dark => _dark;
+
+  static get themeMode => _themeMode;
+
+  static set themeMode(ThemeMode newMode) => _themeMode = newMode;
 }
