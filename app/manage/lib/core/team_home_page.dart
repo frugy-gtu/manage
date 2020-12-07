@@ -29,6 +29,59 @@ class TeamHomePage extends StatelessWidget {
         ],
         toolbarHeight: 100,
       ),
+      body: Center(
+        child: Padding(
+          //TODO: Do dynamic padding here where each pads accordingly
+          //to the number of teams. It is not necessarily to use Padding
+          //widget. Should take care of crossAxisSpacing too.
+          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+          child: GridView.count(
+            primary: false,
+            padding: const EdgeInsets.all(20),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            //TODO: Do dynamic crossAxisCount here where cross axis
+            //determined by number of teams.
+            crossAxisCount: 2,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(5)),
+                margin: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    'User Team',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(5)),
+                margin: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    'Other Team',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(5)),
+                margin: const EdgeInsets.all(10),
+                child: Icon(
+                  Icons.add_circle,
+                  color: Theme.of(context).textTheme.button.color,
+                  size: 28,
+                ),
+              ),
+              Container(),
+            ],
+          ),
         ),
       ),
     );
