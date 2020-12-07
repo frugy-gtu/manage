@@ -44,44 +44,44 @@ class TeamHomePage extends StatelessWidget {
             //determined by number of teams.
             crossAxisCount: 2,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(5)),
-                margin: const EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    'User Team',
-                    style: Theme.of(context).textTheme.button,
-                  ),
+              _teamWidget(context,
+                child: Text(
+                  'User Team',
+                  style: Theme.of(context).textTheme.button,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(5)),
-                margin: const EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    'Other Team',
-                    style: Theme.of(context).textTheme.button,
-                  ),
+              _teamWidget(context,
+                child: Text(
+                  'Other Team',
+                  style: Theme.of(context).textTheme.button,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(5)),
-                margin: const EdgeInsets.all(10),
+              _teamWidget(context,
                 child: Icon(
                   Icons.add_circle,
-                  color: Theme.of(context).textTheme.button.color,
                   size: 28,
                 ),
               ),
-              Container(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _teamWidget(BuildContext context, {Widget child}) {
+    return InkWell(
+      onTap: () {},
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(5)),
+        margin: const EdgeInsets.all(10),
+        child: Center(
+          child: child,
         ),
       ),
     );
