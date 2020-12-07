@@ -5,21 +5,30 @@ class TeamHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: const Text('Teams'))),
-      body: Center(
-        child: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 3,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: const Text("Heeyyy"),
-              color: Colors.blue,
+      appBar: AppBar(
+        leading: Ink(
+          padding: EdgeInsets.symmetric(
+            vertical: 30,
+            horizontal: 10,
+          ),
+          child: InkWell(
+            onTap: () {},
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-          ],
+            child: Icon(Icons.menu_rounded),
+          ),
+        ),
+        title: const Text('Teams'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person_pin_circle_rounded),
+            onPressed: () {},
+            splashRadius: 20,
+          ),
+        ],
+        toolbarHeight: 100,
+      ),
         ),
       ),
     );
