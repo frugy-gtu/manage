@@ -56,6 +56,12 @@ def create_app(config_name=None, register_routes=True, register_cli=True):
         response.status_code = error.status_code
         return response
 
+    @app.errorhandler(NotImplementedError)
+    def handle_not_implemented(error):
+        response = 'NOT IMPLEMENTED'
+        response.status_code = 501
+        return response
+
     @app.before_request
     def for_cors():
         if request.method == 'OPTIONS':
