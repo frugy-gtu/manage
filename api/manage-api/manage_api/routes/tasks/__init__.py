@@ -10,7 +10,7 @@ api = Namespace('tasks', 'Task related routes')
 @api.route('/')
 class Tasks(Resource):
     @jwt_required
-    @responds(schema=response_schemas.Task, api=api, status_code=200)
+    @responds(schema=response_schemas.Task(many=True), api=api, status_code=200)
     def get(self, **kwargs):
         raise NotImplementedError()
 
@@ -61,7 +61,7 @@ class TaskTag(Resource):
 @api.route('/<uuid:task_id>/logs')
 class TaskLogs(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TimeLog, api=api, status_code=200)
+    @responds(schema=response_schemas.TimeLog(many=True), api=api, status_code=200)
     def get(self, task_id, **kwargs):
         raise NotImplementedError()
 

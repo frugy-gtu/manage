@@ -10,7 +10,7 @@ api = Namespace('teams', 'Team related routes')
 @api.route('/')
 class Teams(Resource):
     @jwt_required
-    @responds(schema=response_schemas.Team, api=api, status_code=200)
+    @responds(schema=response_schemas.Team(many=True), api=api, status_code=200)
     def get(self, **kwargs):
         raise NotImplementedError()
 
@@ -43,7 +43,7 @@ class Team(Resource):
 @api.route('/<uuid:team_id>/users')
 class TeamUsers(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TeamUser, api=api, status_code=200)
+    @responds(schema=response_schemas.TeamUser(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -59,7 +59,7 @@ class JoinTeam(Resource):
 @api.route('/<uuid:team_id>/requests')
 class JoinRequests(Resource):
     @jwt_required
-    @responds(schema=response_schemas.JoinRequest, api=api, status_code=200)
+    @responds(schema=response_schemas.JoinRequest(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -85,7 +85,7 @@ class JoinRequest(Resource):
 @api.route('/<uuid:team_id>/tags')
 class TeamTags(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TeamTag, api=api, status_code=200)
+    @responds(schema=response_schemas.TeamTag(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -97,7 +97,7 @@ class TeamTags(Resource):
 
     @jwt_required
     @accepts(schema=request_schemas.TeamTagsPutSchema, api=api)
-    @responds(schema=response_schemas.TeamTag, api=api, status_code=201)
+    @responds(schema=response_schemas.TeamTag(many=True), api=api, status_code=201)
     def put(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -110,7 +110,7 @@ class TeamTags(Resource):
 @api.route('/<uuid:team_id>/states')
 class TeamStates(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TeamState, api=api, status_code=200)
+    @responds(schema=response_schemas.TeamState(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -122,7 +122,7 @@ class TeamStates(Resource):
 
     @jwt_required
     @accepts(schema=request_schemas.TeamStatesPutSchema, api=api)
-    @responds(schema=response_schemas.TeamState, api=api, status_code=201)
+    @responds(schema=response_schemas.TeamState(many=True), api=api, status_code=201)
     def put(self, team_id, **kwargs):
         raise NotImplementedError()
 
@@ -135,7 +135,7 @@ class TeamStates(Resource):
 @api.route('/<uuid:team_id>/projects')
 class TeamProjects(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TeamProject, api=api, status_code=200)
+    @responds(schema=response_schemas.TeamProject(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
         raise NotImplementedError()
 

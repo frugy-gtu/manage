@@ -11,7 +11,7 @@ api = Namespace('projects', 'Project related routes')
 @api.route('/')
 class Projects(Resource):
     @jwt_required
-    @responds(schema=response_schemas.Project, api=api, status_code=200)
+    @responds(schema=response_schemas.Project(many=True), api=api, status_code=200)
     def get(self, **kwargs):
         raise NotImplementedError()
 
@@ -38,7 +38,7 @@ class Project(Resource):
 @api.route('/<uuid:project_id>/tags')
 class ProjectTags(Resource):
     @jwt_required
-    @responds(schema=response_schemas.ProjectTag, api=api, status_code=200)
+    @responds(schema=response_schemas.ProjectTag(many=True), api=api, status_code=200)
     def get(self, project_id, **kwargs):
         raise NotImplementedError()
 
@@ -50,7 +50,7 @@ class ProjectTags(Resource):
 
     @jwt_required
     @accepts(schema=request_schemas.ProjectTagsPutSchema, api=api)
-    @responds(schema=response_schemas.ProjectTag, api=api, status_code=201)
+    @responds(schema=response_schemas.ProjectTag(many=True), api=api, status_code=201)
     def put(self, project_id, **kwargs):
         raise NotImplementedError()
 
@@ -63,7 +63,7 @@ class ProjectTags(Resource):
 @api.route('/<uuid:project_id>/states')
 class ProjectStates(Resource):
     @jwt_required
-    @responds(schema=response_schemas.ProjectState, api=api, status_code=200)
+    @responds(schema=response_schemas.ProjectState(many=True), api=api, status_code=200)
     def get(self, project_id, **kwargs):
         raise NotImplementedError()
 
@@ -75,7 +75,7 @@ class ProjectStates(Resource):
 
     @jwt_required
     @accepts(schema=request_schemas.ProjectStatesPutSchema, api=api)
-    @responds(schema=response_schemas.ProjectState, api=api, status_code=201)
+    @responds(schema=response_schemas.ProjectState(many=True), api=api, status_code=201)
     def put(self, project_id, **kwargs):
         raise NotImplementedError()
 
@@ -88,7 +88,7 @@ class ProjectStates(Resource):
 @api.route('/<uuid:project_id>/task_groups')
 class ProjectTaskGroups(Resource):
     @jwt_required
-    @responds(schema=response_schemas.TaskGroup, api=api, status_code=200)
+    @responds(schema=response_schemas.TaskGroup(many=True), api=api, status_code=200)
     def get(self, project_id, **kwargs):
         raise NotImplementedError()
 
