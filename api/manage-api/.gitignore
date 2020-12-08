@@ -1,0 +1,20 @@
+# OSX files
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Confidential configurations
+*_confidential.py
+
+# Project files to be ignored
+migrations/
+
+# Log files
+*.Log
+
+# Environment files
+poetry.lock
+venv/
