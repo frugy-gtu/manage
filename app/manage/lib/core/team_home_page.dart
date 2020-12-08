@@ -69,7 +69,7 @@ class TeamHomePage extends StatelessWidget {
     );
   }
 
-  Widget _teamWidget(BuildContext context, {Widget child}) {
+  Widget _teamWidget(BuildContext context, {@required Widget child}) {
     return InkWell(
       onTap: () {},
       customBorder: RoundedRectangleBorder(
