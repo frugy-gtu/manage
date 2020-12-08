@@ -22,6 +22,7 @@ class Settings {
   static get box => _box;
 
   static get themeMode {
+    assert(Hive.isBoxOpen('settings'));
     switch (box.get('themeMode', defaultValue: 0)) {
       case 0:
         return ThemeMode.system;
@@ -33,6 +34,7 @@ class Settings {
   }
 
   static set themeMode(ThemeMode newMode) {
+    assert(Hive.isBoxOpen('settings'));
     switch (newMode) {
       case ThemeMode.system:
         box.put('themeMode', 0);
