@@ -16,7 +16,6 @@ class App extends StatelessWidget {
             title: 'Manage',
             theme: Theme.light,
             darkTheme: Theme.dark,
-            themeMode: Settings.themeMode,
             home: TeamHomePage(),
             debugShowCheckedModeBanner: false,
           );
