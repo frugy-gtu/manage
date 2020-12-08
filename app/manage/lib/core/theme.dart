@@ -45,6 +45,10 @@ class Theme {
 
   static final _dark = ThemeData.dark();
 
+  /// This method called accordingly to system's
+  /// [Brightness]. Returns [ThemeMode.dark] only
+  /// if user's preference is dark theme, otherwise
+  /// [ThemeMode.light].
   static get light {
     switch (Settings.themeMode) {
       case ThemeMode.system:
@@ -55,6 +59,10 @@ class Theme {
     }
   }
 
+  /// This method called accordingly to system's
+  /// [Brightness]. Returns [ThemeMode.light] only
+  /// if user's preference is light theme, otherwise
+  /// [ThemeMode.dark].
   static get dark {
     switch (Settings.themeMode) {
       case ThemeMode.system:

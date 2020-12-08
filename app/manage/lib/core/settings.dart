@@ -11,6 +11,17 @@ class _SettingsData {
   int themeMode;
 }
 
+//TODO: Change caching only on the start
+//and end of the app. This can be done by:
+//1- Holding settings internally
+//2- Calling read method and reading all settings
+//from cache at the beginning of app cycle
+//at appropriate place.
+//3- Calling save method and saving all settings
+//to cache at the end of app cycle
+//at appropriate place.
+//4- Modifying settings will notify accordingly
+//using methods other than Hive's listener.
 class Settings {
   static Box _box;
 
