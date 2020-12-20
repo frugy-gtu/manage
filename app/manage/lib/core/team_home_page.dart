@@ -10,7 +10,7 @@ class TeamHomePage extends StatelessWidget {
       appBar: AppBar(
         leading: Ink(
           padding: EdgeInsets.symmetric(
-            vertical: 30,
+            vertical: 55,
             horizontal: 10,
           ),
           child: InkWell(
@@ -24,7 +24,7 @@ class TeamHomePage extends StatelessWidget {
         title: const Text('Teams'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_pin_circle_rounded),
+            icon: Icon(Icons.account_circle),
             onPressed: () {},
             splashRadius: 20,
           ),
