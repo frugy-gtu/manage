@@ -57,6 +57,7 @@ class TeamHomePage extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.add_circle,
+                  color: Theme.of(context).textTheme.button.color,
                   size: 28,
                 ),
               ),
