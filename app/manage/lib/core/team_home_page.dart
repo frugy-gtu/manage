@@ -44,19 +44,25 @@ class TeamHomePage extends StatelessWidget {
             //determined by number of teams.
             crossAxisCount: 2,
             children: [
-              _teamWidget(context,
+              TeamGridTile(
                 child: Text(
                   'User Team',
                   style: Theme.of(context).textTheme.button,
                 ),
               ),
-              _teamWidget(context,
+              TeamGridTile(
                 child: Text(
                   'Other Team',
                   style: Theme.of(context).textTheme.button,
                 ),
               ),
-              _teamWidget(context,
+              TeamGridTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Scaffold()),
+                  );
+                },
                 child: Icon(
                   Icons.add_circle,
                   size: 28,
@@ -69,7 +75,22 @@ class TeamHomePage extends StatelessWidget {
     );
   }
 
-  Widget _teamWidget(BuildContext context, {@required Widget child, Function onTap}) {
+}
+
+class TeamGridTile extends GridTile {
+  final Function onTap;
+
+  const TeamGridTile({
+    @required Widget child,
+    Key key,
+    this.onTap,
+    Widget header,
+    Widget footer,
+  })  : assert(child != null),
+        super(key: key, child: child, header: header, footer: footer);
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap ?? () {},
       customBorder: RoundedRectangleBorder(
@@ -81,7 +102,7 @@ class TeamHomePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(5)),
         margin: const EdgeInsets.all(10),
         child: Center(
-          child: child,
+          child: super.build(context),
         ),
       ),
     );
