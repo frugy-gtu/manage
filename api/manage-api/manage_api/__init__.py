@@ -27,7 +27,7 @@ def create_app(config_name=None, register_routes=True, register_cli=True):
 
     # Response
     class AppResponse(Response):
-        default_mimetype = 'application/json'
+        default_mimetype = 'text/html'
 
     app.response_class = AppResponse
 
