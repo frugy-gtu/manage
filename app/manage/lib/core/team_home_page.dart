@@ -100,7 +100,7 @@ class TeamGridTile extends GridTile {
         decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(5)),
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(5),
         child: Center(
           child: super.build(context),
         ),
