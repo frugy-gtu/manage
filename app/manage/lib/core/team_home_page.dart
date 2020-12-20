@@ -70,7 +70,7 @@ class TeamHomePage extends StatelessWidget {
 
   EdgeInsetsGeometry _teamGridTilePadding(double maxWidth, double maxHeight) {
     if (teamCount == 1) {
-      return EdgeInsets.symmetric(horizontal: (maxWidth - (maxHeight / 2)) / 2);
+      return EdgeInsets.symmetric(horizontal: (maxWidth - (maxHeight / 2)) / 1.6);
     } else {
       return EdgeInsets.all(10);
     }
