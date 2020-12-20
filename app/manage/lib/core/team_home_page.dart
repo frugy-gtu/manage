@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class TeamHomePage extends StatelessWidget {
+  final teamCount = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,32 +29,22 @@ class TeamHomePage extends StatelessWidget {
             splashRadius: 20,
           ),
         ],
-        toolbarHeight: 100,
+        toolbarHeight: MediaQuery.of(context).size.height / 5,
       ),
-      body: Center(
-        child: Padding(
-          //TODO: Do dynamic padding here where each pads accordingly
-          //to the number of teams. It is not necessarily to use Padding
-          //widget. Should take care of crossAxisSpacing too.
-          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+      body: LayoutBuilder(
+        builder: (context, constraints) => Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: constraints.maxHeight / 9,
+          ),
           child: GridView.count(
-            primary: false,
-            padding: const EdgeInsets.all(20),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            //TODO: Do dynamic crossAxisCount here where cross axis
-            //determined by number of teams.
-            crossAxisCount: 2,
+            primary: true,
+            padding: _teamGridTilePadding(constraints.maxWidth,
+                constraints.maxHeight - constraints.maxHeight / 4.5),
+            crossAxisCount: _teamAxisCount(teamCount),
             children: [
               TeamGridTile(
                 child: Text(
                   'User Team',
-                  style: Theme.of(context).textTheme.button,
-                ),
-              ),
-              TeamGridTile(
-                child: Text(
-                  'Other Team',
                   style: Theme.of(context).textTheme.button,
                 ),
               ),
@@ -75,6 +67,22 @@ class TeamHomePage extends StatelessWidget {
     );
   }
 
+  EdgeInsetsGeometry _teamGridTilePadding(double maxWidth, double maxHeight) {
+    if (teamCount == 1) {
+      return EdgeInsets.symmetric(horizontal: (maxWidth - (maxHeight / 2)) / 2);
+    } else {
+      return EdgeInsets.all(10);
+    }
+  }
+
+  int _teamAxisCount(int teamCount) {
+    if (teamCount < 2)
+      return 1;
+    else if (teamCount < 4)
+      return 2;
+    else
+      return 3;
+  }
 }
 
 class TeamGridTile extends GridTile {
