@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:manage/extra/widgets/InkedContainer.dart';
 
 import '../team.dart';
 
@@ -93,34 +94,5 @@ class TeamsScreen extends StatelessWidget {
       return 2;
     else
       return 3;
-  }
-}
-
-class InkedContainer extends StatelessWidget {
-  final Widget child;
-  final Function onTap;
-
-  const InkedContainer({Key key, @required this.child, @required this.onTap})
-      : assert(child != null),
-        assert(onTap != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      customBorder: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(5)),
-        margin: const EdgeInsets.all(5),
-        child: Center(
-          child: child,
-        ),
-      ),
-    );
   }
 }
