@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart' hide Theme;
+import 'package:manage/core/router/team_route_information_parser.dart';
+import 'package:manage/core/router/team_router_delegate.dart';
 import 'package:manage/core/team.dart';
 
 import 'settings.dart';
@@ -12,63 +14,22 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Team _currentTeam;
-  bool _show404 = false;
-  List<Team> teams = [
-    Team('User Team'),
-  ];
-
-  void _handleTeamTapped(Team team) {
-    setState(() {
-      _currentTeam = team;
-    });
-  }
+  TeamRouterDelegate _teamRouterDelegate = TeamRouterDelegate();
+  TeamRouteInformationParser _teamRouteInformationParser =
+      TeamRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: Settings.listenable(['themeMode']),
         builder: (context, box, widget) {
-          return MaterialApp(
+          return MaterialApp.router(
             title: 'Manage',
             theme: Theme.light,
             darkTheme: Theme.dark,
-            home: Navigator(
-              pages: [
-                MaterialPage(
-                  key: ValueKey('TeamsPage'),
-                  child: TeamsScreen(
-                    teams: teams,
-                    onTapped: _handleTeamTapped,
-                  ),
-                ),
-                if (_show404)
-                  MaterialPage(
-                    key: ValueKey('UnknownPage'),
-                    child: Scaffold(),
-                  )
-                else if (_currentTeam != null)
-                  MaterialPage(
-                      key: ValueKey(_currentTeam),
-                      child: Scaffold(
-                        appBar: AppBar(
-                          title: Text(_currentTeam.name),
-                        ),
-                      )),
-              ],
-              onPopPage: (route, result) {
-                if (!route.didPop(result)) {
-                  return false;
-                }
-
-                setState(() {
-                  _currentTeam = null;
-                });
-
-                return true;
-              },
-            ),
             debugShowCheckedModeBanner: false,
+            routerDelegate: _teamRouterDelegate,
+            routeInformationParser: _teamRouteInformationParser,
           );
         });
   }
