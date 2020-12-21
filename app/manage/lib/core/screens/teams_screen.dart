@@ -59,12 +59,7 @@ class TeamsScreen extends StatelessWidget {
                   onTap: () => onTapped(team),
                 ),
               InkedContainer(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Scaffold()),
-                  );
-                },
+                onTap: () {},
                 child: Icon(
                   Icons.add_circle,
                   color: Theme.of(context).textTheme.button.color,
