@@ -4,8 +4,8 @@ import 'package:manage/core/screens/teams_screen.dart';
 
 import '../team.dart';
 
-class TeamRouterDelegate extends RouterDelegate<TeamRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<TeamRoutePath> {
+class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {
   final GlobalKey<NavigatorState> _navigatorKey;
 
   Team _currentTeam;
@@ -14,7 +14,7 @@ class TeamRouterDelegate extends RouterDelegate<TeamRoutePath>
     Team('User Team', '0'),
   ];
 
-  TeamRouterDelegate() : _navigatorKey = GlobalKey<NavigatorState>();
+  ManageRouterDelegate() : _navigatorKey = GlobalKey<NavigatorState>();
 
   void _handleTeamTapped(Team team) {
     _currentTeam = team;
@@ -65,7 +65,7 @@ class TeamRouterDelegate extends RouterDelegate<TeamRoutePath>
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   @override
-  Future<void> setNewRoutePath(TeamRoutePath configuration) async {
+  Future<void> setNewRoutePath(ManageRoutePath configuration) async {
     if(configuration.isUnknown) {
       _currentTeam = null;
       _show404 = true;
@@ -88,13 +88,13 @@ class TeamRouterDelegate extends RouterDelegate<TeamRoutePath>
     _show404 = false;
   }
 
-  TeamRoutePath get currentConfiguration {
+  ManageRoutePath get currentConfiguration {
     if (_show404) {
-      return TeamRoutePath.unknown();
+      return ManageRoutePath.unknown();
     }
 
     return _currentTeam == null
-        ? TeamRoutePath.home()
-        : TeamRoutePath.details(_currentTeam.id);
+        ? ManageRoutePath.home()
+        : ManageRoutePath.details(_currentTeam.id);
   }
 }
