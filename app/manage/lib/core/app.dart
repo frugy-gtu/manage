@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart' hide Theme;
-import 'package:manage/core/router/team_route_information_parser.dart';
-import 'package:manage/core/router/team_router_delegate.dart';
-import 'package:manage/core/team.dart';
+import 'package:manage/core/router/manage_route_information_parser.dart';
+import 'package:manage/core/router/manage_router_delegate.dart';
 
 import 'settings.dart';
 import 'theme.dart';
-import 'screens/teams_screen.dart';
 
 class App extends StatefulWidget {
   // This widget is the root of your application.
@@ -14,9 +12,9 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  TeamRouterDelegate _teamRouterDelegate = TeamRouterDelegate();
-  TeamRouteInformationParser _teamRouteInformationParser =
-      TeamRouteInformationParser();
+  ManageRouterDelegate _manageRouterDelegate = ManageRouterDelegate();
+  ManageRouteInformationParser _manageRouteInformationParser =
+      ManageRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +26,8 @@ class _AppState extends State<App> {
             theme: Theme.light,
             darkTheme: Theme.dark,
             debugShowCheckedModeBanner: false,
-            routerDelegate: _teamRouterDelegate,
-            routeInformationParser: _teamRouteInformationParser,
+            routerDelegate: _manageRouterDelegate,
+            routeInformationParser: _manageRouteInformationParser,
           );
         });
   }
