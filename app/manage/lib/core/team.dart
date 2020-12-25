@@ -1,6 +1,9 @@
 class Team {
   final String name;
-  final String id;
 
-  Team(this.name, this.id);
+  Team(this.name);
+
+  factory Team.fromId(String id) {
+    return Team('User Team');
+  }
 }
