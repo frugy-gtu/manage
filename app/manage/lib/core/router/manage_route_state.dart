@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 import '../team.dart';
 
 class ManageRouteState extends ChangeNotifier {
-  ManageRoute _currentRoute;
-  Team _currentTeam;
+  ManageRoute _route;
+  Team _team;
 
-  ManageRouteState() : _currentRoute = ManageRoute.teams;
+  ManageRouteState() : _route = ManageRoute.teams;
 
-  ManageRoute get currentRoute => _currentRoute;
+  ManageRoute get route => _route;
 
-  Team get currentTeam => _currentTeam;
+  Team get team => _team;
 
   void update(ManageRoute route, {Team team}) {
     assert(route != null);
 
     if(route == ManageRoute.team) {
       assert(team != null);
-      _currentTeam = team;
+      _team = team;
     }
 
-    _currentRoute = route;
+    _route = route;
 
     notifyListeners();
   }
