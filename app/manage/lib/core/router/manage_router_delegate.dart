@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
-import 'package:manage/core/router/manage_teams_path.dart';
-import 'package:manage/core/router/manage_unknown_path.dart';
 import 'package:manage/core/screens/teams_screen.dart';
 import 'package:manage/core/team.dart';
-
-import 'manage_team_path.dart';
 
 class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {

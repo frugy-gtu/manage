@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/auth.dart';
 import 'package:manage/core/router/manage_route_path.dart';
-import 'package:manage/core/router/manage_team_path.dart';
-import 'package:manage/core/router/manage_teams_path.dart';
-import 'package:manage/core/router/manage_unknown_path.dart';
 
 class ManageRouteInformationParser
     extends RouteInformationParser<ManageRoutePath> {
