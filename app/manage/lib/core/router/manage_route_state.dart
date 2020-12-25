@@ -6,10 +6,6 @@ class ManageRouteState extends ChangeNotifier {
   ManageRoute _currentRoute;
   Team _currentTeam;
 
-  List<Team> teams = [
-    Team('User Team', '0'),
-  ];
-
   ManageRouteState() : _currentRoute = ManageRoute.teams;
 
   ManageRoute get currentRoute => _currentRoute;
