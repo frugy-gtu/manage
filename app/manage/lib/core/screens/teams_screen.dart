@@ -5,13 +5,17 @@ import 'package:manage/extra/widgets/InkedContainer.dart';
 import '../team.dart';
 
 class TeamsScreen extends StatelessWidget {
-  final List<Team> teams;
+  final List<Team> teams = [Team('User Team')];
   final ValueChanged<Team> onTapped;
 
-  const TeamsScreen({Key key, @required this.teams, @required this.onTapped})
-      : assert(teams != null),
-        assert(onTapped != null),
+  TeamsScreen({Key key, @required this.onTapped})
+      : assert(onTapped != null),
         super(key: key);
+
+  // const TeamsScreen({Key key, @required this.teams, @required this.onTapped})
+  //     : assert(teams != null),
+  //       assert(onTapped != null),
+  //       super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +57,8 @@ class TeamsScreen extends StatelessWidget {
             children: [
               for (Team team in teams)
                 InkedContainer(
-                  child: Text(team.name,
+                  child: Text(
+                    team.name,
                     style: Theme.of(context).textTheme.button,
                   ),
                   onTap: () => onTapped(team),
