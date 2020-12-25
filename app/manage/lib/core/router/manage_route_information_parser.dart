@@ -33,4 +33,17 @@ class ManageRouteInformationParser
 
     return ManageUnknownPath();
   }
+
+  @override
+  RouteInformation restoreRouteInformation(ManageRoutePath configuration) {
+    if (configuration is ManageTeamsPath) {
+      return RouteInformation(location: '/teams');
+    }
+
+    if (configuration is ManageTeamPath) {
+      return RouteInformation(location: 'teams/${configuration.id}');
+    }
+
+    return null;
+  }
 }
