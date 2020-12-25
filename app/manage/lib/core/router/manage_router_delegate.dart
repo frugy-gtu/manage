@@ -24,7 +24,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       key: navigatorKey,
       pages: _buildPages(),
       onPopPage: (route, result) {
-        print('I popped page');
         if (!route.didPop(result)) {
           return false;
         }
@@ -41,7 +40,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
 
   @override
   Future<void> setNewRoutePath(ManageRoutePath path) async {
-    print('I set new route path');
     if (path is ManageTeamsPath) {
       state.update(ManageRoute.teams);
     } else if (path is ManageTeamPath) {
