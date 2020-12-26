@@ -41,6 +41,7 @@ class _TeamFormState extends State<TeamForm> {
           onChanged: (value) {
             validationService.updateName(value);
           },
+          autofocus: true,
         ),
         TextField(
             decoration: InputDecoration(
