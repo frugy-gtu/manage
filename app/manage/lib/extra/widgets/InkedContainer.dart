@@ -13,6 +13,7 @@ class InkedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      enableFeedback: false,
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
       ),

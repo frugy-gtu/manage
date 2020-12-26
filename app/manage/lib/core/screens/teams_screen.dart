@@ -27,16 +27,15 @@ class TeamsScreen extends StatelessWidget {
             onPressed: () {},
             splashRadius: 20,
           ),
-        ),
         title: const Text('Teams'),
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
+            enableFeedback: false,
             onPressed: () {},
             splashRadius: 20,
           ),
         ],
-        toolbarHeight: MediaQuery.of(context).size.height / 5,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
