@@ -97,6 +97,90 @@ def test_teams_get_only_current_users_teams(flask_test_client):
     assert team2['name'] == team_2['name']
 
 
+def test_teams_post_without_jwt(flask_test_client):
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+    }
+    response: Response = flask_test_client.post('/teams/', json=team_data)
+    assert response.status_code == 401
+
+
+def test_teams_post_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+    }
+    response: Response = flask_test_client.post(
+        '/teams/', json=team_data, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 201
+    assert data['abbreviation'] == team_data['abbreviation']
+    assert data['name'] == team_data['name']
+
+
+def test_teams_post_with_jwt_existing_name(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    team_data_2 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt2',
+    }
+    response: Response = flask_test_client.post(
+        '/teams/', json=team_data_2, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 400
+    assert db_models.Team.query.count() == 1
+
+
+def test_teams_post_with_jwt_existing_name(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    team_data_2 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt2',
+    }
+    response: Response = flask_test_client.post(
+        '/teams/', json=team_data_2, headers=headers
+    )
+    assert response.status_code == 400
+    assert db_models.Team.query.count() == 1
+
+
 def test_team_get_without_jwt(flask_test_client):
     user_data = {
         'username': 'test_user',
