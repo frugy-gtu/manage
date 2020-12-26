@@ -1,11 +1,17 @@
-abstract class ManageRoutePath {}
+abstract class ManageRoutePath {
+  const ManageRoutePath();
+}
 
 class ManageTeamPath extends ManageRoutePath {
   final String id;
 
-  ManageTeamPath(this.id);
+  const ManageTeamPath(this.id);
 }
 
-class ManageTeamsPath extends ManageRoutePath {}
+class ManageTeamsPath extends ManageRoutePath {
+  const ManageTeamsPath();
+}
 
-class ManageUnknownPath extends ManageRoutePath {}
+class ManageUnknownPath extends ManageRoutePath {
+  const ManageUnknownPath();
+}
