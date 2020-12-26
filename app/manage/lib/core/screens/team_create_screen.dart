@@ -23,12 +23,7 @@ class TeamCreateScreen extends StatelessWidget {
   }
 }
 
-class TeamForm extends StatefulWidget {
-  @override
-  _TeamFormState createState() => _TeamFormState();
-}
-
-class _TeamFormState extends State<TeamForm> {
+class TeamForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TeamCreateValidation>(
