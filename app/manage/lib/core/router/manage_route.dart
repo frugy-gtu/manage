@@ -3,6 +3,6 @@ enum ManageRoute {
   signup,
   teams,
   team,
-  team_creation,
+  team_create,
   unknown,
 }

@@ -54,13 +54,27 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       ),
     ];
 
-    if (state.route == ManageRoute.team) {
-      pages.add(MaterialPage(
+    if(state.route == ManageRoute.team) {
+      pages.add(
+        MaterialPage(
           key: ValueKey('TeamPage'),
           child: Scaffold(
             appBar: AppBar(
               title: Text(state.team.name),
             ),
+          )
+        )
+      );
+    }
+
+    if(state.route == ManageRoute.team_create) {
+      pages.add(
+        MaterialPage(
+          key: ValueKey('TeamCreatePage'),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('sex'),
+            )
           )
         )
       );

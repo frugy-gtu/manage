@@ -26,6 +26,9 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamPath(uri.pathSegments[1]);
       }
+      else if(uri.pathSegments[0] == 'create') {
+        return ManageTeamCreatePath();
+      }
     }
 
     return ManageUnknownPath();
@@ -39,6 +42,10 @@ class ManageRouteInformationParser
 
     if (configuration is ManageTeamPath) {
       return RouteInformation(location: 'teams/${configuration.id}');
+    }
+
+    if (configuration is ManageTeamCreatePath) {
+      return RouteInformation(location: 'teams/create');
     }
 
     return null;

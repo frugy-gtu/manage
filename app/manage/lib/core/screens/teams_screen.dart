@@ -54,7 +54,7 @@ class TeamsScreen extends StatelessWidget {
                       .update(ManageRoute.team, team: team),
                 ),
               InkedContainer(
-                onTap: () {},
+                onTap: () => context.read<ManageRouteState>().update(ManageRoute.team_create),
                 child: Icon(
                   Icons.add_circle,
                   color: Theme.of(context).textTheme.button.color,
