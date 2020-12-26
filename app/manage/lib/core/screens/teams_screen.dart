@@ -21,17 +21,11 @@ class TeamsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Ink(
-          padding: EdgeInsets.symmetric(
-            vertical: 55,
-            horizontal: 10,
-          ),
-          child: InkWell(
-            onTap: () {},
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Icon(Icons.menu_rounded),
+        leading: IconButton(
+            icon: Icon(Icons.menu_rounded),
+            enableFeedback: false,
+            onPressed: () {},
+            splashRadius: 20,
           ),
         ),
         title: const Text('Teams'),
