@@ -7,8 +7,8 @@ class TeamsGetSchema(JWTSchema):
     def post_load(self, data, **kwargs):
         user = self.get_user()
         data['filters'] = {
-            '==': {
-                'user_id': user['id'],
+            'special': {
+                'user': user['id'],
             }
         }
         return data
