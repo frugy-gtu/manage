@@ -23,7 +23,9 @@ class Teams(Resource):
     @accepts(schema=request_schemas.TeamsPostSchema, api=api)
     @responds(schema=response_schemas.Team, api=api, status_code=201)
     def post(self, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        team = TeamService.create(data)
+        return team
 
 
 @api.route('/<uuid:team_id>')

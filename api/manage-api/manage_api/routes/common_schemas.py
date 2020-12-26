@@ -4,11 +4,17 @@ from manage_api.db.services import UserService
 
 
 class JWTSchema(Schema):
-    def get_user(self):
+    def get_user_id(self):
         identity = get_jwt_identity()
         if identity:
+            return identity['id']
+        return None
+
+    def get_user(self):
+        id = self.get_user_id()
+        if id:
             try:
-                return UserService(id=identity['id'])
+                return UserService(id=id)
             except ValueError:
                 raise ValidationError('User Not Found')
         return None
