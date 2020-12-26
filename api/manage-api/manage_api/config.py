@@ -31,18 +31,18 @@ class Config(object):
 
     # confidential
     SQLALCHEMY_DATABASE_URI = ''
+    SQLALCHEMY_TESTING_DATABASE_URI = ''
 
 
 class ProductionConfig(Config):
     CONFIG_NAME = 'production'
     DEBUG = False
+    BASE_URL = 'https://manage.frugy.com'
 
 
 class TestingConfig(Config):
     CONFIG_NAME = 'testing'
     DEBUG = True
-
-    BASE_URL = 'https://manage.frugy.com'
 
 
 class DevelopmentConfig(Config):
