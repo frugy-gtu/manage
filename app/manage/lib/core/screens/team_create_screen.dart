@@ -27,26 +27,26 @@ class TeamForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TeamCreateValidation>(
-      builder: (context, validationService, child) => Column(children: [
+      builder: (context, validation, child) => Column(children: [
         TextField(
           decoration: InputDecoration(
             hintText: 'name',
-            errorText: validationService.name.error,
+            errorText: validation.name.error,
           ),
           onChanged: (value) {
-            validationService.updateName(value);
+            validation.updateName(value);
           },
           autofocus: true,
         ),
         TextField(
             decoration: InputDecoration(
               hintText: 'abbreviation',
-              errorText: validationService.abbrv.error,
+              errorText: validation.abbrv.error,
             ),
             maxLength: 3,
             textCapitalization: TextCapitalization.characters,
             onChanged: (value) {
-              validationService.updateAbbrv(value);
+              validation.updateAbbrv(value);
             }),
         child
       ]),
