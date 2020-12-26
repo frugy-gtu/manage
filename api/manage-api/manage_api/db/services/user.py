@@ -3,10 +3,12 @@ from __future__ import annotations
 from typing import Any, Dict, Optional, Iterator, Union, overload
 from uuid import UUID
 
+from flask_jwt_extended import create_access_token
+from marshmallow import EXCLUDE
+
 from manage_api.db.models import db, update_db
 from manage_api.db.models.user import User, UserSchema
 
-from marshmallow import EXCLUDE
 
 __all__ = [
     'Userervice',
@@ -86,6 +88,9 @@ class UserService:
     @classmethod
     def get_all(cls) -> Iterator[UserService]:
         return map(lambda user: cls(user), User.query.all())
+
+    def create_access_token(self):
+        return create_access_token(identity={'id': str(self.obj.id)})
 
     def get(self, key: str, default: bool = None, strict: bool = False) -> Any:
         if not strict:
