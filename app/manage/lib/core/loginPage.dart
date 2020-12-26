@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sw_project/temps/database.dart';
+import 'package:sw_project/temps/user.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -29,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     if(await DBProvider.db.login(mail, password)){
       setState(() {
         _userExist = true;
+        Navigator.pushReplacementNamed(context, '/userPage');
       });
     }else{
       setState(() {
@@ -94,9 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                       });
                       if(_validMail==true && _validPass==true){
                         login(_mailCont.text, _passCont.text);
-                        if(_userExist){
-                          Navigator.pop();
-                        }
                       }
                     }      
                   ),

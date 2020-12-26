@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sw_project/temps/database.dart';
+import 'temps/user.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
