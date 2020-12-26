@@ -8,6 +8,7 @@ from marshmallow import EXCLUDE, Schema
 
 from manage_api.db.models import db, update_db
 from manage_api.db.models.team import Team, TeamSchema
+from manage_api.db.models.user_teams import UserTeams
 from manage_api.db.services.helpers import query_builder
 from manage_api.db.services.pagination import Paginable
 from manage_api.misc.types import filter_type
@@ -81,6 +82,8 @@ class TeamService(Paginable):
             raise ValueError(f'Invalid Data: {validation}')
         dbobject: Team = schema.load(data)
         db.session.add(dbobject)
+        update_db(False)
+        db.session.add(UserTeams(user_id=dbobject.user_id, team_id=dbobject.id))
         update_db(commit)
         return cls(dbobject)
 
@@ -160,6 +163,13 @@ class TeamService(Paginable):
             filters=filters,
             order_by=order_by,
         )
+        special_filters = filters.get('special') if filters else None
+        if special_filters:
+            user = special_filters.get('user')
+            if user:
+                query = query.join(UserTeams, UserTeams.team_id == Team.id).filter(
+                    UserTeams.user_id == user
+                )
         return query
 
     # Operator overloading
