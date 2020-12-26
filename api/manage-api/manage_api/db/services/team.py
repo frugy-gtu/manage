@@ -129,6 +129,14 @@ class TeamService(Paginable):
             return TeamSchema(*args, partial=fields_, **kwargs)
         return TeamSchema(*args, partial=True, **kwargs)
 
+    def is_user_associated(self, user_id: Union[str, UUID]) -> bool:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        query = UserTeams.query.filter(UserTeams.user_id == user_id).filter(
+            UserTeams.team_id == self.obj.id
+        )
+        return query.count() > 0
+
     def get(self, key: str, default: bool = None, strict: bool = False) -> Any:
         if not strict:
             return getattr(self.obj, key, default)

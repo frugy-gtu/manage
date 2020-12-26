@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, abort
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import jwt_required
@@ -29,9 +29,17 @@ class Teams(Resource):
 @api.route('/<uuid:team_id>')
 class Team(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TeamGetSchema, api=api)
     @responds(schema=response_schemas.Team, api=api, status_code=200)
     def get(self, team_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        try:
+            team = TeamService(id=team_id)
+            if team.is_user_associated(params['user']['id']):
+                return team.dump()
+            abort(401, 'You are not in this team')
+        except ValueError as e:
+            abort(404, str(e))
 
     @jwt_required
     @accepts(schema=request_schemas.TeamPutSchema, api=api)

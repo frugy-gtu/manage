@@ -19,6 +19,14 @@ class TeamsPostSchema(JWTSchema):
     abbreviation = fields.String(required=True, allow_none=False)
 
 
+class TeamGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        user = self.get_user()
+        data['user'] = user
+        return data
+
+
 class TeamPutSchema(JWTSchema):
     name = fields.String(required=False, allow_none=True)
     abbreviation = fields.String(required=False, allow_none=True)
