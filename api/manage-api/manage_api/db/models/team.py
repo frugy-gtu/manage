@@ -1,6 +1,6 @@
 from marshmallow import fields, post_load
 from .base import Base, BaseSchema
-from .db import db, UUID, joinedload
+from .db import db, UUID, joinedload, selectinload
 
 
 class Team(Base):
@@ -10,8 +10,10 @@ class Team(Base):
     # relations
     load_strategies = {
         'user': joinedload,
+        'users': selectinload,
     }
     user = db.relationship('User', lazy='noload')
+    users = db.relationship('User', secondary='user_teams', lazy='noload')
 
 
 class TeamSchema(BaseSchema):
