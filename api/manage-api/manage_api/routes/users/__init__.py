@@ -1,3 +1,4 @@
+from manage_api.db.services.user import UserService
 from flask import request
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
@@ -23,9 +24,11 @@ class Login(Resource):
 class Signup(Resource):
     @api.doc(security=None)
     @accepts(schema=request_schemas.SignupSchema, api=api)
-    @responds(schema=response_schemas.Empty, api=api, status_code=201)
+    @responds(schema=response_schemas.User, api=api, status_code=201)
     def post(self, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        user = UserService.create(data)
+        return user.dump()
 
 
 @api.route('/activate')

@@ -1,4 +1,4 @@
-from marshmallow import fields, Schema, post_load, ValidationError
+from marshmallow import fields, Schema, post_load, validates_schema, ValidationError
 from manage_api.db.services import UserService
 
 
@@ -31,6 +31,18 @@ class SignupSchema(Schema):
     username = fields.String(required=True, allow_none=False)
     email = fields.Email(required=True, allow_none=False)
     password = fields.String(required=True, allow_none=False)
+
+    @validates_schema
+    def check_uniqueness_of_user(self, data, **kwargs):
+        try:
+            UserService(username=data['username'])
+            raise ValidationError('User with this username exists')
+        except ValueError:
+            try:
+                UserService(email=data['email'])
+                raise ValidationError('User with this email exists')
+            except ValueError:
+                pass
 
 
 class ActivateSchema(Schema):
