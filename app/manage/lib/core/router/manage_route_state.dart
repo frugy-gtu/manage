@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manage/core/router/manage_route.dart';
 
 import '../team.dart';
 
@@ -26,11 +27,3 @@ class ManageRouteState extends ChangeNotifier {
   }
 }
 
-enum ManageRoute {
-  login,
-  signup,
-  teams,
-  team,
-  team_creation,
-  unknown,
-}
