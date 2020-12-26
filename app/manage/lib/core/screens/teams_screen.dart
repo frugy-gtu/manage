@@ -45,16 +45,21 @@ class TeamsScreen extends StatelessWidget {
             children: [
               for (Team team in teams)
                 InkedContainer(
-                  child: Text(
-                    team.name,
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                  onTap: () => context
-                      .read<ManageRouteState>()
-                      .update(ManageRoute.team, team: team),
-                ),
+                    child: Text(
+                      team.name,
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onTap: () {
+                      context
+                          .read<ManageRouteState>()
+                          .update(ManageRoute.team, team: team);
+                    }),
               InkedContainer(
-                onTap: () => context.read<ManageRouteState>().update(ManageRoute.team_create),
+                onTap: () {
+                  context
+                      .read<ManageRouteState>()
+                      .update(ManageRoute.team_create);
+                },
                 child: Icon(
                   Icons.add_circle,
                   color: Theme.of(context).textTheme.button.color,
