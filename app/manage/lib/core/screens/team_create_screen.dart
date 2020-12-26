@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/models/team/team_create_validation.dart';
+import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
+import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
 import 'package:provider/provider.dart';
 
 class TeamCreateScreen extends StatelessWidget {
@@ -33,6 +35,7 @@ class TeamForm extends StatelessWidget {
             hintText: 'name',
             errorText: validation.name.error,
           ),
+          inputFormatters: [LengthLimitingTextFieldFormatterFixed(32)],
           onChanged: (value) {
             validation.updateName(value);
           },
@@ -44,6 +47,7 @@ class TeamForm extends StatelessWidget {
               errorText: validation.abbrv.error,
             ),
             maxLength: 3,
+            inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
             textCapitalization: TextCapitalization.characters,
             onChanged: (value) {
               validation.updateAbbrv(value);
