@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
+import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
 import 'package:manage/core/team.dart';
 
@@ -71,11 +72,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       pages.add(
         MaterialPage(
           key: ValueKey('TeamCreatePage'),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('sex'),
-            )
-          )
+          child: TeamCreateScreen(),
         )
       );
     }
