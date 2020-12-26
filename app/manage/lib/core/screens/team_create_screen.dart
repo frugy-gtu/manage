@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/models/team/team_create_validation.dart';
+import 'package:manage/core/controller/team_create_controller.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
 import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class TeamCreateScreen extends StatelessWidget {
               horizontal: constraints.maxWidth / 9,
             ),
             child: ChangeNotifierProvider(
-                create: (_) => TeamCreateValidation(), child: TeamForm()),
+                create: (_) => TeamCreateController(), child: TeamForm()),
           ),
         ),
       ),
@@ -28,30 +28,27 @@ class TeamCreateScreen extends StatelessWidget {
 class TeamForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<TeamCreateValidation>(
-      builder: (context, validation, child) => Column(children: [
+    return Consumer<TeamCreateController>(
+      builder: (context, controller, child) => Column(children: [
         TextField(
           decoration: InputDecoration(
             hintText: 'name',
-            errorText: validation.name.error,
+            errorText: controller.nameError,
           ),
+          controller: controller.name,
           inputFormatters: [LengthLimitingTextFieldFormatterFixed(32)],
-          onChanged: (value) {
-            validation.updateName(value);
-          },
           autofocus: true,
         ),
         TextField(
             decoration: InputDecoration(
               hintText: 'abbreviation',
-              errorText: validation.abbrv.error,
             ),
+            controller: controller.abbrv,
+            onTap: () { controller.isAbbrvEdited = true; },
             maxLength: 3,
             inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
             textCapitalization: TextCapitalization.characters,
-            onChanged: (value) {
-              validation.updateAbbrv(value);
-            }),
+          ),
         child
       ]),
       child: ElevatedButton(
