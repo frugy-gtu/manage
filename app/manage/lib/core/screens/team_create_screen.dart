@@ -54,7 +54,7 @@ class TeamForm extends StatelessWidget {
       ]),
       child: ElevatedButton(
         onPressed: () {},
-        child: Text('Submit'),
+        child: Text('Create'),
       ),
     );
   }
