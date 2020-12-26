@@ -58,6 +58,14 @@ class TeamPutSchema(JWTSchema):
         return data
 
 
+class TeamDeleteSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        user = self.get_user()
+        data['user'] = user
+        return data
+
+
 class TeamTagsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
