@@ -49,9 +49,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     List<Page<dynamic>> pages = [
       MaterialPage(
         key: ValueKey('TeamsPage'),
-        child: TeamsScreen(
-          onTapped: _handleTeamTapped,
-        ),
+        child: TeamsScreen(),
       ),
     ];
 
@@ -68,9 +66,5 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     }
 
     return pages;
-  }
-
-  void _handleTeamTapped(Team team) {
-    state.update(ManageRoute.team, team: team);
   }
 }

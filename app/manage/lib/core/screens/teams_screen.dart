@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:manage/extra/widgets/InkedContainer.dart';
+import 'package:manage/core/router/manage_route_state.dart';
+import 'package:provider/provider.dart';
 
 import '../team.dart';
 
 class TeamsScreen extends StatelessWidget {
-  final List<Team> teams = [Team('User Team')];
-  final ValueChanged<Team> onTapped;
+  final List<Team> teams = const [Team('User Team')];
 
-  TeamsScreen({Key key, @required this.onTapped})
-      : assert(onTapped != null),
-        super(key: key);
-
-  // const TeamsScreen({Key key, @required this.teams, @required this.onTapped})
-  //     : assert(teams != null),
-  //       assert(onTapped != null),
-  //       super(key: key);
+  const TeamsScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.menu_rounded),
-            enableFeedback: false,
-            onPressed: () {},
-            splashRadius: 20,
-          ),
+          icon: Icon(Icons.menu_rounded),
+          enableFeedback: false,
+          onPressed: () {},
+          splashRadius: 20,
+        ),
         title: const Text('Teams'),
         actions: [
           IconButton(
@@ -54,7 +48,9 @@ class TeamsScreen extends StatelessWidget {
                     team.name,
                     style: Theme.of(context).textTheme.button,
                   ),
-                  onTap: () => onTapped(team),
+                  onTap: () => context
+                      .read<ManageRouteState>()
+                      .update(ManageRoute.team, team: team),
                 ),
               InkedContainer(
                 onTap: () {},
