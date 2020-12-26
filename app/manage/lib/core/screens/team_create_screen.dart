@@ -42,6 +42,7 @@ class TeamForm extends StatelessWidget {
         TextField(
             decoration: InputDecoration(
               hintText: 'abbreviation',
+              labelText: 'abbreviation',
             ),
             controller: controller.abbrv,
             onTap: () { controller.isAbbrvEdited = true; },
