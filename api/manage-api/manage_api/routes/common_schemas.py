@@ -3,15 +3,12 @@ from marshmallow import Schema, post_load, ValidationError
 from manage_api.db.services import UserService
 
 
-class UserHeadersSchema(Schema):
-    @post_load
-    def post_load(self, data, **kwargs):
+class JWTSchema(Schema):
+    def get_user(self):
         identity = get_jwt_identity()
         if identity:
             try:
-                data['user'] = UserService(id=identity['id'])
-                return data
+                return UserService(id=identity['id'])
             except ValueError:
                 raise ValidationError('User Not Found')
-        data['user'] = None
-        return data
+        return None

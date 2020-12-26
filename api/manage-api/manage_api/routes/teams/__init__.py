@@ -1,8 +1,10 @@
+from flask import request
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
+from manage_api.db.services.team import TeamService
 
 api = Namespace('teams', 'Team related routes')
 
@@ -10,9 +12,12 @@ api = Namespace('teams', 'Team related routes')
 @api.route('/')
 class Teams(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TeamsGetSchema, api=api)
     @responds(schema=response_schemas.Team(many=True), api=api, status_code=200)
     def get(self, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        result = TeamService.dump_all(filters=params['filters'])
+        return result
 
     @jwt_required
     @accepts(schema=request_schemas.TeamsPostSchema, api=api)
