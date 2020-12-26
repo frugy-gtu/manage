@@ -6,15 +6,9 @@ import 'package:provider/provider.dart';
 import 'settings.dart';
 import 'theme.dart';
 
-class App extends StatefulWidget {
-  // This widget is the root of your application.
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  ManageRouterDelegate _manageRouterDelegate = ManageRouterDelegate();
-  ManageRouteInformationParser _manageRouteInformationParser =
+class App extends StatelessWidget {
+  final ManageRouterDelegate _manageRouterDelegate = ManageRouterDelegate();
+  final ManageRouteInformationParser _manageRouteInformationParser =
       ManageRouteInformationParser();
 
   @override
