@@ -25,6 +25,10 @@ def create_app(config_name=None, register_routes=True, register_cli=True):
     app.config.from_object(
         config_confidential
     )  # override confidential configuration values
+    if config_name == 'testing':
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config[
+            'SQLALCHEMY_TESTING_DATABASE_URI'
+        ]
 
     # Response
     class AppResponse(Response):
