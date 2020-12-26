@@ -5,6 +5,7 @@ from flask import Flask, Response, jsonify, request
 from flask import json
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 from manage_api.config import config
 from manage_api import config_confidential
@@ -37,6 +38,9 @@ def create_app(config_name=None, register_routes=True, register_cli=True):
     # Initialize database
     db.init_app(app)
     Migrate(app, db, compare_type=True)
+
+    # jwt
+    JWTManager(app)
 
     # Register routes
     if register_routes:
