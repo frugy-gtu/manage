@@ -47,7 +47,16 @@ class Team(Resource):
     @accepts(schema=request_schemas.TeamPutSchema, api=api)
     @responds(schema=response_schemas.Team, api=api, status_code=200)
     def put(self, team_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        try:
+            team = TeamService(id=team_id)
+            if team['user_id'] == data['user']['id']:
+                del data['user']
+                team.update(data)
+                return team.dump()
+            abort(401, 'You are not the manager of this team')
+        except ValueError as e:
+            abort(404, str(e))
 
     @jwt_required
     @responds(schema=response_schemas.Team, api=api, status_code=200)

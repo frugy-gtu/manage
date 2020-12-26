@@ -148,6 +148,14 @@ class TeamService(Paginable):
             raise RuntimeError('Database object is null')
         return self.obj.check_password(password)
 
+    def update(self, data: Dict[str, Any], commit=True):
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        for k, v in data.items():
+            if hasattr(self.obj, k):
+                setattr(self.obj, k, v)
+        update_db(commit)
+
     def delete(self, commit=True):
         if self.obj is None:
             raise RuntimeError('Database object is null')

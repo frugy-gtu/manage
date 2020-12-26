@@ -35,8 +35,7 @@ class TeamsPostSchema(JWTSchema):
 
     @post_load
     def post_load(self, data, **kwargs):
-        user = self.get_user()
-        data['user_id'] = user['id']
+        data['user_id'] = self.get_user_id()
         return data
 
 
@@ -51,6 +50,12 @@ class TeamGetSchema(JWTSchema):
 class TeamPutSchema(JWTSchema):
     name = fields.String(required=False, allow_none=True)
     abbreviation = fields.String(required=False, allow_none=True)
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        user = self.get_user()
+        data['user'] = user
+        return data
 
 
 class TeamTagsPostSchema(JWTSchema):
