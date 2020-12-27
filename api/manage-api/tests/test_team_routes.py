@@ -501,3 +501,81 @@ def test_team_projects_get_with_jwt_cuurent_teams_project(flask_test_client):
     assert project2['id'] == project_2['id']
     assert project2['name'] == project_2['name']
 
+
+def test_team_projects_post_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1'}
+    response: Response = flask_test_client.post(
+        f'/teams/{team_1["id"]}/projects', json=project_data_1
+    )
+    data = response.get_json()
+    assert response.status_code == 401
+
+
+def test_team_projects_post_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1'}
+    response: Response = flask_test_client.post(
+        f'/teams/{team_1["id"]}/projects', json=project_data_1, headers=headers
+    )
+    data = response.get_json()
+    print(data)
+    assert response.status_code == 201
+    assert db_models.Project.query.count() == 1
+    project = db_models.Project.query.get(data['id'])
+    assert project is not None
+    assert project.name == project_data_1['name']
+
+
+def test_team_projects_post_with_jwt_not_manager(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    user2_data = {
+        'username': 'test_user2',
+        'email': 'test2@user.com',
+        'password': '123123asd',
+    }
+    user2 = db_services.UserService.create(user2_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user2['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1'}
+    response: Response = flask_test_client.post(
+        f'/teams/{team_1["id"]}/projects', json=project_data_1, headers=headers
+    )
+    print(response.get_json())
+    assert response.status_code == 401
+    assert db_models.Project.query.count() == 0
