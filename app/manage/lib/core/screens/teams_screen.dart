@@ -75,7 +75,11 @@ class TeamsScreen extends StatelessWidget {
                             }),
                       ),
                     ),
-                    Center(child: Text(team.name)),
+                    Center(child:
+                      Text(team.name,
+                        textAlign: TextAlign.center,
+                      )
+                    ),
                     SizedBox(
                       height: 5,
                     ),
@@ -122,7 +126,7 @@ class TeamsScreen extends StatelessWidget {
   EdgeInsetsGeometry _teamGridTilePadding(double maxWidth, double maxHeight) {
     if (teams.length == 1) {
       return EdgeInsets.symmetric(
-          horizontal: (maxWidth - (maxHeight / 2)) / 1.6);
+          horizontal: (maxWidth - (maxHeight / 2)) / 1.5);
     } else {
       return EdgeInsets.all(25);
     }
