@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:manage/core/model/manage_model.dart';
 
 part 'team.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class Team {
+class Team extends ManageModel {
   final String name;
   final String abbrv;
   final String id;
