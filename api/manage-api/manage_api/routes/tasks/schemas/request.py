@@ -1,8 +1,11 @@
 from flask import abort
+from flask.globals import request
 from marshmallow import fields, Schema, post_load, validates_schema
 from marshmallow.exceptions import ValidationError
 from manage_api.db.services import ProjectService
+from manage_api.db.services import TaskService
 from manage_api.db.services import TaskGroupService
+from manage_api.db.services import TeamService
 from manage_api.routes.common_schemas import JWTSchema
 
 
@@ -71,25 +74,65 @@ class TasksPostSchema(JWTSchema):
         return data
 
 
-class TaskPutSchema(Schema):
+class TaskGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task = TaskService(id=request.view_args['task_id'])
+            team = TeamService(id=task['team_id'])
+            if not team.is_user_associated(self.get_user_id()):
+                abort(401, 'You don\'t have access to this task')
+            data['task'] = task
+            return data
+        except ValueError as e:
+            abort(404, str(e))
+
+
+class TaskPutSchema(JWTSchema):
     name = fields.String(required=False, allow_none=True)
     deadline = fields.DateTime(required=False, allow_none=True)
     task_group_id = fields.UUID(required=False, allow_none=True)
     details = fields.String(required=False, allow_none=True)
     schedule = fields.DateTime(required=False, allow_none=True)
 
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task = TaskService(id=request.view_args['task_id'])
+            team = TeamService(id=task['team_id'])
+            if not team.is_user_associated(self.get_user_id()):
+                abort(401, 'You don\'t have access to this task')
+            data['task'] = task
+            return data
+        except ValueError as e:
+            abort(404, str(e))
 
-class TaskStatePutSchema(Schema):
+
+class TaskDeleteSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task = TaskService(id=request.view_args['task_id'])
+            team = TeamService(id=task['team_id'])
+            if not team.is_user_associated(self.get_user_id()):
+                abort(401, 'You don\'t have access to this task')
+            data['task'] = task
+            return data
+        except ValueError as e:
+            abort(404, str(e))
+
+
+class TaskStatePutSchema(JWTSchema):
     state_id = fields.UUID(required=True, allow_none=False)
 
 
-class TaskTagPutSchema(Schema):
+class TaskTagPutSchema(JWTSchema):
     tag_id = fields.UUID(required=True, allow_none=False)
 
 
-class TimeLogsPostSchema(Schema):
+class TimeLogsPostSchema(JWTSchema):
     logged_time = fields.Integer(required=True, allow_none=False)
 
 
-class TimeLogPutSchema(Schema):
+class TimeLogPutSchema(JWTSchema):
     logged_time = fields.Integer(required=True, allow_none=False)

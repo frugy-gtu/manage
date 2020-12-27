@@ -31,20 +31,32 @@ class Tasks(Resource):
 @api.route('/<uuid:task_id>')
 class Task(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TaskGetSchema, api=api)
     @responds(schema=response_schemas.Task, api=api, status_code=200)
     def get(self, task_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        task = params['task']
+        return task.dump()
 
     @jwt_required
     @accepts(schema=request_schemas.TaskPutSchema, api=api)
     @responds(schema=response_schemas.Task, api=api, status_code=200)
     def put(self, task_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        task = data['task']
+        del data['task']
+        task.update(data)
+        return task.dump()
 
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TaskDeleteSchema, api=api)
     @responds(schema=response_schemas.Task, api=api, status_code=200)
     def delete(self, task_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        task = params['task']
+        task_data = task.dump()
+        task.delete()
+        return task_data
 
 
 @api.route('/<uuid:task_id>/state')
