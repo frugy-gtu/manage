@@ -4,7 +4,7 @@ from manage_api.db import models as db_models
 from manage_api.db import services as db_services
 
 
-def test_projects_put(flask_test_client):
+def test_project_put(flask_test_client):
     response: Response = flask_test_client.put('/projects/')
     assert response.status_code == 405
 
@@ -207,7 +207,7 @@ def test_projects_get_with_jwt_not_associated_user(flask_test_client):
     assert response.status_code == 401
 
 
-def test_projects_put_without_jwt(flask_test_client):
+def test_project_put_without_jwt(flask_test_client):
     user_data = {
         'username': 'test_user',
         'email': 'test@user.com',
@@ -232,7 +232,7 @@ def test_projects_put_without_jwt(flask_test_client):
     assert response.status_code == 401
 
 
-def test_projects_put_with_jwt(flask_test_client):
+def test_project_put_with_jwt(flask_test_client):
     user_data = {
         'username': 'test_user',
         'email': 'test@user.com',
@@ -264,7 +264,7 @@ def test_projects_put_with_jwt(flask_test_client):
     assert project.name == project_update_data['name']
 
 
-def test_projects_put_with_jwt_not_manager(flask_test_client):
+def test_project_put_with_jwt_not_manager(flask_test_client):
     user_data = {
         'username': 'test_user',
         'email': 'test@user.com',
