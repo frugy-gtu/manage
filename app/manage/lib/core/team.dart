@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
+
 class Team {
   final String name;
+  final String abbrv;
 
-  const Team(this.name);
+  const Team({@required this.name, @required this.abbrv});
 
   factory Team.fromId(String id) {
-    return Team('User Team');
+    return Team(name: 'User Team', abbrv: 'UT');
   }
 }
