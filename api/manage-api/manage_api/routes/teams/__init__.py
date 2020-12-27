@@ -1,10 +1,10 @@
-from manage_api.db.services.project import ProjectService
 from flask import request, abort
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
+from manage_api.db.services.project import ProjectService
 from manage_api.db.services.team import TeamService
 from manage_api.db.services.user import UserService
 
