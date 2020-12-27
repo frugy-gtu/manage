@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/cache/auth.dart';
+import 'package:manage/core/model/user.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:provider/provider.dart';
+import 'package:manage/core/service/user_service.dart' as service;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,9 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void login(String mail, String password) async {
-      _userExist = true;
-      Auth.status = AuthStatus.logged_in;
+  Future<void> login(String mail, String password) async {
+    _userExist = await service.login(User(email: mail, password: password));
   }
 
   @override
@@ -98,7 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                         if (_validMail == true && _validPass == true) {
                           login(_mailCont.text, _passCont.text);
-                          print('aasdasd');
                           if (_userExist) {
                             context
                                 .read<ManageRouteState>()
