@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:sw_project/temps/userProfile.dart';
-import 'temps/team.dart';
-import 'temps/project.dart';
 
 class UserPage extends StatelessWidget {
   
