@@ -122,3 +122,12 @@ class TeamProjectsGetSchema(JWTSchema):
 
 class TeamProjectsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
+
+    @validates_schema
+    def validate(self, data, **kwargs):
+        _validate_user_is_manager(user_id=self.get_user_id())
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        data['team_id'] = request.view_args['team_id']
+        return data

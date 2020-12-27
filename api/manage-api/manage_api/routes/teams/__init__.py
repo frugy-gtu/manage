@@ -182,4 +182,6 @@ class TeamProjects(Resource):
     @accepts(schema=request_schemas.TeamProjectsPostSchema, api=api)
     @responds(schema=response_schemas.TeamProject, api=api, status_code=201)
     def post(self, team_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        projects = ProjectService.create(data)
+        return projects
