@@ -122,15 +122,24 @@ class ProjectTaskGroups(Resource):
         return task_group.dump()
 
 
-@api.route('/<uuid:project_id>/task_groups/<uuid:task_group_id>')
+@api.route('/<uuid:project_id>/task-groups/<uuid:task_group_id>')
 class ProjectTaskGroup(Resource):
     @jwt_required
     @accepts(schema=request_schemas.ProjectTaskGroupPutSchema, api=api)
     @responds(schema=response_schemas.TaskGroup, api=api, status_code=200)
     def put(self, project_id, task_group_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        task_group = data['task_group']
+        del data['task_group']
+        task_group.update(data)
+        return task_group.dump()
 
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectTaskGroupDeleteSchema, api=api)
     @responds(schema=response_schemas.TaskGroup, api=api, status_code=200)
     def delete(self, project_id, task_group_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        task_group = params['task_group']
+        task_group_data = task_group.dump()
+        task_group.delete()
+        return task_group_data

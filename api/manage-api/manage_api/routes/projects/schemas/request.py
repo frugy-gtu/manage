@@ -2,6 +2,7 @@ from flask import request, abort
 from marshmallow import fields, post_load, validates_schema, Schema
 from marshmallow.exceptions import ValidationError
 from manage_api.db.services import ProjectService
+from manage_api.db.services import TaskService
 from manage_api.db.services import TaskGroupService
 from manage_api.db.services import TeamService
 from manage_api.routes.common_schemas import JWTSchema
@@ -131,6 +132,34 @@ class ProjectTaskGroupsPostSchema(JWTSchema):
 class ProjectTaskGroupPutSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
+    @validates_schema
+    def validate(self, data, **kwargs):
+        _validate_user_is_manager(self.get_user_id())
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task_group = TaskGroupService(id=request.view_args['task_group_id'])
+            if task_group['project_id'] != request.view_args['project_id']:
+                abort(404, 'Task group not found in project')
+            data['task_group'] = task_group
+            return data
+        except ValueError as e:
+            raise ValidationError(str(e))
+
 
 class ProjectTaskGroupDeleteSchema(JWTSchema):
-    ...
+    @validates_schema
+    def validate(self, data, **kwargs):
+        _validate_user_is_manager(self.get_user_id())
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task_group = TaskGroupService(id=request.view_args['task_group_id'])
+            if task_group['project_id'] != request.view_args['project_id']:
+                abort(404, 'Task group not found in project')
+            data['task_group'] = task_group
+            return data
+        except ValueError as e:
+            raise ValidationError(str(e))
