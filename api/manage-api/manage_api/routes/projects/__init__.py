@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
 from manage_api.db.services.project import ProjectService
+from manage_api.db.services.task_group import TaskGroupService
 
 
 api = Namespace('projects', 'Project related routes')
@@ -102,12 +103,15 @@ class ProjectStates(Resource):
         raise NotImplementedError()
 
 
-@api.route('/<uuid:project_id>/task_groups')
+@api.route('/<uuid:project_id>/task-groups')
 class ProjectTaskGroups(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectTaskGroupsGetSchema, api=api)
     @responds(schema=response_schemas.TaskGroup(many=True), api=api, status_code=200)
     def get(self, project_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        task_groups = TaskGroupService.dump_all(filters=params['filters'])
+        return task_groups
 
     @jwt_required
     @accepts(schema=request_schemas.ProjectTaskGroupsPostSchema, api=api)

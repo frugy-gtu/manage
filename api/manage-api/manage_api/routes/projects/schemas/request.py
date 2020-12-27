@@ -102,6 +102,19 @@ class ProjectStatesPutSchema(JWTSchema):
     )
 
 
+class ProjectTaskGroupsGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        user_id = self.get_user_id()
+        project = _validate_user_associated(user_id=user_id)
+        data['filters'] = {
+            '==': {
+                'project_id': project['id'],
+            },
+        }
+        return data
+
+
 class ProjectTaskGroupsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
