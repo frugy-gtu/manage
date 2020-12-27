@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sw_project/temps/database.dart';
-import 'package:sw_project/temps/user.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,40 +6,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   TextEditingController _mailCont;
   TextEditingController _passCont;
   bool _validMail = true;
   bool _validPass = true;
   bool _userExist = true;
 
-  void initState(){
+  void initState() {
     super.initState();
     _mailCont = TextEditingController();
     _passCont = TextEditingController();
   }
 
-  void dispose(){
+  void dispose() {
     _mailCont.dispose();
     _passCont.dispose();
     super.dispose();
   }
 
-  Future<void> login(String mail, String password) async{
-    if(await DBProvider.db.login(mail, password)){
-      setState(() {
-        _userExist = true;
-        Navigator.pushReplacementNamed(context, '/userPage');
-      });
-    }else{
-      setState(() {
-        _userExist = false;
-      });
-    }
-  }
-
-  Future<User> getUser(String mail, String password) async{
-    return await DBProvider.db.getUser(mail, password);
+  Future<void> login(String mail, String password) async {
+    setState(() {
+      _userExist = false;
+    });
   }
 
   @override
@@ -58,7 +44,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 40.0,),
+              SizedBox(
+                height: 40.0,
+              ),
               TextField(
                 controller: _mailCont,
                 decoration: InputDecoration(
@@ -67,7 +55,9 @@ class _LoginPageState extends State<LoginPage> {
                   errorText: _validMail ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               TextField(
                 obscureText: true,
                 controller: _passCont,
@@ -77,40 +67,49 @@ class _LoginPageState extends State<LoginPage> {
                   errorText: _validPass ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 5.0,),
+              SizedBox(
+                height: 5.0,
+              ),
               Center(
                 child: Text(
                   _userExist ? '' : 'Wrong information',
                   style: TextStyle(color: Colors.red),
                 ),
               ),
-              SizedBox(height: 5.0,),
+              SizedBox(
+                height: 5.0,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   RaisedButton(
-                    child: Text('Login'),
-                    onPressed: (){
-                      setState(() {
-                        _mailCont.text.isEmpty ? _validMail = false : _validMail = true;
-                        _passCont.text.isEmpty ? _validPass = false : _validPass = true;
-                      });
-                      if(_validMail==true && _validPass==true){
-                        login(_mailCont.text, _passCont.text);
-                      }
-                    }      
+                      child: Text('Login'),
+                      onPressed: () {
+                        setState(() {
+                          _mailCont.text.isEmpty
+                              ? _validMail = false
+                              : _validMail = true;
+                          _passCont.text.isEmpty
+                              ? _validPass = false
+                              : _validPass = true;
+                        });
+                        if (_validMail == true && _validPass == true) {
+                          login(_mailCont.text, _passCont.text);
+                        }
+                      }),
+                  SizedBox(
+                    width: 5.0,
                   ),
-                  SizedBox(width: 5.0,),
                   RaisedButton(
                     child: Text('Sign up'),
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
                         _mailCont.clear();
                         _passCont.clear();
                       });
                       Navigator.pushNamed(context, '/registerPage');
                     },
-                  )  
+                  )
                 ],
               )
             ],

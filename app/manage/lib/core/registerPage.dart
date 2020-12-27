@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sw_project/temps/database.dart';
-import 'temps/user.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -8,7 +6,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   TextEditingController _fNameCont;
   TextEditingController _lNameCont;
   TextEditingController _mailCont;
@@ -19,7 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _validPass = true;
   bool _registered = true;
 
-  void initState(){
+  void initState() {
     super.initState();
     _fNameCont = TextEditingController();
     _lNameCont = TextEditingController();
@@ -27,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _passCont = TextEditingController();
   }
 
-  void dispose(){
+  void dispose() {
     _fNameCont.dispose();
     _lNameCont.dispose();
     _mailCont.dispose();
@@ -35,25 +32,19 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  Future<void> register(String mail, String password) async{
-    if(await DBProvider.db.userExist(mail)){
-      setState(() {
-        _registered = false;
-      });
-    }else{
-      setState(() {
-        _registered = true;
-      });
-      DBProvider.db.insertUser(User(fName: _fNameCont.text, lName: _lNameCont.text, mail: _mailCont.text, password: _passCont.text));
-      Navigator.pop(context);
-    }
+  Future<void> register(String mail, String password) async {
+    setState(() {
+      _registered = true;
+    });
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('Sign up'),),
+      appBar: AppBar(
+        title: Text('Sign up'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -61,7 +52,9 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 40.0,),
+              SizedBox(
+                height: 40.0,
+              ),
               TextField(
                 controller: _fNameCont,
                 decoration: InputDecoration(
@@ -70,7 +63,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   errorText: _validFName ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               TextField(
                 controller: _lNameCont,
                 decoration: InputDecoration(
@@ -79,7 +74,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   errorText: _validLName ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               TextField(
                 controller: _mailCont,
                 decoration: InputDecoration(
@@ -88,7 +85,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   errorText: _validMail ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               TextField(
                 controller: _passCont,
                 obscureText: true,
@@ -98,7 +97,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   errorText: _validPass ? null : 'You must fill here',
                 ),
               ),
-              SizedBox(height: 10.0,),
+              SizedBox(
+                height: 10.0,
+              ),
               Center(
                 child: Text(
                   _registered ? '' : 'Mail address is already used',
@@ -107,17 +108,28 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               RaisedButton(
                 child: Text('Sign up'),
-                onPressed: (){
+                onPressed: () {
                   setState(() {
-                    _fNameCont.text.isEmpty ? _validFName = false : _validFName = true;
-                    _lNameCont.text.isEmpty ? _validLName = false : _validLName = true;
-                    _mailCont.text.isEmpty ? _validMail = false : _validMail = true;
-                    _passCont.text.isEmpty ? _validPass = false : _validPass = true;
+                    _fNameCont.text.isEmpty
+                        ? _validFName = false
+                        : _validFName = true;
+                    _lNameCont.text.isEmpty
+                        ? _validLName = false
+                        : _validLName = true;
+                    _mailCont.text.isEmpty
+                        ? _validMail = false
+                        : _validMail = true;
+                    _passCont.text.isEmpty
+                        ? _validPass = false
+                        : _validPass = true;
                   });
-                  if(_validFName==true && _validLName==true && _validMail==true && _validPass==true){
+                  if (_validFName == true &&
+                      _validLName == true &&
+                      _validMail == true &&
+                      _validPass == true) {
                     register(_mailCont.text, _passCont.text);
                   }
-                }, 
+                },
               ),
             ],
           ),
