@@ -629,3 +629,284 @@ def test_project_task_groups_post_with_jwt_not_manager(flask_test_client):
     )
     assert response.status_code == 401
     assert db_models.TaskGroup.query.count() == 0
+
+
+def test_project_task_group_get(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_group_update_data = {
+        'name': 'test_task_group_new_name',
+    }
+    response: Response = flask_test_client.get(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}'
+    )
+    assert response.status_code == 405
+
+
+def test_project_task_group_post(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    response: Response = flask_test_client.post(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}'
+    )
+    assert response.status_code == 405
+
+
+def test_project_task_group_put_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_group_update_data = {
+        'name': 'test_task_group_new_name',
+    }
+    response: Response = flask_test_client.put(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}',
+        json=task_group_update_data,
+    )
+    assert response.status_code == 401
+
+
+def test_project_task_group_put_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_group_update_data = {
+        'name': 'test_task_group_new_name',
+    }
+    response: Response = flask_test_client.put(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}',
+        json=task_group_update_data,
+        headers=headers,
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['id'] == str(task_group_1['id'])
+    assert data['name'] == task_group_update_data['name']
+    task_group = db_models.TaskGroup.query.get(data['id'])
+    assert task_group is not None
+    assert task_group.name == task_group_update_data['name']
+
+
+def test_project_task_group_put_with_jwt_not_manager(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    user_data_2 = {
+        'username': 'test_user2',
+        'email': 'test2@user.com',
+        'password': '123123asd',
+    }
+    user2 = db_services.UserService.create(user_data_2)
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user2['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_group_update_data = {
+        'name': 'test_task_group_new_name',
+    }
+    response: Response = flask_test_client.put(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}',
+        json=task_group_update_data,
+        headers=headers,
+    )
+    _ = response.get_json()
+    assert response.status_code == 401
+    task_group = db_models.TaskGroup.query.get(task_group_1['id'])
+    assert task_group is not None
+    assert task_group.name != task_group_update_data['name']
+    assert task_group.name == task_group_data_1['name']
+
+
+def test_project_task_group_delete_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}',
+    )
+    assert response.status_code == 401
+
+
+def test_project_task_group_delete_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1).dump()
+    url = f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}'
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['id'] == task_group_1['id']
+    assert data['name'] == task_group_1['name']
+    assert db_models.TaskGroup.query.count() == 0
+    task_group = db_models.TaskGroup.query.get(task_group_1['id'])
+    assert task_group is None
+
+
+def test_project_task_group_delete_with_jwt_contains_task(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1).dump()
+    task_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+        'user_id': user['id'],
+    }
+    _ = db_services.TaskService.create(task_data).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['id'] == task_group_1['id']
+    assert data['name'] == task_group_1['name']
+    assert db_models.TaskGroup.query.count() == 0
+    assert db_models.Task.query.count() == 0
+    task_group = db_models.TaskGroup.query.get(task_group_1['id'])
+    assert task_group is None
+
+
+def test_project_task_group_delete_with_jwt_not_manager(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    user_data_2 = {
+        'username': 'test_user2',
+        'email': 'test2@user.com',
+        'password': '123123asd',
+    }
+    user2 = db_services.UserService.create(user_data_2)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user2['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}/task-groups/{task_group_1["id"]}', headers=headers
+    )
+    assert response.status_code == 401
+    assert db_models.TaskGroup.query.count() == 1
+    task_group = db_models.TaskGroup.query.get(task_group_1['id'])
+    assert task_group is not None
