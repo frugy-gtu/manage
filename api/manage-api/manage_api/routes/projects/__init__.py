@@ -1,8 +1,10 @@
+from flask import request, abort
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
+from manage_api.db.services.project import ProjectService
 
 
 api = Namespace('projects', 'Project related routes')
@@ -11,9 +13,12 @@ api = Namespace('projects', 'Project related routes')
 @api.route('/')
 class Projects(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectsGetSchema, api=api)
     @responds(schema=response_schemas.Project(many=True), api=api, status_code=200)
     def get(self, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        result = ProjectService.dump_all(filters=params['filters'])
+        return result
 
 
 @api.route('/<uuid:project_id>')
