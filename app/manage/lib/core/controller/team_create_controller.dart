@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:manage/core/router/manage_route.dart';
+import 'package:manage/core/router/manage_route_state.dart';
+import 'package:provider/provider.dart';
 
 class TeamCreateController extends ChangeNotifier {
   final TextEditingController _name;
@@ -18,6 +21,23 @@ class TeamCreateController extends ChangeNotifier {
   String get nameError => _nameError;
 
   TextEditingController get abbrv => _abbrv;
+
+  bool _checkStatus() {
+    if (_name.text != null &&
+        _abbrv.text != null &&
+        _name.text.length > 2 &&
+        _abbrv.text.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
+  void onCreate(BuildContext context) {
+    if (_checkStatus()) {
+      context.read<ManageRouteState>().update(ManageRoute.teams);
+    }
+  }
 
   void _nameCallback() {
     if (_name.text.isNotEmpty && _name.text.length < 3) {

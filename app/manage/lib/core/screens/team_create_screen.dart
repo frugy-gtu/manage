@@ -17,7 +17,9 @@ class TeamCreateScreen extends StatelessWidget {
               horizontal: constraints.maxWidth / 9,
             ),
             child: ChangeNotifierProvider(
-                create: (_) => TeamCreateController(), child: TeamForm()),
+              create: (_) => TeamCreateController(),
+              child: TeamForm(),
+            ),
           ),
         ),
       ),
@@ -40,22 +42,25 @@ class TeamForm extends StatelessWidget {
           autofocus: true,
         ),
         TextField(
-            decoration: InputDecoration(
-              hintText: 'abbreviation',
-              labelText: 'abbreviation',
-            ),
-            controller: controller.abbrv,
-            onTap: () { controller.isAbbrvEdited = true; },
-            maxLength: 3,
-            inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
-            textCapitalization: TextCapitalization.characters,
+          decoration: InputDecoration(
+            hintText: 'abbreviation',
+            labelText: 'abbreviation',
           ),
-        child
+          controller: controller.abbrv,
+          onTap: () {
+            controller.isAbbrvEdited = true;
+          },
+          maxLength: 3,
+          inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
+          textCapitalization: TextCapitalization.characters,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            controller.onCreate(context);
+          },
+          child: Text('Create'),
+        ),
       ]),
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text('Create'),
-      ),
     );
   }
 }
