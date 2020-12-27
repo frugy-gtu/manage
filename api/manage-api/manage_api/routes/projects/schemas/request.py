@@ -118,6 +118,15 @@ class ProjectTaskGroupsGetSchema(JWTSchema):
 class ProjectTaskGroupsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
+    @validates_schema
+    def validate(self, data, **kwargs):
+        _validate_user_is_manager(self.get_user_id())
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        data['project_id'] = request.view_args['project_id']
+        return data
+
 
 class ProjectTaskGroupPutSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)

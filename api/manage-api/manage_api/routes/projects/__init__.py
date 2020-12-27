@@ -117,7 +117,9 @@ class ProjectTaskGroups(Resource):
     @accepts(schema=request_schemas.ProjectTaskGroupsPostSchema, api=api)
     @responds(schema=response_schemas.TaskGroup, api=api, status_code=201)
     def post(self, project_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        task_group = TaskGroupService.create(data)
+        return task_group.dump()
 
 
 @api.route('/<uuid:project_id>/task_groups/<uuid:task_group_id>')
