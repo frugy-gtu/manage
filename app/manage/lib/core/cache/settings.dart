@@ -3,14 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-part '.g/settings.g.dart';
-
-@HiveType(typeId: 0)
-class _SettingsData {
-  @HiveField(0)
-  int themeMode;
-}
-
 //TODO: Change caching only on the start
 //and end of the app. This can be done by:
 //1- Holding settings internally
@@ -26,7 +18,6 @@ class Settings {
   static Box _box;
 
   static Future<void> init() async {
-    Hive.registerAdapter(SettingsDataAdapter());
     _box = await Hive.openBox('settings');
   }
 
