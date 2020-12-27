@@ -385,6 +385,31 @@ def test_team_delete_with_jwt(flask_test_client):
     assert team is None
 
 
+def test_team_delete_with_jwt_contains_project(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    _ = db_services.ProjectService.create(project_data_1)
+    response: Response = flask_test_client.delete(
+        f'/teams/{team_1["id"]}', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 412
+    assert db_models.Team.query.count() == 1
+
+
 def test_team_delete_with_jwt_not_manager(flask_test_client):
     user_data = {
         'username': 'test_user',
