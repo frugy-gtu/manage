@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/settings.dart';
+import 'package:manage/core/cache/settings.dart';
 
 class Theme {
   //TODO: Select a font familty.

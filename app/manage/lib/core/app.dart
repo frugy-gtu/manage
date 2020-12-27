@@ -3,7 +3,7 @@ import 'package:manage/core/router/manage_route_information_parser.dart';
 import 'package:manage/core/router/manage_router_delegate.dart';
 import 'package:provider/provider.dart';
 
-import 'settings.dart';
+import 'cache/settings.dart';
 import 'theme.dart';
 
 class App extends StatelessWidget {
