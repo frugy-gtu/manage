@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _fNameCont;
   TextEditingController _lNameCont;
   TextEditingController _mailCont;
