@@ -409,6 +409,48 @@ def test_project_delete_with_jwt_not_manager(flask_test_client):
     assert team is not None
 
 
+def test_project_task_groups_put(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data).dump()
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1)
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    response: Response = flask_test_client.put(
+        f'/projects/{project_1["id"]}/task-groups'
+    )
+    assert response.status_code == 405
+
+
+def test_project_task_groups_delete(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data).dump()
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1)
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}/task-groups'
+    )
+    assert response.status_code == 405
+
+
 def test_project_task_groups_get_without_jwt(flask_test_client):
     user_data = {
         'username': 'test_user',
