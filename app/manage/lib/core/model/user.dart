@@ -9,10 +9,10 @@ part 'user.g.dart';
 class User extends ManageModel {
   final String username;
   final String password;
-  final String email;
+  final String mail;
 
   const User(
-    {@required this.username, @required this.password, @required this.email});
+    {@required this.mail, @required this.password, this.username});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
