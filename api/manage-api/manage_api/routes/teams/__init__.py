@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
 from manage_api.db.services.team import TeamService
+from manage_api.db.services.user import UserService
 
 api = Namespace('teams', 'Team related routes')
 
@@ -73,9 +74,12 @@ class Team(Resource):
 @api.route('/<uuid:team_id>/users')
 class TeamUsers(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TeamUsersGetSchema, api=api)
     @responds(schema=response_schemas.TeamUser(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        users = UserService.dump_all(filters=params['filters'])
+        return users
 
 
 @api.route('/<uuid:team_id>/join')

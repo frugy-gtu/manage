@@ -110,6 +110,21 @@ class TeamDeleteSchema(JWTSchema):
         return data
 
 
+class TeamUsersGetSchema(JWTSchema):
+    @validates_schema
+    def validate(self, data, **kwargs):
+        _validate_user_associated(user_id=self.get_user_id())
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        data['filters'] = {
+            'special': {
+                'team': request.view_args['team_id'],
+            }
+        }
+        return data
+
+
 class TeamTagsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
