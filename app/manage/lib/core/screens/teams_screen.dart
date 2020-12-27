@@ -54,11 +54,11 @@ class TeamsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => InkedContainer(
-                            child: Padding(
+                      child: InkedContainer(
+                          child: LayoutBuilder(
+                            builder: (context, constraints) => Padding(
                               padding: EdgeInsets.symmetric(
-                                vertical: constraints.maxHeight / 4,
+                                vertical: constraints.maxHeight / 3.6,
                               ),
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
@@ -68,18 +68,18 @@ class TeamsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onTap: () {
-                              context
-                                  .read<ManageRouteState>()
-                                  .update(ManageRoute.team, team: team);
-                            }),
-                      ),
+                          ),
+                          onTap: () {
+                            context
+                                .read<ManageRouteState>()
+                                .update(ManageRoute.team, team: team);
+                          }),
                     ),
-                    Center(child:
-                      Text(team.name,
-                        textAlign: TextAlign.center,
-                      )
-                    ),
+                    Center(
+                        child: Text(
+                      team.name,
+                      textAlign: TextAlign.center,
+                    )),
                     SizedBox(
                       height: 5,
                     ),
@@ -94,17 +94,17 @@ class TeamsScreen extends StatelessWidget {
                             .read<ManageRouteState>()
                             .update(ManageRoute.team_create);
                       },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: constraints.maxWidth /
-                                4.5 /
-                                _teamAxisCount(teams.length)),
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Icon(
-                            Icons.add_circle,
-                            color: Theme.of(context).textTheme.button.color,
-                            size: 28,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) => Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: constraints.maxWidth / 3.6),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Icon(
+                              Icons.add_circle,
+                              color: Theme.of(context).textTheme.button.color,
+                              size: 28,
+                            ),
                           ),
                         ),
                       ),
