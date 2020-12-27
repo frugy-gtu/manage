@@ -129,6 +129,11 @@ class TeamService(Paginable):
             return TeamSchema(*args, partial=fields_, **kwargs)
         return TeamSchema(*args, partial=True, **kwargs)
 
+    def add_user(self, user_id: Union[str, UUID], commit=True) -> bool:
+        user_team = UserTeams(user_id=user_id, team_id=self.obj.id)
+        db.session.add(user_team)
+        update_db(commit)
+
     def is_user_associated(self, user_id: Union[str, UUID]) -> bool:
         if self.obj is None:
             raise RuntimeError('Database object is null')
