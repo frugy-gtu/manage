@@ -39,6 +39,7 @@ class TeamForm extends StatelessWidget {
           ),
           controller: controller.name,
           inputFormatters: [LengthLimitingTextFieldFormatterFixed(32)],
+          cursorColor: Theme.of(context).colorScheme.secondaryVariant,
           autofocus: true,
         ),
         TextField(
@@ -53,6 +54,7 @@ class TeamForm extends StatelessWidget {
           maxLength: 3,
           inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
           textCapitalization: TextCapitalization.characters,
+          cursorColor: Theme.of(context).colorScheme.secondaryVariant,
         ),
         ElevatedButton(
           onPressed: () {
