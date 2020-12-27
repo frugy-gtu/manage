@@ -3,39 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:sw_project/temps/userProfile.dart';
 import 'temps/team.dart';
 import 'temps/project.dart';
-import 'package:provider/provider.dart';
 
-class UserPage extends StatefulWidget {
-  @override
-  _UserPageState createState() => _UserPageState();
-}
-
-class _UserPageState extends State<UserPage> {
+class UserPage extends StatelessWidget {
   
-  List<Team> teams = [
-    Team(name: 'Frugy', icon: Icon(Icons.account_box, size: 50.0)),
-    Team(name: 'Ale', icon: Icon(Icons.ac_unit, size: 50.0)),
-    ];
-  List<Project> projects = [
-    Project(name: 'Manage', icon: Icon(Icons.accessible, size: 50.0)),
-    Project(name: 'Rat', icon: Icon(Icons.pages, size: 50.0)),
-    Project(name: 'Phone', icon: Icon(Icons.phone, size: 50.0)),
-    Project(name: 'XD', icon: Icon(Icons.save, size: 50.0)),
-    Project(name: 'Text', icon: Icon(Icons.text_fields, size: 50.0)),
-    Project(name: 'SAD', icon: Icon(Icons.aspect_ratio, size: 50.0)),
-    Project(name: 'DASD', icon: Icon(Icons.dashboard, size: 50.0))
-  ];
+  final UserProfile user;
 
-  UserProfile user;
-
-  void initState(){
-    super.initState();
-    user = UserProfile(name:'Ali', lName: 'Asa', photo: Icon(Icons.account_circle, size: 100.0), teams: teams, projects: projects);
-  }
-
-  void dispose(){
-    super.dispose();
-  }
+  UserPage({@required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -48,30 +21,17 @@ class _UserPageState extends State<UserPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: ChangeNotifierProvider(
-            create: (context) => UserProfile.cp(user),
-            child: Consumer<UserProfile>(
-              builder: (context, user, child) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ProfileInfos(user: user),
-                    SizedBox(height: 20.0),
-                    Text('Projects:'),
-                    ProjectsList(user: user),
-                    Text('Teams:'),
-                    TeamsList(user: user),
-                    RaisedButton(
-                      onPressed: (){
-                        Team tm = new Team(icon: Icon(Icons.backspace), name: "new team");
-                        user.addTeam(tm);
-                      }
-                    ),
-                  ],
-                );
-              },  
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ProfileInfos(user: user),
+              SizedBox(height: 20.0),
+              Text('Projects:'),
+              ProjectsList(user: user),
+              Text('Teams:'),
+              TeamsList(user: user),
+            ],
           ),
         ),
       ),
@@ -119,51 +79,28 @@ class ProfileInfos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          FutureBuilder<Icon>(
-            future: user.getPhoto(),
-            builder: (context, snapshot){
-              if(snapshot.hasData){
-                return snapshot.data;
-              }else{
-                return Center(
-                  child: Text('No Photo', style: TextStyle(fontSize: 30))
-                );
-              }
+      child: Center(
+        child: FutureBuilder(
+          future: Future.wait([user.getPhoto(), user.getName(), user.getLName()]),
+          builder: (context, user){
+            if(user.hasData){
+              Icon photo = Icon(user.data[0], size:100.0);
+              String name = user.data[1];
+              String lName = user.data[2];
+              return Column(
+                children: [
+                  photo,
+                  Center(child: Text(name, style: TextStyle(fontSize: 30.0))),
+                  Center(child: Text(lName, style: TextStyle(fontSize: 30.0))),
+                ],
+              );
+            }else{
+              return Center(
+                child: Text('Could not access user infos', style: TextStyle(fontSize: 30))
+              );
             }
-          ),
-          FutureBuilder<String>(
-            future: user.getName(),
-            builder: (context, snapshot) {
-              if(snapshot.hasData){
-                return Center(
-                  child: Text(snapshot.data, style: TextStyle(fontSize: 30))
-                );
-              }else{
-                return Center(
-                  child: Text('No First Name', style: TextStyle(fontSize: 30))
-                );
-              }
-            }
-          ),
-          FutureBuilder<String>(
-            future: user.getLName(),
-            builder: (context, snapshot) {
-              if(snapshot.hasData){
-                return Center(
-                  child: Text(snapshot.data, style: TextStyle(fontSize: 30))
-                );
-              }else{
-                return Center(
-                  child: Text('No Last Name', style: TextStyle(fontSize: 30))
-                );
-              }
-            }
-          )
-        ],
+          }
+        ),
       )
     );
   }
@@ -180,17 +117,17 @@ class TeamsList extends StatelessWidget {
       height: 100.0,
       child: FutureBuilder<List<Team>>(
         future: user.getTeams(),
-        builder: (context, snapshot){
-          if(snapshot.hasData){
+        builder: (context, teams){
+          if(teams.hasData){
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: snapshot.data.length,
+              itemCount: teams.data.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, int position){
-                final item = snapshot.data[position];
+                final currentTeam = teams.data[position];
                 return GestureDetector(
                   onTap: () {
-                        //go to team page
+                    //go to team page
                   },
                   child: Card(
                     margin: EdgeInsets.all(5),
@@ -198,8 +135,8 @@ class TeamsList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.getName()),
-                        item.getIcon(),
+                        Text(currentTeam.getName()),
+                        currentTeam.getIcon(),
                       ],
                     ),
                   ),
@@ -228,14 +165,14 @@ class ProjectsList extends StatelessWidget {
       height: 100.0,
       child: FutureBuilder<List<Project>>(
         future: user.getProjects(),
-        builder: (context, snapshot){
-          if(snapshot.hasData){
+        builder: (context, projects){
+          if(projects.hasData){
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: snapshot.data.length,
+              itemCount: projects.data.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, int position){
-                final item = snapshot.data[position];
+                final currentProject = projects.data[position];
                 return GestureDetector(
                   onTap: () {
                     //go to project page
@@ -246,8 +183,8 @@ class ProjectsList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.getName()),
-                        item.getIcon(),
+                        Text(currentProject.getName()),
+                        currentProject.getIcon(),
                       ],
                     ),
                   ),
