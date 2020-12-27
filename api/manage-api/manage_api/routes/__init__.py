@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask_restx import Api
+from . import projects, tasks, teams, users
 
 rest_api = Api(
     prefix='/',
@@ -10,3 +11,8 @@ rest_api = Api(
     security='jwt',
     validate=True,
 )
+
+rest_api.add_namespace(projects.api)
+rest_api.add_namespace(tasks.api)
+rest_api.add_namespace(teams.api)
+rest_api.add_namespace(users.api)
