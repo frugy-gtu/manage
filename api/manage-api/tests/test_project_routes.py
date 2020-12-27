@@ -299,3 +299,111 @@ def test_project_put_with_jwt_not_manager(flask_test_client):
     assert project is not None
     assert project.name != project_update_data['name']
     assert project.name == project_data_1['name']
+
+
+def test_project_delete_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}',
+    )
+    assert response.status_code == 401
+
+
+def test_project_delete_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['id'] == project_1['id']
+    assert data['name'] == project_1['name']
+    assert db_models.Project.query.count() == 0
+    project = db_models.Project.query.get(project_1['id'])
+    assert project is None
+
+
+def test_project_delete_with_jwt_contains_task_group(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1)
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project_1['id']}
+    _ = db_services.TaskGroupService.create(task_group_data_1)
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}', headers=headers
+    )
+    assert response.status_code == 412
+    assert db_models.Project.query.count() == 1
+
+
+def test_project_delete_with_jwt_not_manager(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    user_data_2 = {
+        'username': 'test_user2',
+        'email': 'test2@user.com',
+        'password': '123123asd',
+    }
+    user2 = db_services.UserService.create(user_data_2)
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user2['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1).dump()
+    project_data_1 = {'name': 'test_project_1', 'team_id': team_1['id']}
+    project_1 = db_services.ProjectService.create(project_data_1).dump()
+    response: Response = flask_test_client.delete(
+        f'/projects/{project_1["id"]}', headers=headers
+    )
+    assert response.status_code == 401
+    assert db_models.Project.query.count() == 1
+    team = db_models.Project.query.get(project_1['id'])
+    assert team is not None
