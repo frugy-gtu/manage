@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:manage/core/router/manage_route.dart';
+import 'package:manage/core/router/manage_route_state.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -128,6 +131,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       _validMail == true &&
                       _validPass == true) {
                     register(_mailCont.text, _passCont.text);
+                    if(_registered) {
+                      context.read<ManageRouteState>().update(ManageRoute.login);
+                    }
                   }
                 },
               ),

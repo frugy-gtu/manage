@@ -59,7 +59,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
   }
 
   List<Page<dynamic>> _buildPages() {
-    List<Page<dynamic>> pages;
+    List<Page<dynamic>> pages = [];
 
     if (!Auth.isLoggedIn()) {
       pages.add(MaterialPage(

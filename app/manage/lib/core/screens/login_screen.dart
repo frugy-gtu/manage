@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:manage/core/cache/auth.dart';
+import 'package:manage/core/router/manage_route.dart';
+import 'package:manage/core/router/manage_route_state.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,10 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> login(String mail, String password) async {
-    setState(() {
-      _userExist = false;
-    });
+  void login(String mail, String password) async {
+      _userExist = true;
+      Auth.status = AuthStatus.logged_in;
   }
 
   @override
@@ -95,6 +98,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                         if (_validMail == true && _validPass == true) {
                           login(_mailCont.text, _passCont.text);
+                          print('aasdasd');
+                          if (_userExist) {
+                            context
+                                .read<ManageRouteState>()
+                                .update(ManageRoute.teams);
+                          }
                         }
                       }),
                   SizedBox(
@@ -107,7 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         _mailCont.clear();
                         _passCont.clear();
                       });
-                      Navigator.pushNamed(context, '/registerPage');
+                      context
+                          .read<ManageRouteState>()
+                          .update(ManageRoute.signup);
                     },
                   )
                 ],
