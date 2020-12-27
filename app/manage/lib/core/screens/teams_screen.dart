@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 import '../team.dart';
 
 class TeamsScreen extends StatelessWidget {
-  final List<Team> teams = const [Team('User Team')];
+  final List<Team> teams = const [
+    Team(name: 'User Team', abbrv: 'TUC'),
+    Team(name: 'User Team', abbrv: 'C'),
+    Team(name: 'User Team', abbrv: 'UC'),
+    Team(name: 'User Team', abbrv: 'UC'),
+  ];
 
   const TeamsScreen({Key key}) : super(key: key);
 
@@ -44,27 +49,67 @@ class TeamsScreen extends StatelessWidget {
             crossAxisCount: _teamAxisCount(teams.length),
             children: [
               for (Team team in teams)
-                InkedContainer(
-                    child: Text(
-                      team.name,
-                      style: Theme.of(context).textTheme.button,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) => InkedContainer(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: constraints.maxHeight / 4.5,
+                              ),
+                              child: FittedBox(
+                                fit: BoxFit.fitHeight,
+                                child: Text(
+                                  team.abbrv,
+                                  style: Theme.of(context).textTheme.button,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              context
+                                  .read<ManageRouteState>()
+                                  .update(ManageRoute.team, team: team);
+                            }),
+                      ),
                     ),
-                    onTap: () {
-                      context
-                          .read<ManageRouteState>()
-                          .update(ManageRoute.team, team: team);
-                    }),
-              InkedContainer(
-                onTap: () {
-                  context
-                      .read<ManageRouteState>()
-                      .update(ManageRoute.team_create);
-                },
-                child: Icon(
-                  Icons.add_circle,
-                  color: Theme.of(context).textTheme.button.color,
-                  size: 28,
+                    Center(child: Text(team.name)),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
                 ),
+              Column(
+                children: [
+                  Expanded(
+                    child: InkedContainer(
+                      onTap: () {
+                        context
+                            .read<ManageRouteState>()
+                            .update(ManageRoute.team_create);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: constraints.maxWidth /
+                                4.5 /
+                                _teamAxisCount(teams.length)),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Icon(
+                            Icons.add_circle,
+                            color: Theme.of(context).textTheme.button.color,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(''),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
               ),
             ],
           ),
@@ -78,7 +123,7 @@ class TeamsScreen extends StatelessWidget {
       return EdgeInsets.symmetric(
           horizontal: (maxWidth - (maxHeight / 2)) / 1.6);
     } else {
-      return EdgeInsets.all(10);
+      return EdgeInsets.all(25);
     }
   }
 
