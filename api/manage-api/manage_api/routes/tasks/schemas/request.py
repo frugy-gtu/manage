@@ -13,17 +13,20 @@ class TasksGetSchema(JWTSchema):
     @validates_schema
     def validate_schema(self, data, **kwargs):
         user_id = self.get_user_id()
-        if data.get('task_group_id'):
-            task_group = TaskGroupService(id=data['task_group_id'])
-            project = ProjectService(id=task_group['project_id'])
-            if not project.is_user_associated(user_id):
-                abort(401, 'You don\'t have access to this team\'s tasks')
-        else:
-            if data.get('project_id'):
-                project = ProjectService(id=data['project_id'])
-                project.is_user_associated(user_id)
+        try:
+            if data.get('task_group_id'):
+                task_group = TaskGroupService(id=data['task_group_id'])
+                project = ProjectService(id=task_group['project_id'])
                 if not project.is_user_associated(user_id):
                     abort(401, 'You don\'t have access to this team\'s tasks')
+            else:
+                if data.get('project_id'):
+                    project = ProjectService(id=data['project_id'])
+                    project.is_user_associated(user_id)
+                    if not project.is_user_associated(user_id):
+                        abort(401, 'You don\'t have access to this team\'s tasks')
+        except ValueError as e:
+            abort(404, str(e))
 
     @post_load
     def post_load(self, data, **kwargs):
@@ -37,6 +40,7 @@ class TasksGetSchema(JWTSchema):
         return data
 
 
+class TasksPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
     deadline = fields.DateTime(required=True, allow_none=False)
     task_group_id = fields.UUID(required=True, allow_none=False)
@@ -44,6 +48,27 @@ class TasksGetSchema(JWTSchema):
     tag_id = fields.UUID(required=False, allow_none=True)
     details = fields.String(required=False, allow_none=True)
     schedule = fields.DateTime(required=False, allow_none=True)
+
+    @validates_schema
+    def validate(self, data, **kwargs):
+        user_id = self.get_user_id()
+        try:
+            if data.get('task_group_id'):
+                task_group = TaskGroupService(id=data['task_group_id'])
+                project = ProjectService(id=task_group['project_id'])
+                if not project.is_user_associated(user_id):
+                    abort(401, 'You don\'t have access to this team\'s tasks')
+        except ValueError as e:
+            abort(404, str(e))
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        if 'state_id' in data:
+            del data['state_id']
+        if 'tag_id' in data:
+            del data['tag_id']
+        data['user_id'] = self.get_user_id()
+        return data
 
 
 class TaskPutSchema(Schema):

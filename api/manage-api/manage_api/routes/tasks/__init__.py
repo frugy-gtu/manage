@@ -23,7 +23,9 @@ class Tasks(Resource):
     @accepts(schema=request_schemas.TasksPostSchema, api=api)
     @responds(schema=response_schemas.Task, api=api, status_code=201)
     def post(self, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        task = TaskService.create(data)
+        return task
 
 
 @api.route('/<uuid:task_id>')
