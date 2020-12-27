@@ -2,6 +2,7 @@ from flask import request, abort
 from marshmallow import fields, post_load, validates_schema, Schema
 from marshmallow.exceptions import ValidationError
 from manage_api.db.services import ProjectService
+from manage_api.db.services import TaskGroupService
 from manage_api.db.services import TeamService
 from manage_api.routes.common_schemas import JWTSchema
 from marshmallow import fields, Schema
@@ -61,7 +62,25 @@ class ProjectPutSchema(JWTSchema):
 
 
 class ProjectDeleteSchema(JWTSchema):
-    name = fields.String(required=True, allow_none=False)
+    @validates_schema
+    def validate_project_is_empty(self, data, **kwargs):
+        if (
+            len(
+                list(
+                    TaskGroupService.dump_all(
+                        filters={'==': {'project_id': request.view_args['project_id']}}
+                    )
+                )
+            )
+            > 0
+        ):
+            abort(412, 'Project is not empty')
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        user_id = self.get_user_id()
+        data['project'] = _validate_user_is_manager(user_id)
+        return data
 
 
 class ProjectTagsPostSchema(JWTSchema):

@@ -42,9 +42,14 @@ class Project(Resource):
         return project.dump()
 
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectDeleteSchema, api=api)
     @responds(schema=response_schemas.Project, api=api, status_code=200)
     def delete(self, project_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        project = params['project']
+        project_data = project.dump()
+        project.delete()
+        return project_data
 
 
 @api.route('/<uuid:project_id>/tags')
