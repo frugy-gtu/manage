@@ -7,3 +7,9 @@ class Empty(Schema):
 
 class Token(Schema):
     access_token = fields.String()
+
+
+class User(Schema):
+    id = fields.String()
+    username = fields.String()
+    email = fields.String()

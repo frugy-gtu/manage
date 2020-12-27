@@ -18,7 +18,7 @@ flask-accepts = {git = "https://github.com/ismltpn/flask_accepts.git"}
 SQLAlchemy-Utils = "^0.36.8"
 Flask-Migrate = "^2.5.3"
 passlib = "^1.7.4"
-psycopg2 = "^2.8.6"
+psycopg2-binary = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
