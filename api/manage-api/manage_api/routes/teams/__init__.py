@@ -64,16 +64,10 @@ class Team(Resource):
     @responds(schema=response_schemas.Team, api=api, status_code=200)
     def delete(self, team_id, **kwargs):
         params = request.parsed_query_params
-        try:
-            team = TeamService(id=team_id)
-            if team['user_id'] == params['user']['id']:
-                del params['user']
-                team_data = team.dump()
-                team.delete()
-                return team_data
-            abort(401, 'You are not the manager of this team')
-        except ValueError as e:
-            abort(404, str(e))
+        team = params['team']
+        team_data = team.dump()
+        team.delete()
+        return team_data
 
 
 @api.route('/<uuid:team_id>/users')

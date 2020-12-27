@@ -1,6 +1,7 @@
 from flask import request, abort
 from marshmallow import fields, post_load, validates_schema, Schema
 from marshmallow.exceptions import ValidationError
+from manage_api.db.services import ProjectService
 from manage_api.db.services import TeamService
 from manage_api.routes.common_schemas import JWTSchema
 
@@ -17,12 +18,14 @@ def _validate_user_associated(user_id):
     team = _validate_team_in_url()
     if not team.is_user_associated(user_id):
         abort(401, 'You are not in this team')
+    return team
 
 
 def _validate_user_is_manager(user_id):
     team = _validate_team_in_url()
-    if str(team['user_id']) != user_id:
+    if str(team['user_id']) != str(user_id):
         abort(401, 'You are not the manager of this team')
+    return team
 
 
 class TeamsGetSchema(JWTSchema):
@@ -80,10 +83,30 @@ class TeamPutSchema(JWTSchema):
 
 
 class TeamDeleteSchema(JWTSchema):
+    @validates_schema
+    def validate_team_has_no_project(self, data, **kwargs):
+        if (
+            len(
+                ProjectService.dump_all(
+                    filters={
+                        '==': {
+                            'team_id': request.view_args['team_id'],
+                        },
+                    },
+                )
+            )
+            > 0
+        ):
+            abort(
+                412,
+                'Cannot delete team because it has projects. First delete the projects.',
+            )
+
     @post_load
     def post_load(self, data, **kwargs):
         user = self.get_user()
-        data['user'] = user
+        team = _validate_user_is_manager(user['id'])
+        data['team'] = team
         return data
 
 
