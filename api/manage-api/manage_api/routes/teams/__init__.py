@@ -1,3 +1,4 @@
+from manage_api.db.services.project import ProjectService
 from flask import request, abort
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
@@ -170,9 +171,12 @@ class TeamStates(Resource):
 @api.route('/<uuid:team_id>/projects')
 class TeamProjects(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TeamProjectsGetSchema, api=api)
     @responds(schema=response_schemas.TeamProject(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        projects = ProjectService.dump_all(filters=params['filters'])
+        return projects
 
     @jwt_required
     @accepts(schema=request_schemas.TeamProjectsPostSchema, api=api)
