@@ -24,9 +24,12 @@ class Projects(Resource):
 @api.route('/<uuid:project_id>')
 class Project(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectGetSchema, api=api)
     @responds(schema=response_schemas.Project, api=api, status_code=200)
     def get(self, project_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        project = params['project']
+        return project.dump()
 
     @jwt_required
     @accepts(schema=request_schemas.ProjectPutSchema, api=api)

@@ -42,6 +42,13 @@ class ProjectsGetSchema(JWTSchema):
         return data
 
 
+class ProjectGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        user_id = self.get_user_id()
+        data['project'] = _validate_user_associated(user_id)
+        return data
+
 
 class ProjectPutSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
