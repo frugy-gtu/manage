@@ -44,6 +44,7 @@ class TeamsScreen extends StatelessWidget {
           ),
           child: GridView.count(
             primary: true,
+            childAspectRatio: 0.9,
             padding: _teamGridTilePadding(constraints.maxWidth,
                 constraints.maxHeight - constraints.maxHeight / 4.5),
             crossAxisCount: _teamAxisCount(teams.length),
@@ -57,7 +58,7 @@ class TeamsScreen extends StatelessWidget {
                         builder: (context, constraints) => InkedContainer(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                vertical: constraints.maxHeight / 4.5,
+                                vertical: constraints.maxHeight / 4,
                               ),
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
