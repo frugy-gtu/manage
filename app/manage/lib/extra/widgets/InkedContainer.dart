@@ -20,11 +20,10 @@ class InkedContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(5)),
+            borderRadius: BorderRadius.circular(5),
+          ),
         margin: const EdgeInsets.all(5),
-        child: Center(
-          child: child,
-        ),
+        child: child,
       ),
     );
   }
