@@ -1,8 +1,10 @@
+from flask import request
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
+from manage_api.db.services import TaskService
 
 api = Namespace('tasks', 'Task related routes')
 
@@ -10,9 +12,12 @@ api = Namespace('tasks', 'Task related routes')
 @api.route('/')
 class Tasks(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TasksGetSchema, api=api)
     @responds(schema=response_schemas.Task(many=True), api=api, status_code=200)
     def get(self, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        result = TaskService.dump_all(filters=params['filters'])
+        return result
 
     @jwt_required
     @accepts(schema=request_schemas.TasksPostSchema, api=api)
