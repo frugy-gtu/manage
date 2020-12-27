@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/router/manage_route.dart';
 
-import '../team.dart';
+import '../model/team.dart';
 
 class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;

@@ -5,7 +5,7 @@ import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:provider/provider.dart';
 
-import '../team.dart';
+import '../model/team.dart';
 
 class TeamsScreen extends StatelessWidget {
   final List<Team> teams = const [
