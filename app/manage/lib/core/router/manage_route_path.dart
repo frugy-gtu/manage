@@ -2,6 +2,14 @@ abstract class ManageRoutePath {
   const ManageRoutePath();
 }
 
+class ManageLoginPath extends ManageRoutePath {
+  const ManageLoginPath();
+}
+
+class ManageSignUpPath extends ManageRoutePath {
+  const ManageSignUpPath();
+}
+
 class ManageTeamsPath extends ManageRoutePath {
   const ManageTeamsPath();
 }

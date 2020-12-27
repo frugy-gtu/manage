@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:manage/core/router/manage_route.dart';
+import 'package:manage/core/router/manage_route_state.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _fNameCont;
   TextEditingController _lNameCont;
   TextEditingController _mailCont;
@@ -128,6 +131,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       _validMail == true &&
                       _validPass == true) {
                     register(_mailCont.text, _passCont.text);
+                    if(_registered) {
+                      context.read<ManageRouteState>().update(ManageRoute.login);
+                    }
                   }
                 },
               ),
