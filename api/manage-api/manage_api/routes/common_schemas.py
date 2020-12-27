@@ -1,6 +1,10 @@
 from flask_jwt_extended import get_jwt_identity
-from marshmallow import Schema, post_load, ValidationError
+from marshmallow import fields, Schema, post_load, ValidationError
 from manage_api.db.services import UserService
+
+
+class BoolResult(Schema):
+    result = fields.Boolean()
 
 
 class JWTSchema(Schema):

@@ -81,6 +81,17 @@ class TeamUsers(Resource):
         users = UserService.dump_all(filters=params['filters'])
         return users
 
+    @jwt_required
+    @accepts(schema=request_schemas.TeamUsersPostSchema, api=api)
+    @responds(schema=response_schemas.BoolResult, api=api, status_code=201)
+    def post(self, team_id, **kwargs):
+        data = request.parsed_obj
+        team: TeamService = data['team']
+        if team:
+            team.add_user(data['user_id'])
+            return {'result': True}
+        return {'result': False}
+
 
 @api.route('/<uuid:team_id>/join')
 class JoinTeam(Resource):

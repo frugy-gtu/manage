@@ -125,6 +125,19 @@ class TeamUsersGetSchema(JWTSchema):
         return data
 
 
+class TeamUsersPostSchema(JWTSchema):
+    user_id = fields.UUID(required=True, allow_none=False)
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        team = _validate_user_is_manager(user_id=self.get_user_id())
+        if team.is_user_associated(data['user_id']):
+            data['team'] = None
+            return data
+        data['team'] = team
+        return data
+
+
 class TeamTagsPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
 
