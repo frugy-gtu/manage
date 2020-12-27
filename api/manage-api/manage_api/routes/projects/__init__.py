@@ -35,7 +35,11 @@ class Project(Resource):
     @accepts(schema=request_schemas.ProjectPutSchema, api=api)
     @responds(schema=response_schemas.Project, api=api, status_code=200)
     def put(self, project_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        project = data['project']
+        del data['project']
+        project.update(data)
+        return project.dump()
 
     @jwt_required
     @responds(schema=response_schemas.Project, api=api, status_code=200)
