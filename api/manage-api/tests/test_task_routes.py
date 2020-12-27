@@ -4,10 +4,10 @@ from manage_api.db import models as db_models
 from manage_api.db import services as db_services
 
 
-def create_user():
+def create_user(i=1):
     user_data = {
-        'username': 'test_user',
-        'email': 'test@user.com',
+        'username': f'test_user{i}',
+        'email': f'test{i}@user.com',
         'password': '123123asd',
     }
     user = db_services.UserService.create(user_data)
@@ -142,3 +142,60 @@ def test_tasks_get_with_jwt_filter_project(flask_test_client):
     r_task = data[0]
     assert r_task['id'] == str(task_1['id'])
     assert r_task['name'] == str(task_1['name'])
+
+
+def test_tasks_post_without_jwt(flask_test_client):
+    user, project = create_user_and_project()
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+    }
+    response: Response = flask_test_client.post('/tasks/', json=task_1_data)
+    assert response.status_code == 401
+    assert db_models.Task.query.count() == 0
+
+
+def test_tasks_post_with_jwt(flask_test_client):
+    user, project = create_user_and_project()
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+    }
+    response: Response = flask_test_client.post(
+        '/tasks/', json=task_1_data, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 201
+    assert data['name'] == task_1_data['name']
+    assert db_models.Task.query.count() == 1
+    task = db_models.Task.query.first()
+    assert task is not None
+    assert task.name == task_1_data['name']
+
+
+def test_tasks_post_with_jwt_not_associated_user(flask_test_client):
+    user, project = create_user_and_project()
+    user2 = create_user(2)
+    access_token = user2.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+    }
+    response: Response = flask_test_client.post(
+        '/tasks/', json=task_1_data, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 401
+    assert db_models.Task.query.count() == 0
