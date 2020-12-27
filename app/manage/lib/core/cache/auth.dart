@@ -34,6 +34,10 @@ class Auth {
     }
   }
 
+  static get accessToken => _box.get('accessToken', defaultValue: '');
+
+  static set accessToken(String token) => _box.put('accessToken', token);
+
   static ValueListenable<Box> listenable(List<String> keys) {
     return _box.listenable(keys: keys);
   }
