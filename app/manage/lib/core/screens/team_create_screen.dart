@@ -38,7 +38,7 @@ class TeamForm extends StatelessWidget {
             errorText: controller.nameError,
           ),
           controller: controller.name,
-          inputFormatters: [LengthLimitingTextFieldFormatterFixed(32)],
+          inputFormatters: [LengthLimitingTextFieldFormatterFixed(12)],
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
           autofocus: true,
         ),
