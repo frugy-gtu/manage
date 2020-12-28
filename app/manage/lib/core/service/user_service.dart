@@ -1,7 +1,7 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:manage/core/cache/auth.dart';
+import 'package:manage/core/model/access.dart';
 import 'package:manage/core/model/user.dart';
 
 import 'manage_service.dart' as service;
@@ -13,7 +13,7 @@ Future<bool> login(User request) async {
     return false;
   }
 
-  Auth.accessToken = jsonDecode(response.data)['access_token'];
+  Auth.accessToken = Access.fromJson(response.data).accessToken;
   Auth.status = AuthStatus.logged_in;
 
   return true;
