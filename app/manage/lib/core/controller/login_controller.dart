@@ -7,15 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:manage/core/service/user_service.dart' as service;
 
 class LoginController extends ChangeNotifier {
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
   String _emailError = '';
   String _passwordError = '';
   String _credentialsError = '';
-
-  TextEditingController get email => _email;
-  TextEditingController get password => _password;
 
   String get emailError => _emailError;
   String get passwordError => _passwordError;
@@ -24,7 +21,7 @@ class LoginController extends ChangeNotifier {
   Future<void> onLogin(BuildContext context) async {
     if (_checkStatus()) {
       ResponseResult status = await service
-          .login(User(email: _email.text, password: _password.text));
+          .login(User(email: email.text, password: password.text));
       if (status.status == Status.success) {
         context.read<ManageRouteState>().update(ManageRoute.teams);
         return;
@@ -45,7 +42,7 @@ class LoginController extends ChangeNotifier {
   }
 
   bool _checkStatus() {
-    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+    if (email.text.isNotEmpty && password.text.isNotEmpty) {
       return true;
     }
 
