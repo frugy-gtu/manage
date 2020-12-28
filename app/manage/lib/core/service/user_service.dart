@@ -36,7 +36,9 @@ Future<ResponseResult> signUp(User request) async {
   }
 
   if (response.success == null) {
-    return ResponseResult(Status.fail);
+    Error error = Error.fromJson(response.fail.data);
+    String errorMsg = error?.table['schema_errors']?.values?.first[0];
+    return ResponseResult(Status.fail, errorMsg ?? 'Invalid credentials.');
   }
 
   return ResponseResult(Status.success);
