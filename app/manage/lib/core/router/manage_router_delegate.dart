@@ -52,7 +52,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageTeamsPath) {
       state.update(ManageRoute.teams);
     } else if (path is ManageTeamPath) {
-      state.update(ManageRoute.team, team: Team(name: 'Not implemented', abbrv: 'NI', id: path.id));
+      state.update(ManageRoute.team, team: Team(name: 'Not implemented', abbreviation: 'NI', id: path.id));
     } else if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }

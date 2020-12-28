@@ -28,3 +28,26 @@ Future<ManageResponse> post(String url,
     return null;
   }
 }
+
+Future<ManageResponse> get(String url,
+    {Map<String, dynamic> data, Map<String, dynamic> queryParameters}) async {
+  try {
+    Response response = await Dio().get(
+      _baseUrl + url,
+      queryParameters: queryParameters,
+      options: Options(
+        headers: <String, dynamic>{
+          'Authorization': 'Bearer ' + Auth.accessToken
+        },
+      ),
+    );
+    return ManageResponse(response, null);
+  } on DioError catch (e) {
+    print(e);
+    print(e.response.data);
+    return ManageResponse(null, e.response);
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
