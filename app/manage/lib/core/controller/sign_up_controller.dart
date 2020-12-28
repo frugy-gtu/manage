@@ -6,7 +6,7 @@ import 'package:manage/core/service/response_status.dart';
 import 'package:provider/provider.dart';
 import 'package:manage/core/service/user_service.dart' as service;
 
-class SignUpController extends ChangeNotifier {
+class SignUpScreenController extends ChangeNotifier {
   final TextEditingController uName = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();

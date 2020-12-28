@@ -13,7 +13,7 @@ class SignUpScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ChangeNotifierProvider(
-            create: (_) => SignUpController(),
+            create: (_) => SignUpScreenController(),
             child: SignUpForm(),
           ),
         ),
@@ -29,7 +29,7 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SignUpController>(
+    return Consumer<SignUpScreenController>(
       builder: (context, controller, child) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
