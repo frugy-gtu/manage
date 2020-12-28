@@ -7,11 +7,11 @@ part 'team.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Team extends ManageModel {
   final String name;
-  final String abbrv;
+  final String abbreviation;
   final String id;
   final String createdAt;
 
-  const Team({@required this.name, @required this.abbrv, this.id, this.createdAt});
+  const Team({@required this.name, @required this.abbreviation, this.id, this.createdAt});
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
