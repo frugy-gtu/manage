@@ -1,7 +1,8 @@
-class ResponseResult {
+class ResponseResult<E> {
   final Status status;
   final String msg;
-  const ResponseResult(this.status, [this.msg = '']);
+  final E data;
+  const ResponseResult(this.status, {this.msg = '', this.data});
 }
 
 enum Status {
