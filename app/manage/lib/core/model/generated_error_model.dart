@@ -14,7 +14,4 @@ class GeneratedErrorModel extends ManageModel {
   factory GeneratedErrorModel.fromJson(Map<String, dynamic> json) => _$GeneratedErrorModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$GeneratedErrorModelToJson(this);
-
-  @override
-  ManageModel decode(Map<String, dynamic> json) => GeneratedErrorModel.fromJson(json);
 }

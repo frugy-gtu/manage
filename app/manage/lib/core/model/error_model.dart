@@ -6,10 +6,9 @@ part 'error_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ErrorModel extends ManageModel {
-  @JsonKey(name: 'errors')
-  final Map<String, Map<String, List<String>>> table;
+  final String msg;
 
-  const ErrorModel({@required this.table});
+  const ErrorModel({@required this.msg});
 
   factory ErrorModel.fromJson(Map<String, dynamic> json) => _$ErrorModelFromJson(json);
 
