@@ -23,7 +23,7 @@ class LoginController extends ChangeNotifier {
 
   Future<void> onLogin(BuildContext context) async {
     if (_checkStatus()) {
-      ResponseStatus status = await service
+      ResponseResult status = await service
           .login(User(email: _email.text, password: _password.text));
       if (status.status == Status.success) {
         context.read<ManageRouteState>().update(ManageRoute.teams);

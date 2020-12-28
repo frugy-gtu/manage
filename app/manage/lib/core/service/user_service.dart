@@ -7,37 +7,37 @@ import 'package:manage/core/service/response_status.dart';
 
 import 'manage_service.dart' as service;
 
-Future<ResponseStatus> login(User request) async {
+Future<ResponseResult> login(User request) async {
   ManageResponse response =
       await service.post('/users/login', data: request.toJson());
 
   if (response == null) {
-    return ResponseStatus(Status.fail);
+    return ResponseResult(Status.fail);
   }
 
   if (response.success == null) {
     Error error = Error.fromJson(response.fail.data);
     String errorMsg = error?.table['schema_errors']?.values?.first[0];
-    return ResponseStatus(Status.fail, errorMsg ?? 'Invalid credentials.');
+    return ResponseResult(Status.fail, errorMsg ?? 'Invalid credentials.');
   }
 
   Auth.accessToken = Access.fromJson(response.success.data).accessToken;
   Auth.status = AuthStatus.logged_in;
 
-  return ResponseStatus(Status.success);
+  return ResponseResult(Status.success);
 }
 
-Future<ResponseStatus> signUp(User request) async {
+Future<ResponseResult> signUp(User request) async {
   ManageResponse response =
       await service.post('/users/signup', data: request.toJson());
 
   if (response == null) {
-    return ResponseStatus(Status.fail);
+    return ResponseResult(Status.fail);
   }
 
   if (response.success == null) {
-    return ResponseStatus(Status.fail);
+    return ResponseResult(Status.fail);
   }
 
-  return ResponseStatus(Status.success);
+  return ResponseResult(Status.success);
 }

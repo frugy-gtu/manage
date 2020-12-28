@@ -44,7 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> register(String username, String mail, String password) async {
 
-    ResponseStatus result = await service.signUp(User(
+    ResponseResult result = await service.signUp(User(
       username: username,
       email: mail,
       password: password,
