@@ -10,7 +10,6 @@ class Auth {
   }
 
   static bool isLoggedIn() {
-    print('is logged in??');
     switch (_box.get('status', defaultValue: 0)) {
       case 0:
         return false;
@@ -20,7 +19,6 @@ class Auth {
   }
 
   static set status(AuthStatus status) {
-    print('settings status $status');
     switch (status) {
       case AuthStatus.logged_out:
         _box.put('status', 0);
