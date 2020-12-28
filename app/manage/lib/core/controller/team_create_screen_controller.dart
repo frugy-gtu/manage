@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:manage/core/model/team_create_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
-import 'package:manage/core/service/response_status.dart';
+import 'package:manage/core/service/request_result.dart';
 import 'package:manage/core/service/team_service.dart' as service;
 import 'package:provider/provider.dart';
 
@@ -44,7 +44,7 @@ class TeamCreateScreenController extends ChangeNotifier {
 
   Future<void> onCreate(BuildContext context) async {
     if (_checkStatus()) {
-      ResponseResult result = await service
+      RequestResult result = await service
           .createTeam(TeamCreateModel(name: name.text, abbreviation: abbrv.text));
 
       if (result.status == Status.success) {

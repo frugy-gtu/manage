@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
-import 'package:manage/core/service/response_status.dart';
+import 'package:manage/core/service/request_result.dart';
 import 'package:provider/provider.dart';
 import 'package:manage/core/service/user_service.dart' as service;
 
@@ -20,7 +20,7 @@ class LoginController extends ChangeNotifier {
 
   Future<void> onLogin(BuildContext context) async {
     if (_checkStatus()) {
-      ResponseResult status = await service
+      RequestResult status = await service
           .login(UserModel(email: email.text, password: password.text));
       if (status.status == Status.success) {
         context.read<ManageRouteState>().update(ManageRoute.teams);
