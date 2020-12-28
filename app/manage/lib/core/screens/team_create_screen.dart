@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/controller/team_create_controller.dart';
+import 'package:manage/core/controller/team_create_screen_controller.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
 import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
 import 'package:provider/provider.dart';
