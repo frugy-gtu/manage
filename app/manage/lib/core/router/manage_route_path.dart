@@ -24,6 +24,10 @@ class ManageTeamCreatePath extends ManageRoutePath {
   const ManageTeamCreatePath();
 }
 
+class ManageTaskCreatePath extends ManageRoutePath {
+  const ManageTaskCreatePath();
+}
+
 class ManageUnknownPath extends ManageRoutePath {
   const ManageUnknownPath();
 }

@@ -7,6 +7,7 @@ import 'package:manage/core/screens/login_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
+import 'package:manage/core/screens/task_create_screen.dart';
 import 'package:manage/core/team.dart';
 
 class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
@@ -53,6 +54,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       state.update(ManageRoute.teams);
     } else if (path is ManageTeamPath) {
       state.update(ManageRoute.team, team: Team.fromId(path.id));
+    } else if (path is ManageTaskCreatePath) {
+      state.update(ManageRoute.task_create);
     } else if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }
@@ -63,14 +66,14 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
 
     if (!Auth.isLoggedIn()) {
       pages.add(MaterialPage(
-          key: ValueKey('LoginPage'),
-          child: LoginScreen(),
+        key: ValueKey('LoginPage'),
+        child: LoginScreen(),
       ));
 
-      if(state.route == ManageRoute.signup) {
+      if (state.route == ManageRoute.signup) {
         pages.add(MaterialPage(
-            key: ValueKey('SignUpPage'),
-            child: SignUpScreen(),
+          key: ValueKey('SignUpPage'),
+          child: SignUpScreen(),
         ));
       }
     } else {
@@ -92,6 +95,12 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         pages.add(MaterialPage(
           key: ValueKey('TeamCreatePage'),
           child: TeamCreateScreen(),
+        ));
+      }
+      if (state.route == ManageRoute.task_create) {
+        pages.add(MaterialPage(
+          key: ValueKey('TaskCreatePage'),
+          child: TaskCreateScreen(),
         ));
       }
     }
