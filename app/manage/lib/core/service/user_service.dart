@@ -8,13 +8,14 @@ import 'package:manage/core/service/response_status.dart';
 import 'manage_service.dart' as service;
 
 Future<ResponseStatus> login(User request) async {
-  ManageResponse response = await service.post('/users/login', data: request.toJson());
+  ManageResponse response =
+      await service.post('/users/login', data: request.toJson());
 
-  if(response == null) {
+  if (response == null) {
     return ResponseStatus(Status.fail);
   }
 
-  if(response.success == null) {
+  if (response.success == null) {
     Error error = Error.fromJson(response.fail.data);
     String errorMsg = error?.table['schema_errors']?.values?.first[0];
     return ResponseStatus(Status.fail, errorMsg ?? 'Invalid credentials.');
@@ -26,16 +27,17 @@ Future<ResponseStatus> login(User request) async {
   return ResponseStatus(Status.success);
 }
 
-Future<bool> signUp(User request) async {
-  ManageResponse response = await service.post('/users/signup', data: request.toJson());
+Future<ResponseStatus> signUp(User request) async {
+  ManageResponse response =
+      await service.post('/users/signup', data: request.toJson());
 
-  if(response == null) {
-    return false;
+  if (response == null) {
+    return ResponseStatus(Status.fail);
   }
 
-  if(response.success == null) {
-    return false;
+  if (response.success == null) {
+    return ResponseStatus(Status.fail);
   }
 
-  return true;
+  return ResponseStatus(Status.success);
 }

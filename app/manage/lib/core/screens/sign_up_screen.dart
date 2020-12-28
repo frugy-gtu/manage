@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/model/user.dart';
+import 'package:manage/core/service/response_status.dart';
 import 'package:provider/provider.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
@@ -43,14 +44,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> register(String username, String mail, String password) async {
 
-    bool registerStatus = await service.signUp(User(
+    ResponseStatus result = await service.signUp(User(
       username: username,
       email: mail,
       password: password,
     ));
 
     setState(() {
-      _registered = registerStatus;
+      _registered = result.status == Status.success ? true : false;
     });
   }
 
