@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/router/manage_route.dart';
 
-import '../model/team.dart';
+import '../model/team_model.dart';
 
 class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
-  Team _team;
+  TeamModel _team;
 
   ManageRouteState() : _route = ManageRoute.teams;
 
   ManageRoute get route => _route;
 
-  Team get team => _team;
+  TeamModel get team => _team;
 
-  void update(ManageRoute route, {Team team}) {
+  void update(ManageRoute route, {TeamModel team}) {
     assert(route != null);
 
     if(route == ManageRoute.team) {

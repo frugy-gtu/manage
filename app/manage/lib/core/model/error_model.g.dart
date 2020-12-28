@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'error.dart';
+part of 'error_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Error _$ErrorFromJson(Map<String, dynamic> json) {
-  return Error(
+ErrorModel _$ErrorModelFromJson(Map<String, dynamic> json) {
+  return ErrorModel(
     table: (json['errors'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k,
@@ -19,6 +19,7 @@ Error _$ErrorFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ErrorToJson(Error instance) => <String, dynamic>{
+Map<String, dynamic> _$ErrorModelToJson(ErrorModel instance) =>
+    <String, dynamic>{
       'errors': instance.table,
     };

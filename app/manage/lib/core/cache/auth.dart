@@ -7,6 +7,7 @@ class Auth {
 
   static Future<void> init() async {
     _box = await Hive.openBox('auth');
+    _box.put('status', 0);
   }
 
   static bool isLoggedIn() {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/model/user.dart';
+import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/service/response_status.dart';
@@ -23,7 +23,7 @@ class SignUpScreenController extends ChangeNotifier {
 
   Future<void> onSignUp(BuildContext context) async {
     if (_checkStatus()) {
-      ResponseResult status = await service.signUp(User(
+      ResponseResult status = await service.signUp(UserModel(
         username: uName.text,
         email: email.text,
         password: password.text,

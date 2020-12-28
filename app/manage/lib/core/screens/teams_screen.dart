@@ -6,7 +6,7 @@ import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:provider/provider.dart';
 
-import '../model/team.dart';
+import '../model/team_model.dart';
 
 class TeamsScreen extends StatelessWidget {
   final controller = TeamsScreenController();
@@ -53,7 +53,7 @@ class TeamsScreen extends StatelessWidget {
 
 class _TeamsScreenBody extends StatelessWidget {
 
-  final List<Team> teams;
+  final List<TeamModel> teams;
 
   _TeamsScreenBody(this.teams);
 
@@ -71,7 +71,7 @@ class _TeamsScreenBody extends StatelessWidget {
               constraints.maxHeight - constraints.maxHeight / 4.5),
           crossAxisCount: _teamAxisCount(teams.length),
           children: [
-            for (Team team in teams)
+            for (TeamModel team in teams)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

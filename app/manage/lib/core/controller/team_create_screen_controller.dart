@@ -11,8 +11,9 @@ class TeamCreateScreenController extends ChangeNotifier {
   final TextEditingController _name;
   final TextEditingController _abbrv;
 
-  String _nameError = '';
-  String _abbrvError = '';
+  String _nameError;
+  String _abbrvError;
+
   String _requestError = '';
 
   bool isAbbrvEdited = false;
@@ -56,8 +57,8 @@ class TeamCreateScreenController extends ChangeNotifier {
       _requestError = '';
     }
 
-    _nameError = name.text.isEmpty ? 'Enter a name' : '';
-    _abbrvError = abbrv.text.isEmpty ? 'Enter a abbreviation' : '';
+    _nameError = name.text.isEmpty ? 'Enter a name' : null;
+    _abbrvError = abbrv.text.isEmpty ? 'Enter a abbreviation' : null;
 
     notifyListeners();
   }
