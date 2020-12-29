@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/controller/sign_up_controller.dart';
 import 'package:provider/provider.dart';
+
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Sign up'),
+        title: Text('Manage'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      body: LayoutBuilder(
+        builder: (context, constraints) => Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: constraints.maxWidth / 9,
+          ),
           child: ChangeNotifierProvider(
             create: (_) => SignUpScreenController(),
             child: SignUpForm(),
@@ -31,51 +33,66 @@ class SignUpForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SignUpScreenController>(
       builder: (context, controller, child) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 40.0,
+          Row(
+            children: [
+              Icon(Icons.person),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextField(
+                  controller: controller.uName,
+                  cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+                  decoration: InputDecoration(
+                    labelText: 'username',
+                    errorText: controller.uNameError,
+                  ),
+                ),
+              ),
+            ],
           ),
-          TextField(
-            controller: controller.uName,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'username',
-              errorText: controller.uNameError,
+          Row(
+            children: [
+              Icon(Icons.mail),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextField(
+                  controller: controller.email,
+                  cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+                  decoration: InputDecoration(
+                    labelText: 'email',
+                    errorText: controller.emailError,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+            Icon(Icons.lock),
+            SizedBox(
+              width: 10,
             ),
+              Expanded(
+                child: TextField(
+                  controller: controller.password,
+                  cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'password',
+                    errorText: controller.passwordError,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            controller: controller.email,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'email',
-              errorText: controller.emailError,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            controller: controller.password,
-            obscureText: true,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'password',
-              errorText: controller.passwordError,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Center(
-            child: Text(
-              controller.credentialsError,
-              style: TextStyle(color: Colors.red),
-            ),
+          Text(
+            controller.credentialsError,
+            style: TextStyle(color: Colors.red),
           ),
           RaisedButton(
             child: Text('Sign up'),
