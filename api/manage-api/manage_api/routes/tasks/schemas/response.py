@@ -7,14 +7,14 @@ class BooleanResult(Schema):
 
 class Base(Schema):
     id = fields.UUID()
-    created_at = fields.DateTime()
+    created_at = fields.String()
 
 
 class Task(Base):
     name = fields.String()
     details = fields.String()
-    schedule = fields.DateTime()
-    deadline = fields.DateTime()
+    schedule = fields.String()
+    deadline = fields.String()
     task_group_id = fields.UUID()
     task_state_id = fields.UUID()
     task_tag_id = fields.UUID()
