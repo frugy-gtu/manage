@@ -7,14 +7,11 @@ class Auth {
 
   static Future<void> init() async {
     _box = await Hive.openBox('auth');
-    status = AuthStatus.logged_out;
+    _box.put('status', 0);
   }
 
-  static get box => _box;
-
   static bool isLoggedIn() {
-    assert(Hive.isBoxOpen('auth'));
-    switch (box.get('status', defaultValue: 0)) {
+    switch (_box.get('status', defaultValue: 0)) {
       case 0:
         return false;
       default:
@@ -23,16 +20,19 @@ class Auth {
   }
 
   static set status(AuthStatus status) {
-    assert(Hive.isBoxOpen('settings'));
     switch (status) {
       case AuthStatus.logged_out:
-        box.put('status', 0);
+        _box.put('status', 0);
         break;
       default:
-        box.put('status', 1);
+        _box.put('status', 1);
         break;
     }
   }
+
+  static get accessToken => _box.get('accessToken', defaultValue: '');
+
+  static set accessToken(String token) => _box.put('accessToken', token);
 
   static ValueListenable<Box> listenable(List<String> keys) {
     return _box.listenable(keys: keys);

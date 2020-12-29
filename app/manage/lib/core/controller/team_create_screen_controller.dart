@@ -1,16 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:manage/core/model/team_create_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_state.dart';
+import 'package:manage/core/service/request_result.dart';
+import 'package:manage/core/service/team_service.dart' as service;
 import 'package:provider/provider.dart';
 
-class TeamCreateController extends ChangeNotifier {
+class TeamCreateScreenController extends ChangeNotifier {
   final TextEditingController _name;
   final TextEditingController _abbrv;
+
   String _nameError;
+  String _abbrvError;
+
+  String _requestError = '';
+
   bool isAbbrvEdited = false;
 
-  TeamCreateController()
+  TeamCreateScreenController()
       : _name = TextEditingController(),
         _abbrv = TextEditingController() {
     _name.addListener(_nameCallback);
@@ -19,12 +27,13 @@ class TeamCreateController extends ChangeNotifier {
   TextEditingController get name => _name;
 
   String get nameError => _nameError;
+  String get abbrvError => _abbrvError;
+  String get requestError => _requestError;
 
   TextEditingController get abbrv => _abbrv;
 
   bool _checkStatus() {
-    if (_name.text != null &&
-        _abbrv.text != null &&
+    if (_name.text.isNotEmpty &&
         _name.text.length > 2 &&
         _abbrv.text.isNotEmpty) {
       return true;
@@ -33,10 +42,25 @@ class TeamCreateController extends ChangeNotifier {
     return false;
   }
 
-  void onCreate(BuildContext context) {
+  Future<void> onCreate(BuildContext context) async {
     if (_checkStatus()) {
-      context.read<ManageRouteState>().update(ManageRoute.teams);
+      RequestResult result = await service
+          .createTeam(TeamCreateModel(name: name.text, abbreviation: abbrv.text));
+
+      if (result.status == Status.success) {
+        context.read<ManageRouteState>().update(ManageRoute.teams);
+        return;
+      } else {
+        _requestError = result.msg;
+      }
+    } else {
+      _requestError = '';
     }
+
+    _nameError = name.text.isEmpty ? 'Enter a name' : null;
+    _abbrvError = abbrv.text.isEmpty ? 'Enter a abbreviation' : null;
+
+    notifyListeners();
   }
 
   void _nameCallback() {

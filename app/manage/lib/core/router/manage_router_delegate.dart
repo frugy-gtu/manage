@@ -7,7 +7,7 @@ import 'package:manage/core/screens/login_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
-import 'package:manage/core/team.dart';
+import 'package:manage/core/model/team_model.dart';
 
 class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {
@@ -52,7 +52,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageTeamsPath) {
       state.update(ManageRoute.teams);
     } else if (path is ManageTeamPath) {
-      state.update(ManageRoute.team, team: Team.fromId(path.id));
+      state.update(ManageRoute.team, team: TeamModel(name: 'Not implemented', abbreviation: 'NI', id: path.id));
     } else if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }
