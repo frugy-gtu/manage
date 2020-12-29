@@ -7,14 +7,16 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Manage'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      body: LayoutBuilder(
+        builder: (context, constraints) => Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: constraints.maxWidth / 9,
+          ),
           child: ChangeNotifierProvider(
             create: (_) => LoginController(),
-            child: LoginForm()
+            child: LoginForm(),
           ),
         ),
       ),
@@ -23,65 +25,66 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginController>(
       builder: (context, controller, child) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 40.0,
+          Row(
+            children: [
+              Icon(Icons.mail),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextField(
+                  controller: controller.email,
+                  cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+                  decoration: InputDecoration(
+                    labelText: 'email',
+                    errorText: controller.emailError,
+                  ),
+                ),
+              ),
+            ],
           ),
-          TextField(
-            controller: controller.email,
-            cursorColor: Theme.of(context).colorScheme.secondaryVariant,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'email',
-              errorText: controller.emailError,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            obscureText: true,
-            controller: controller.password,
-            cursorColor: Theme.of(context).colorScheme.secondaryVariant,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'password',
-              errorText: controller.passwordError,
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Center(
-            child: Text(
-              controller.credentialsError,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
+          Row(
+            children: [
+              Icon(
+                Icons.lock,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextField(
+                  obscureText: true,
+                  controller: controller.password,
+                  cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+                  decoration: InputDecoration(
+                    labelText: 'password',
+                    errorText: controller.passwordError,
+                  ),
+                ),
+              ),
+            ],
           ),
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text(
+                controller.credentialsError,
+                style: TextStyle(color: Colors.red),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               RaisedButton(
                   child: Text('Login'),
                   onPressed: () {
                     controller.onLogin(context);
-                  }
-                ),
-              SizedBox(
-                width: 5.0,
-              ),
+                  }),
               RaisedButton(
                 child: Text('Sign up'),
                 onPressed: () {
