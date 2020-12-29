@@ -9,8 +9,9 @@ class ManageRouteInformationParser
       RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location);
 
-    //TODO: Forward to login page if log out
-    if (!Auth.isLoggedIn()) return ManageLoginPath();
+    if (!Auth.isLoggedIn()) {
+      return ManageLoginPath();
+    }
 
     if (uri.pathSegments.length == 0) {
       return ManageTeamsPath();
