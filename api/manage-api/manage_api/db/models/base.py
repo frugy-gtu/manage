@@ -1,7 +1,6 @@
 from datetime import datetime
 from marshmallow import Schema, fields
-from sqlalchemy.dialects.postgresql import UUID
-from .db import db
+from .db import db, UUID
 
 
 class DateTimeV2(fields.DateTime):
