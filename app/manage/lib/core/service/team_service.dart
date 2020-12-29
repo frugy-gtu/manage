@@ -1,7 +1,7 @@
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_create_model.dart';
 import 'package:manage/core/service/request_method.dart';
-import 'package:manage/core/service/response_status.dart';
+import 'package:manage/core/service/request_result.dart';
 
 import 'manage_service.dart' as service;
 

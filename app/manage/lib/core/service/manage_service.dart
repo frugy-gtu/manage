@@ -5,7 +5,7 @@ import 'package:manage/core/model/error_model.dart';
 import 'package:manage/core/model/generated_error_model.dart';
 import 'package:manage/core/service/manage_response.dart';
 import 'package:manage/core/service/request_method.dart';
-import 'package:manage/core/service/response_status.dart';
+import 'package:manage/core/service/request_result.dart';
 
 String _baseUrl = 'http://ec2-52-15-131-192.us-east-2.compute.amazonaws.com';
 
