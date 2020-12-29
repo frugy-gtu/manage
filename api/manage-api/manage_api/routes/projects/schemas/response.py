@@ -3,7 +3,7 @@ from marshmallow import fields, Schema
 
 class Base(Schema):
     id = fields.UUID()
-    created_at = fields.DateTime()
+    created_at = fields.String()
 
 
 class Project(Base):
