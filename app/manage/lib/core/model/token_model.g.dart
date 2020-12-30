@@ -1,18 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'access_model.dart';
+part of 'token_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AccessModel _$AccessModelFromJson(Map<String, dynamic> json) {
-  return AccessModel(
+TokenModel _$TokenModelFromJson(Map<String, dynamic> json) {
+  return TokenModel(
     accessToken: json['access_token'] as String,
   );
 }
 
-Map<String, dynamic> _$AccessModelToJson(AccessModel instance) =>
+Map<String, dynamic> _$TokenModelToJson(TokenModel instance) =>
     <String, dynamic>{
       'access_token': instance.accessToken,
     };
