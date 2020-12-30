@@ -577,6 +577,9 @@ def test_team_projects_post_with_jwt(flask_test_client):
     project = db_models.Project.query.get(data['id'])
     assert project is not None
     assert project.name == project_data_1['name']
+    assert db_models.TaskGroup.query.count() == 1
+    task_group = db_models.TaskGroup.query.first()
+    assert task_group.project_id == project.id
 
 
 def test_team_projects_post_with_jwt_not_manager(flask_test_client):
