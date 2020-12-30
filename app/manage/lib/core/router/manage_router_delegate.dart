@@ -6,6 +6,7 @@ import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
+import 'package:manage/core/screens/team_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
 import 'package:manage/core/model/team_model.dart';
 
@@ -81,11 +82,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       if (state.route == ManageRoute.team) {
         pages.add(MaterialPage(
             key: ValueKey('TeamPage'),
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(state.team.name),
-              ),
-            )));
+            child: TeamScreen(state.team),
+        ));
       }
 
       if (state.route == ManageRoute.team_create) {
