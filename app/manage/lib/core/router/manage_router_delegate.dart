@@ -24,20 +24,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      pages: _buildPages(),
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-
-        if (state.route == ManageRoute.signup) {
-          state.update(ManageRoute.login);
-        } else {
-          state.update(ManageRoute.teams);
-        }
-
-        return true;
-      },
+      pages: _pages,
+      onPopPage: _onPopPage,
     );
   }
 
@@ -53,25 +41,27 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageTeamsPath) {
       state.update(ManageRoute.teams);
     } else if (path is ManageTeamPath) {
-      state.update(ManageRoute.team, team: TeamModel(name: 'Not implemented', abbreviation: 'NI', id: path.id));
+      state.update(ManageRoute.team,
+          team: TeamModel(
+              name: 'Not implemented', abbreviation: 'NI', id: path.id));
     } else if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }
   }
 
-  List<Page<dynamic>> _buildPages() {
+  List<Page<dynamic>> get _pages {
     List<Page<dynamic>> pages = [];
 
     if (!Auth.isLoggedIn()) {
       pages.add(MaterialPage(
-          key: ValueKey('LoginPage'),
-          child: LoginScreen(),
+        key: ValueKey('LoginPage'),
+        child: LoginScreen(),
       ));
 
-      if(state.route == ManageRoute.signup) {
+      if (state.route == ManageRoute.signup) {
         pages.add(MaterialPage(
-            key: ValueKey('SignUpPage'),
-            child: SignUpScreen(),
+          key: ValueKey('SignUpPage'),
+          child: SignUpScreen(),
         ));
       }
     } else {
@@ -79,10 +69,11 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         key: ValueKey('TeamsPage'),
         child: TeamsScreen(),
       ));
+
       if (state.route == ManageRoute.team) {
         pages.add(MaterialPage(
-            key: ValueKey('TeamPage'),
-            child: TeamScreen(state.team),
+          key: ValueKey('TeamPage'),
+          child: TeamScreen(state.team),
         ));
       }
 
@@ -95,5 +86,21 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     }
 
     return pages;
+  }
+
+  bool _onPopPage(Route<dynamic> route, dynamic result) {
+    if (!route.didPop(result)) {
+      return false;
+    }
+
+    switch (state.route) {
+      case ManageRoute.signup:
+        state.update(ManageRoute.login);
+        break;
+      default:
+        state.update(ManageRoute.teams);
+    }
+
+    return true;
   }
 }
