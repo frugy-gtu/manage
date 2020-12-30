@@ -1,10 +1,11 @@
-from manage_api.db.services.user import UserService
 from flask import request
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
 from flask_jwt_extended import create_access_token
 
 from .schemas import request as request_schemas, response as response_schemas
+from manage_api.db.services.team import TeamService
+from manage_api.db.services.user import UserService
 
 api = Namespace('users', 'User related routes')
 
@@ -28,6 +29,13 @@ class Signup(Resource):
     def post(self, **kwargs):
         data = request.parsed_obj
         user = UserService.create(data)
+        team = TeamService.create(
+            {
+                'name': f'{user["username"]}\'s team',
+                'abbreviation': f'{user["username"][:2]}T',
+                'user_id': user['id'],
+            }
+        )
         return user.dump()
 
 
