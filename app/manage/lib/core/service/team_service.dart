@@ -1,5 +1,6 @@
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_create_model.dart';
+import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/service/request_method.dart';
 import 'package:manage/core/service/request_result.dart';
 
@@ -15,3 +16,11 @@ Future<RequestResult<List<TeamModel>>> teams() async =>
 
 Future<RequestResult> createTeam(TeamCreateModel model) async => await service
     .request(method: RequestMethod.post, url: '/teams/', jsonData: model.toJson());
+
+Future<RequestResult<List<TeamProjectModel>>> projectsOf(TeamModel team) async =>
+    (await service.request<TeamProjectModel>(
+      method: RequestMethod.get,
+      url: '/teams/' + team.id + '/projects',
+      decode: (i) => TeamProjectModel.fromJson(i),
+    ))
+        .castTo<List<TeamProjectModel>>();
