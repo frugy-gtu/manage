@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'Models/user_profile_model.dart';
+import 'package:manage/core/model/user_profile_model.dart';
 
 class UserPage extends StatelessWidget {
   
@@ -11,6 +11,7 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -47,14 +48,18 @@ class ProfileInfos extends StatelessWidget {
             Container(
               height: 150.0, 
               width: 150.0, 
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 3.0,
+                ),
+              ),
               child: user.profilePhoto,
             ),
             SizedBox(height: 5.0,),
             Text(user.userName, style: TextStyle(fontSize: 30.0)),
             SizedBox(height: 5.0,),
-            Text(user.name, style: TextStyle(fontSize: 30.0)),
-            SizedBox(height: 5.0,),
-            Text(user.surname, style: TextStyle(fontSize: 30.0)),
+            Text(user.name + ' ' + user.surname, style: TextStyle(fontSize: 30.0)),
           ],
         ),
       ),
