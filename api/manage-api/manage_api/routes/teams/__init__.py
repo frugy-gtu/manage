@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 
 from .schemas import request as request_schemas, response as response_schemas
 from manage_api.db.services.project import ProjectService
+from manage_api.db.services.task_group import TaskGroupService
 from manage_api.db.services.team import TeamService
 from manage_api.db.services.user import UserService
 
@@ -192,5 +193,11 @@ class TeamProjects(Resource):
     @responds(schema=response_schemas.TeamProject, api=api, status_code=201)
     def post(self, team_id, **kwargs):
         data = request.parsed_obj
-        projects = ProjectService.create(data)
-        return projects
+        project = ProjectService.create(data)
+        _ = TaskGroupService.create(
+            {
+                'name': f'Default Task Group',
+                'project_id': project['id'],
+            }
+        )
+        return project
