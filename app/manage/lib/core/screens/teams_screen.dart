@@ -64,6 +64,7 @@ class _TeamsScreenBody extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           vertical: constraints.maxHeight / 9,
         ),
+        //TODO: switch to GridView.extent
         child: GridView.count(
           primary: true,
           childAspectRatio: 0.9,

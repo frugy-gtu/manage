@@ -73,7 +73,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       if (state.route == ManageRoute.team) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
-          child: TeamScreen(state.team),
+          child: TeamScreen(team: state.team),
         ));
       }
 
