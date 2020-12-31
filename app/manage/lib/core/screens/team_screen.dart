@@ -168,13 +168,57 @@ class _TeamScreenBody extends StatelessWidget {
       return EdgeInsets.all(25);
     }
   }
+class _TeamMembersView extends StatelessWidget {
+  const _TeamMembersView({
+    Key key,
+    @required List<TeamUserModel> members,
+  })  : _members = members,
+        super(key: key);
 
-  int _teamAxisCount(int teamCount) {
-    if (teamCount < 2)
-      return 1;
-    else if (teamCount < 4)
-      return 2;
-    else
-      return 3;
+  final List<TeamUserModel> _members;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => CustomScrollView(
+        key: PageStorageKey<String>('TeamMembersView'),
+        slivers: <Widget>[
+          SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(
+                vertical: 30, horizontal: constraints.maxWidth / 6),
+            sliver: SliverFixedExtentList(
+              itemExtent: 60.0,
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => InkedContainer(
+                  onTap: () {},
+                  child: Row(
+                    children: [
+                      Spacer(),
+                      Icon(
+                        Icons.account_circle,
+                        color: Colors.white,
+                      ),
+                      Spacer(flex: 2),
+                      Flexible(
+                        flex: 6,
+                        child: Text('${_members[index].username}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ),
+                childCount: _members.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
