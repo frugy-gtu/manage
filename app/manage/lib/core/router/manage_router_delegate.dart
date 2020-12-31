@@ -4,8 +4,10 @@ import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
+import 'package:manage/core/screens/project_create_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
+import 'package:manage/core/screens/team_invite_screen.dart';
 import 'package:manage/core/screens/team_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
 import 'package:manage/core/model/team_model.dart';
@@ -44,6 +46,10 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       state.update(ManageRoute.team,
           team: TeamModel(
               name: 'Not implemented', abbreviation: 'NI', id: path.id));
+    } else if (path is ManageProjectCreatePath) {
+      state.update(ManageRoute.project_create);
+    } else if (path is ManageTeamInvitePath) {
+      state.update(ManageRoute.team_invite);
     } else if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }
@@ -83,6 +89,20 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           child: TeamCreateScreen(),
         ));
       }
+
+      if (state.route == ManageRoute.project_create) {
+        pages.add(MaterialPage(
+          key: ValueKey('ProjectCreatePage'),
+          child: ProjectCreateScreen(state.team),
+        ));
+      }
+
+      if (state.route == ManageRoute.team_invite) {
+        pages.add(MaterialPage(
+          key: ValueKey('TeamInvitePage'),
+          child: TeamInviteScreen(state.team),
+        ));
+      }
     }
 
     return pages;
@@ -96,6 +116,10 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     switch (state.route) {
       case ManageRoute.signup:
         state.update(ManageRoute.login);
+        break;
+      case ManageRoute.project_create:
+      case ManageRoute.team_invite:
+        state.update(ManageRoute.team, team: state.team);
         break;
       default:
         state.update(ManageRoute.teams);

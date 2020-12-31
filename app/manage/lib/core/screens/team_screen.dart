@@ -48,13 +48,13 @@ class _TeamScreenFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {},
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
-      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      child: context.watch<TeamScreenController>().tabController.index == 0
-          ? Icon(Icons.add_circle_outlined)
-          : Icon(Icons.person_add),
+    return Consumer<TeamScreenController>(
+      builder: (context, controller, child) => FloatingActionButton(
+        onPressed: () => controller.onFloatingActionPress(context),
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        child: controller.floatingActionButtonIcon(),
+      ),
     );
   }
 }

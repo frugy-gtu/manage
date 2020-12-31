@@ -40,6 +40,18 @@ class ManageRouteInformationParser
       }
     }
 
+    if(uri.pathSegments.length == 3) {
+      if(uri.pathSegments[0] == 'teams') {
+        if(uri.pathSegments[2] == 'create') {
+          return ManageProjectCreatePath(uri.pathSegments[1]);
+        }
+
+        if(uri.pathSegments[2] == 'invite') {
+          return ManageTeamInvitePath(uri.pathSegments[1]);
+        }
+      }
+    }
+
     return ManageUnknownPath();
   }
 
@@ -63,6 +75,14 @@ class ManageRouteInformationParser
 
     if (configuration is ManageTeamCreatePath) {
       return RouteInformation(location: 'teams/create');
+    }
+
+    if (configuration is ManageProjectCreatePath) {
+      return RouteInformation(location: 'teams/${configuration.id}/create');
+    }
+
+    if (configuration is ManageTeamInvitePath) {
+      return RouteInformation(location: 'teams/${configuration.id}/invite');
     }
 
     return null;
