@@ -23,6 +23,23 @@ class TeamScreen extends StatelessWidget {
           enableFeedback: false,
           onPressed: () {},
           splashRadius: 20,
+class _TeamScreenFloatingActionButton extends StatelessWidget {
+  const _TeamScreenFloatingActionButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {},
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      child: context.watch<TeamScreenController>().tabController.index == 0
+          ? Icon(Icons.add_circle_outlined)
+          : Icon(Icons.person_add),
+    );
+  }
+}
         ),
         title: Text(controller.team.name),
         actions: [
