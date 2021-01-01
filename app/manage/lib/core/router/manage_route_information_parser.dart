@@ -70,7 +70,7 @@ class ManageRouteInformationParser
     }
 	
 	if (configuration is ManageProfilePath) {
-	  return RouteInformation(location '/profile');
+	  return RouteInformation(location: '/profile');
 	}
 	
     return null;
