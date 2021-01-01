@@ -29,10 +29,6 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamsPath();
       }
-
-      if (uri.pathSegments[0] == 'profile') {
-        return ManageUserProfilePath();
-      }
     }
 
     if (uri.pathSegments.length == 2) {
@@ -43,6 +39,10 @@ class ManageRouteInformationParser
       }
       if (uri.pathSegments[0] == 'users') {
         return ManageMemberProfilePath(uri.pathSegments[1]);
+      }
+
+      if (uri.pathSegments[1] == 'profile') {
+        return ManageUserProfileFromTeamsPath();
       }
     }
 
@@ -76,23 +76,23 @@ class ManageRouteInformationParser
     }
 
     if (configuration is ManageTeamPath) {
-      return RouteInformation(location: 'teams/${configuration.id}');
+      return RouteInformation(location: '/teams/${configuration.id}');
     }
 
     if (configuration is ManageTeamCreatePath) {
-      return RouteInformation(location: 'teams/create');
+      return RouteInformation(location: '/teams/create');
     }
 
     if (configuration is ManageProjectCreatePath) {
-      return RouteInformation(location: 'teams/${configuration.id}/create');
+      return RouteInformation(location: '/teams/${configuration.id}/create');
     }
 
     if (configuration is ManageTeamInvitePath) {
-      return RouteInformation(location: 'teams/${configuration.id}/invite');
+      return RouteInformation(location: '/teams/${configuration.id}/invite');
     }
 
-    if (configuration is ManageUserProfilePath) {
-      return RouteInformation(location: '/profile');
+    if (configuration is ManageUserProfileFromTeamsPath) {
+      return RouteInformation(location: '/teams/profile');
     }
 
     if (configuration is ManageMemberProfilePath) {

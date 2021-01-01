@@ -54,8 +54,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       state.update(ManageRoute.project_create);
     } else if (path is ManageTeamInvitePath) {
       state.update(ManageRoute.team_invite);
-    } else if (path is ManageUserProfilePath) {
-      state.update(ManageRoute.user_profile);
+    } else if (path is ManageUserProfileFromTeamsPath) {
+      state.update(ManageRoute.user_profile_f_teams);
     } else if (path is ManageMemberProfilePath) {
       state.update(
         ManageRoute.member_profile,
@@ -91,10 +91,16 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         child: TeamsScreen(),
       ));
 
+      if (state.route == ManageRoute.user_profile_f_teams) {
+        pages.add(MaterialPage(
+          key: ValueKey('UserProfileFromTeamsPage'),
+          child: UserProfileScreen(Auth.user),
+        ));
+      }
+
       if (state.route == ManageRoute.team ||
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
-          state.route == ManageRoute.user_profile ||
           state.route == ManageRoute.member_profile) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
@@ -105,13 +111,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           pages.add(MaterialPage(
             key: ValueKey('MemberProfilePage'),
             child: MemberProfileScreen(state.member),
-          ));
-        }
-
-        if (state.route == ManageRoute.user_profile) {
-          pages.add(MaterialPage(
-            key: ValueKey('UserProfilePage'),
-            child: UserProfileScreen(Auth.user),
           ));
         }
 
@@ -154,12 +153,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       case ManageRoute.team_invite:
       case ManageRoute.member_profile:
         state.update(ManageRoute.team, team: state.team);
-        break;
-      case ManageRoute.user_profile:
-        if (state.prevRoute == ManageRoute.team)
-          state.update(ManageRoute.team, team: state.team);
-        else
-          state.update(ManageRoute.teams);
         break;
       default:
         state.update(ManageRoute.teams);
