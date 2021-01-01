@@ -4,5 +4,6 @@ enum ManageRoute {
   teams,
   team,
   team_create,
+  profile,
   unknown,
 }

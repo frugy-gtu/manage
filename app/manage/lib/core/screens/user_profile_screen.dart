@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:manage/core/controller/user_profile_screen_controller.dart';
 import 'package:manage/core/model/user_profile_model.dart';
 
-class UserPage extends StatelessWidget {
-  
-  final UserProfileModel user;
 
-  UserPage({@required this.user});
+class UserPage extends StatelessWidget {
+
+  final controller = UserProfileScreenController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,16 @@ class UserPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ProfileInfos(user: user,),
+      body: FutureBuilder<UserProfileModel>(
+        future: controller.user(),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            return ProfileInfos(user: snapshot.data);
+          }else{
+            return Center(child: CircularProgressIndicator(),);
+          }
+        }
+      ),  
       drawer: ThisDrawer(),
     );
   }
@@ -49,11 +58,12 @@ class ProfileInfos extends StatelessWidget {
               height: 150.0, 
               width: 150.0, 
               decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.black,
                   width: 3.0,
                 ),
-				image: DecorationImage(image: user.profilePhoto.image,),
+                image: DecorationImage(image: user.profilePhoto.image,)
               ),
             ),
             SizedBox(height: 5.0,),

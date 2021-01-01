@@ -29,6 +29,10 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamsPath();
       }
+	  
+	  if(uri.pathSegments[0] == 'profile') {
+	    return ManageProfilePath();
+	  }
     }
 
     if (uri.pathSegments.length == 2) {
@@ -39,7 +43,7 @@ class ManageRouteInformationParser
         return ManageTeamCreatePath();
       }
     }
-
+	
     return ManageUnknownPath();
   }
 
@@ -64,7 +68,11 @@ class ManageRouteInformationParser
     if (configuration is ManageTeamCreatePath) {
       return RouteInformation(location: 'teams/create');
     }
-
+	
+	if (configuration is ManageProfilePath) {
+	  return RouteInformation(location '/profile');
+	}
+	
     return null;
   }
 }
