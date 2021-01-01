@@ -20,23 +20,27 @@ class ManageRouteState extends ChangeNotifier {
 
   GeneralUserModel get member => _member;
 
-  void update(ManageRoute route, {TeamModel team, GeneralUserModel member,}) {
+  void update(ManageRoute route,
+      {TeamModel team, GeneralUserModel member, ManageRoute prevRoute}) {
     assert(route != null);
 
-    if(route == ManageRoute.team) {
+    if (route == ManageRoute.team) {
       assert(team != null);
       _team = team;
     }
 
-    if(route == ManageRoute.member_profile) {
+    if (route == ManageRoute.member_profile) {
       assert(member != null);
       _member = member;
     }
 
-    _prevRoute = _route;
+    if (route == ManageRoute.user_profile) {
+      assert(prevRoute != null);
+      _prevRoute = prevRoute;
+    }
+
     _route = route;
 
     notifyListeners();
   }
 }
-

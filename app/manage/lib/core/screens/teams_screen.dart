@@ -27,7 +27,7 @@ class TeamsScreen extends StatelessWidget {
             icon: Icon(Icons.account_circle),
             enableFeedback: false,
             onPressed: () {
-              context.read<ManageRouteState>().update(ManageRoute.user_profile_f_teams);
+              context.read<ManageRouteState>().update(ManageRoute.user_profile);
             },
             splashRadius: 20,
           ),

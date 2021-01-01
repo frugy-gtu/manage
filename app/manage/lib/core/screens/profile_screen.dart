@@ -3,11 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:manage/core/model/general_user_model.dart';
 
 
-class UserProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
 
   final GeneralUserModel user;
 
-  UserProfileScreen(this.user);
+  ProfileScreen(this.user);
 
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
+import 'package:manage/core/screens/profile_screen.dart';
 import 'package:manage/core/screens/project_create_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/team_invite_screen.dart';
 import 'package:manage/core/screens/team_screen.dart';
 import 'package:manage/core/screens/teams_screen.dart';
-import 'package:manage/core/model/team_model.dart';
-import 'package:manage/core/screens/user_profile_screen.dart';
 
 class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {
@@ -54,7 +54,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageTeamInvitePath) {
       state.update(ManageRoute.team_invite);
     } else if (path is ManageUserProfileFromTeamsPath) {
-      state.update(ManageRoute.user_profile_f_teams);
+      state.update(ManageRoute.user_profile, prevRoute: ManageRoute.teams);
     } else if (path is ManageMemberProfilePath) {
       state.update(
         ManageRoute.member_profile,
@@ -89,26 +89,44 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         child: TeamsScreen(),
       ));
 
-      if (state.route == ManageRoute.user_profile_f_teams) {
+      if (state.route == ManageRoute.user_profile) {
+        if (state.prevRoute == ManageRoute.teams) {
+          pages.add(MaterialPage(
+            key: ValueKey('UserProfileFromTeamsPage'),
+            child: ProfileScreen(Auth.user),
+          ));
+        }
+      }
+
+      if (state.route == ManageRoute.team_create) {
         pages.add(MaterialPage(
-          key: ValueKey('UserProfileFromTeamsPage'),
-          child: UserProfileScreen(Auth.user),
+          key: ValueKey('TeamCreatePage'),
+          child: TeamCreateScreen(),
         ));
       }
 
       if (state.route == ManageRoute.team ||
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
-          state.route == ManageRoute.member_profile) {
+          state.route == ManageRoute.member_profile ||
+          (state.route == ManageRoute.user_profile &&
+              state.prevRoute == ManageRoute.team)) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
           child: TeamScreen(team: state.team),
         ));
 
+        if (state.route == ManageRoute.user_profile) {
+          pages.add(MaterialPage(
+            key: ValueKey('UserProfileFromTeamPage'),
+            child: ProfileScreen(Auth.user),
+          ));
+        }
+
         if (state.route == ManageRoute.member_profile) {
           pages.add(MaterialPage(
             key: ValueKey('MemberProfilePage'),
-            child: UserProfileScreen(state.member),
+            child: ProfileScreen(state.member),
           ));
         }
 
@@ -125,13 +143,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
             child: TeamInviteScreen(state.team),
           ));
         }
-      }
-
-      if (state.route == ManageRoute.team_create) {
-        pages.add(MaterialPage(
-          key: ValueKey('TeamCreatePage'),
-          child: TeamCreateScreen(),
-        ));
       }
     }
 
@@ -151,6 +162,9 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       case ManageRoute.team_invite:
       case ManageRoute.member_profile:
         state.update(ManageRoute.team, team: state.team);
+        break;
+      case ManageRoute.user_profile:
+        state.update(state.prevRoute);
         break;
       default:
         state.update(ManageRoute.teams);
