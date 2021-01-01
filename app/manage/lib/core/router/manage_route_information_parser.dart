@@ -29,28 +29,30 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamsPath();
       }
-	  
-	  if(uri.pathSegments[0] == 'profile') {
-	    return ManageProfilePath();
-	  }
+
+      if (uri.pathSegments[0] == 'profile') {
+        return ManageUserProfilePath();
+      }
     }
 
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamPath(uri.pathSegments[1]);
-      }
-      else if(uri.pathSegments[0] == 'create') {
+      } else if (uri.pathSegments[0] == 'create') {
         return ManageTeamCreatePath();
+      }
+      if (uri.pathSegments[0] == 'users') {
+        return ManageMemberProfilePath(uri.pathSegments[1]);
       }
     }
 
-    if(uri.pathSegments.length == 3) {
-      if(uri.pathSegments[0] == 'teams') {
-        if(uri.pathSegments[2] == 'create') {
+    if (uri.pathSegments.length == 3) {
+      if (uri.pathSegments[0] == 'teams') {
+        if (uri.pathSegments[2] == 'create') {
           return ManageProjectCreatePath(uri.pathSegments[1]);
         }
 
-        if(uri.pathSegments[2] == 'invite') {
+        if (uri.pathSegments[2] == 'invite') {
           return ManageTeamInvitePath(uri.pathSegments[1]);
         }
       }
@@ -89,10 +91,14 @@ class ManageRouteInformationParser
       return RouteInformation(location: 'teams/${configuration.id}/invite');
     }
 
-	if (configuration is ManageProfilePath) {
-	  return RouteInformation(location: '/profile');
-	}
-	
+    if (configuration is ManageUserProfilePath) {
+      return RouteInformation(location: '/profile');
+    }
+
+    if (configuration is ManageMemberProfilePath) {
+      return RouteInformation(location: '/users/${configuration.id}');
+    }
+
     return null;
   }
 }

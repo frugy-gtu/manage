@@ -34,8 +34,13 @@ class ManageTeamInvitePath extends ManageRoutePath {
   const ManageTeamInvitePath(this.id);
 }
 
-class ManageProfilePath extends ManageRoutePath {
-  const ManageProfilePath();
+class ManageUserProfilePath extends ManageRoutePath {
+  const ManageUserProfilePath();
+}
+
+class ManageMemberProfilePath extends ManageRoutePath{
+  final String id;
+  const ManageMemberProfilePath(this.id);
 }
 
 class ManageUnknownPath extends ManageRoutePath {
