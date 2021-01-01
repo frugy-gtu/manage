@@ -76,31 +76,33 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         child: TeamsScreen(),
       ));
 
-      if (state.route == ManageRoute.team) {
+      if (state.route == ManageRoute.team ||
+          state.route == ManageRoute.project_create ||
+          state.route == ManageRoute.team_invite) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
           child: TeamScreen(team: state.team),
         ));
+
+        if (state.route == ManageRoute.project_create) {
+          pages.add(MaterialPage(
+            key: ValueKey('ProjectCreatePage'),
+            child: ProjectCreateScreen(state.team),
+          ));
+        }
+
+        if (state.route == ManageRoute.team_invite) {
+          pages.add(MaterialPage(
+            key: ValueKey('TeamInvitePage'),
+            child: TeamInviteScreen(state.team),
+          ));
+        }
       }
 
       if (state.route == ManageRoute.team_create) {
         pages.add(MaterialPage(
           key: ValueKey('TeamCreatePage'),
           child: TeamCreateScreen(),
-        ));
-      }
-
-      if (state.route == ManageRoute.project_create) {
-        pages.add(MaterialPage(
-          key: ValueKey('ProjectCreatePage'),
-          child: ProjectCreateScreen(state.team),
-        ));
-      }
-
-      if (state.route == ManageRoute.team_invite) {
-        pages.add(MaterialPage(
-          key: ValueKey('TeamInvitePage'),
-          child: TeamInviteScreen(state.team),
         ));
       }
     }
