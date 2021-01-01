@@ -6,13 +6,15 @@ import '../model/team_model.dart';
 
 class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
+  ManageRoute _prevRoute;
   TeamModel _team;
   TeamUserModel _member;
   TeamUserModel user;
 
-  ManageRouteState() : _route = ManageRoute.teams;
+  ManageRouteState();
 
   ManageRoute get route => _route;
+  ManageRoute get prevRoute => _prevRoute;
 
   TeamModel get team => _team;
 
@@ -31,6 +33,7 @@ class ManageRouteState extends ChangeNotifier {
       _member = member;
     }
 
+    _prevRoute = _route;
     _route = route;
 
     notifyListeners();
