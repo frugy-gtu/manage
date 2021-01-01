@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/controller/team_create_controller.dart';
+import 'package:manage/core/controller/team_create_screen_controller.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
 import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class TeamCreateScreen extends StatelessWidget {
               horizontal: constraints.maxWidth / 9,
             ),
             child: ChangeNotifierProvider(
-              create: (_) => TeamCreateController(),
+              create: (_) => TeamCreateScreenController(),
               child: TeamForm(),
             ),
           ),
@@ -30,7 +30,7 @@ class TeamCreateScreen extends StatelessWidget {
 class TeamForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<TeamCreateController>(
+    return Consumer<TeamCreateScreenController>(
       builder: (context, controller, child) => Column(children: [
         TextField(
           decoration: InputDecoration(
@@ -46,6 +46,7 @@ class TeamForm extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'abbreviation',
             labelText: 'abbreviation',
+            errorText: controller.abbrvError,
           ),
           controller: controller.abbrv,
           onTap: () {
@@ -55,6 +56,10 @@ class TeamForm extends StatelessWidget {
           inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
           textCapitalization: TextCapitalization.characters,
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
+        ),
+        SizedBox(height: 10,),
+        Text(controller.requestError,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
         ElevatedButton(
           onPressed: () {

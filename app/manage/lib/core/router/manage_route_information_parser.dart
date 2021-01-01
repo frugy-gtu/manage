@@ -9,8 +9,9 @@ class ManageRouteInformationParser
       RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location);
 
-    //TODO: Forward to login page if log out
-    if (!Auth.isLoggedIn()) return ManageLoginPath();
+    if (!Auth.isLoggedIn()) {
+      return ManageLoginPath();
+    }
 
     if (uri.pathSegments.length == 0) {
       return ManageTeamsPath();
@@ -28,6 +29,10 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'teams') {
         return ManageTeamsPath();
       }
+	  
+	  if(uri.pathSegments[0] == 'profile') {
+	    return ManageProfilePath();
+	  }
     }
 
     if (uri.pathSegments.length == 2) {
@@ -36,6 +41,18 @@ class ManageRouteInformationParser
       }
       else if(uri.pathSegments[0] == 'create') {
         return ManageTeamCreatePath();
+      }
+    }
+
+    if(uri.pathSegments.length == 3) {
+      if(uri.pathSegments[0] == 'teams') {
+        if(uri.pathSegments[2] == 'create') {
+          return ManageProjectCreatePath(uri.pathSegments[1]);
+        }
+
+        if(uri.pathSegments[2] == 'invite') {
+          return ManageTeamInvitePath(uri.pathSegments[1]);
+        }
       }
     }
 
@@ -64,6 +81,18 @@ class ManageRouteInformationParser
       return RouteInformation(location: 'teams/create');
     }
 
+    if (configuration is ManageProjectCreatePath) {
+      return RouteInformation(location: 'teams/${configuration.id}/create');
+    }
+
+    if (configuration is ManageTeamInvitePath) {
+      return RouteInformation(location: 'teams/${configuration.id}/invite');
+    }
+
+	if (configuration is ManageProfilePath) {
+	  return RouteInformation(location: '/profile');
+	}
+	
     return null;
   }
 }

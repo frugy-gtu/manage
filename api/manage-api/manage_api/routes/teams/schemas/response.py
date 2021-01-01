@@ -1,33 +1,34 @@
 from marshmallow import fields, Schema
+from manage_api.routes.common_schemas import BoolResult
 
 
-class Base(Schema):
+class TeamBase(Schema):
     id = fields.UUID()
-    created_at = fields.DateTime()
+    created_at = fields.String()
 
 
-class Team(Base):
+class Team(TeamBase):
     name = fields.String()
     abbreviation = fields.String()
 
 
-class TeamUser(Base):
+class TeamUser(TeamBase):
     username = fields.String()
     email = fields.Email()
 
 
-class JoinRequest(Base):
+class JoinRequest(TeamBase):
     user_id = fields.UUID()
 
 
-class TeamTag(Base):
+class TeamTag(TeamBase):
     name = fields.String()
 
 
-class TeamState(Base):
+class TeamState(TeamBase):
     name = fields.String()
     rank = fields.Integer()
 
 
-class TeamProject(Base):
+class TeamProject(TeamBase):
     name = fields.String()

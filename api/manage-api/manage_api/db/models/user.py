@@ -16,6 +16,8 @@ class User(Base):
         server_default=db.text('false'),
     )
 
+    teams = db.relationship('Team', secondary='user_teams', lazy='noload')
+
     def hash_password(self):
         self.password = generate_password_hash(self.password)
 
