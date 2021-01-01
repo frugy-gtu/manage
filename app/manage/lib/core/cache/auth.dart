@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:manage/core/model/login_user_model.dart';
 
 class Auth {
   static Box _box;
+  static LoginUserModel _user;
 
   static Future<void> init() async {
     _box = await Hive.openBox('auth');
@@ -17,6 +19,29 @@ class Auth {
       default:
         return true;
     }
+  }
+
+  static get user {
+    if(isLoggedIn()) {
+
+      if(_user != null) return _user;
+
+      _user = LoginUserModel(
+        email: _box.get('email'),
+        username: _box.get('username'),
+        createdAt: _box.get('createdAt'),
+      );
+
+      return _user;
+    }
+
+    return null;
+  }
+
+  static set user(LoginUserModel user) {
+    _box.put('email', user.email);
+    _box.put('username', user.username);
+    _box.put('createdAt', user.createdAt);
   }
 
   static set status(AuthStatus status) {
