@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/cache/auth.dart';
-import 'package:manage/core/model/team_user_model.dart';
+import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
-import 'package:manage/core/screens/member_profile_screen.dart';
 import 'package:manage/core/screens/project_create_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
@@ -59,9 +58,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageMemberProfilePath) {
       state.update(
         ManageRoute.member_profile,
-        member: TeamUserModel(
+        member: GeneralUserModel(
             email: 'Not implemented',
-            password: 'Not implemented',
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
@@ -110,7 +108,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         if (state.route == ManageRoute.member_profile) {
           pages.add(MaterialPage(
             key: ValueKey('MemberProfilePage'),
-            child: MemberProfileScreen(state.member),
+            child: UserProfileScreen(state.member),
           ));
         }
 

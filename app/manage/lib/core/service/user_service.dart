@@ -1,5 +1,5 @@
 import 'package:manage/core/cache/auth.dart';
-import 'package:manage/core/model/login_user_model.dart';
+import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/model/token_model.dart';
 import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/service/request_method.dart';
@@ -14,7 +14,7 @@ Future<RequestResult> login(UserModel model) async => service.request(
     successCallback: (success) {
       Auth.accessToken = TokenModel.fromJson(success.data).accessToken;
       Auth.status = AuthStatus.logged_in;
-      Auth.user = LoginUserModel(
+      Auth.user = GeneralUserModel(
           email: 'demo@gmail.com',
           username: 'DemoDemo',
           createdAt: '02/02/2021');

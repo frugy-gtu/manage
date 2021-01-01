@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manage/core/model/login_user_model.dart';
+import 'package:manage/core/model/general_user_model.dart';
 
 
 class UserProfileScreen extends StatelessWidget {
 
-  final LoginUserModel user;
+  final GeneralUserModel user;
 
   UserProfileScreen(this.user);
 
@@ -32,7 +32,7 @@ class UserProfileScreen extends StatelessWidget {
 }
 
 class ProfileInfos extends StatelessWidget {
-  final LoginUserModel user;
+  final GeneralUserModel user;
 
   ProfileInfos({this.user});
 

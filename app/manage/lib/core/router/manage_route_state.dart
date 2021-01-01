@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/model/team_user_model.dart';
+import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 
 import '../model/team_model.dart';
@@ -8,8 +8,8 @@ class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
   ManageRoute _prevRoute;
   TeamModel _team;
-  TeamUserModel _member;
-  TeamUserModel user;
+  GeneralUserModel _member;
+  GeneralUserModel user;
 
   ManageRouteState();
 
@@ -18,9 +18,9 @@ class ManageRouteState extends ChangeNotifier {
 
   TeamModel get team => _team;
 
-  TeamUserModel get member => _member;
+  GeneralUserModel get member => _member;
 
-  void update(ManageRoute route, {TeamModel team, TeamUserModel member,}) {
+  void update(ManageRoute route, {TeamModel team, GeneralUserModel member,}) {
     assert(route != null);
 
     if(route == ManageRoute.team) {
