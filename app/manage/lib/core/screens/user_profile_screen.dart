@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manage/core/model/user_profile_model.dart';
+import 'package:manage/core/model/login_user_model.dart';
 
 
-class UserPage extends StatelessWidget {
+class UserProfileScreen extends StatelessWidget {
 
-  final UserProfileModel user;
+  final LoginUserModel user;
 
-  UserPage({this.user});
+  UserProfileScreen(this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class UserPage extends StatelessWidget {
 }
 
 class ProfileInfos extends StatelessWidget {
-  final UserProfileModel user;
+  final LoginUserModel user;
 
   ProfileInfos({this.user});
 
@@ -47,26 +47,26 @@ class ProfileInfos extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 150.0, 
-              width: 150.0, 
+              height: 150.0,
+              width: 150.0,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.black,
                   width: 3.0,
                 ),
-                image: DecorationImage(image: user.profilePhoto.image,)
+                image: DecorationImage(image: null)
               ),
             ),
             SizedBox(height: 5.0,),
-            Text(user.userName, style: TextStyle(fontSize: 30.0)),
+            Text(user.username, style: TextStyle(fontSize: 30.0)),
             SizedBox(height: 5.0,),
-            Text(user.name + ' ' + user.surname, style: TextStyle(fontSize: 30.0)),
+            Text(user.email, style: TextStyle(fontSize: 30.0)),
           ],
         ),
       ),
     );
-  }      
+  }
 }
 
 class ThisDrawer extends StatelessWidget {
