@@ -3,6 +3,7 @@ from marshmallow import fields, post_load, validates_schema, Schema
 from marshmallow.exceptions import ValidationError
 from manage_api.db.services import ProjectService
 from manage_api.db.services import TeamService
+from manage_api.db.services import UserService
 from manage_api.routes.common_schemas import JWTSchema
 
 
@@ -122,6 +123,30 @@ class TeamUsersGetSchema(JWTSchema):
                 'team': request.view_args['team_id'],
             }
         }
+        return data
+
+
+class TeamUsersPostSchema(JWTSchema):
+    user_id = fields.UUID(required=False, allow_none=True)
+    username = fields.String(required=False, allow_none=True)
+
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            if not data.get('user_id'):
+                if not data.get('username'):
+                    abort(400)
+                user = UserService(username=data['username'])
+                data['user_id'] = str(user['id'])
+            else:
+                UserService(id=data['user_id'])
+        except ValueError as e:
+            abort(404, 'User not found')
+        team = _validate_user_is_manager(user_id=self.get_user_id())
+        if team.is_user_associated(data['user_id']):
+            data['team'] = None
+            return data
+        data['team'] = team
         return data
 
 

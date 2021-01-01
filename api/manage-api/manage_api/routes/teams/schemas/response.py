@@ -1,4 +1,5 @@
 from marshmallow import fields, Schema
+from manage_api.routes.common_schemas import BoolResult
 
 
 class TeamBase(Schema):
