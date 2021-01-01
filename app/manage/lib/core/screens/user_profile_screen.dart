@@ -27,7 +27,6 @@ class UserProfileScreen extends StatelessWidget {
         ],
       ),
       body: ProfileInfos(user: user),
-      drawer: ThisDrawer(),
     );
   }
 }
@@ -55,7 +54,7 @@ class ProfileInfos extends StatelessWidget {
                   color: Colors.black,
                   width: 3.0,
                 ),
-                image: DecorationImage(image: null)
+                image: DecorationImage(image: Image.asset('assets/default-profile.png').image),
               ),
             ),
             SizedBox(height: 5.0,),
@@ -69,40 +68,3 @@ class ProfileInfos extends StatelessWidget {
   }
 }
 
-class ThisDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        canvasColor: Colors.black,
-      ),
-      child: SizedBox(
-        width: 150.0,
-        child: Drawer(
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text('Back', style: TextStyle(color: Colors.white)),
-                onTap: (){
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Agenda', style: TextStyle(color: Colors.white)),
-                onTap: (){
-                  //Navigator.popAndPushNamed(context, '/agendaPage');
-                },
-              ),
-              ListTile(
-                title: Text('Settings', style: TextStyle(color: Colors.white)),
-                onTap: (){
-                  //Navigator.popAndPushNamed(context, '/settingsPage');
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
