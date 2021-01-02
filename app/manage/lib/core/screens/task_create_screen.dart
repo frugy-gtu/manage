@@ -40,8 +40,10 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: Card(
-          child: TaskCreate(),
+        child: SingleChildScrollView(
+          child: Card(
+            child: TaskCreate(),
+          ),
         ),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -124,7 +126,6 @@ class _TaskCreateState extends State<TaskCreate> {
         inputType: InputType.both,
         format: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
         editable: false,
-        firstDate: DateTime.now(),
         decoration: InputDecoration(
           labelText: 'DateTime',
           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -140,10 +141,10 @@ class _TaskCreateState extends State<TaskCreate> {
         focusNode: _submitFocusNode,
         child: Text(
           'Submit',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).textSelectionColor),
         ),
         onPressed: submitEnabled ? _submit : null,
-        color: Colors.indigo,
+        color: Theme.of(context).buttonColor,
       )
     ];
   }
