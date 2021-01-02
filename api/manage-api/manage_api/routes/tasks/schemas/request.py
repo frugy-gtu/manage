@@ -125,6 +125,21 @@ class TaskDeleteSchema(JWTSchema):
 class TaskStatePutSchema(JWTSchema):
     state_id = fields.UUID(required=True, allow_none=False)
 
+    @post_load
+    def post_load(self, data, **kwargs):
+        try:
+            task = TaskService(id=request.view_args['task_id'])
+            team = TeamService(id=task['team_id'])
+            if not team.is_user_associated(self.get_user_id()):
+                abort(401, 'You don\'t have access to this task')
+            project = ProjectService(id=task['project_id'])
+            if not project.has_state(data['state_id']):
+                abort(404, 'This state not found on project')
+            data['task'] = task
+            return data
+        except ValueError as e:
+            abort(404, str(e))
+
 
 class TaskTagPutSchema(JWTSchema):
     tag_id = fields.UUID(required=True, allow_none=False)
