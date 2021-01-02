@@ -1126,3 +1126,54 @@ def test_team_users_post_with_jwt_using_wrong_username(flask_test_client):
     )
     assert response.status_code == 404
     assert db_models.UserTeams.query.count() == 1
+
+
+def test_team_states_get_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    team.update_states(['state1', 'state2', 'state3'])
+    response: Response = flask_test_client.get(
+        f'/teams/{team["id"]}/states',
+    )
+    data = response.get_json()
+    assert response.status_code == 401
+
+
+def test_team_states_get_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    state_data = ['state1', 'state2', 'state3']
+    team.update_states(state_data)
+    response: Response = flask_test_client.get(
+        f'/teams/{team["id"]}/states', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert len(data) == 3
+    states = db_models.DefaultState.query.order_by(db_models.DefaultState.rank).all()
+    assert len(states) == 3
+    for i in range(3):
+        assert states[i].name == state_data[i]
+        assert states[i].team_id == team['id']
