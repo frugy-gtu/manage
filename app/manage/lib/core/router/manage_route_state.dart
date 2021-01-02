@@ -10,6 +10,7 @@ class ManageRouteState extends ChangeNotifier {
   TeamModel _team;
   GeneralUserModel _member;
   GeneralUserModel user;
+  BottomBarTab _selectedTab = BottomBarTab.teams;
 
   ManageRouteState();
 
@@ -19,6 +20,12 @@ class ManageRouteState extends ChangeNotifier {
   TeamModel get team => _team;
 
   GeneralUserModel get member => _member;
+
+  BottomBarTab get tab => _selectedTab;
+
+  set tab(BottomBarTab value) {
+    tab = value;
+  }
 
   void update(ManageRoute route,
       {TeamModel team, GeneralUserModel member, ManageRoute prevRoute}) {
@@ -39,8 +46,15 @@ class ManageRouteState extends ChangeNotifier {
       _prevRoute = prevRoute;
     }
 
+    _selectedTab = BottomBarTab.teams;
     _route = route;
 
     notifyListeners();
   }
+}
+
+enum BottomBarTab {
+  teams,
+  projects,
+  profile,
 }
