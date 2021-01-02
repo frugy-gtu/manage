@@ -12,10 +12,12 @@ from manage_api.routes.common_schemas import JWTSchema
 class TasksGetSchema(JWTSchema):
     project_id = fields.UUID(required=False, allow_none=True)
     task_group_id = fields.UUID(required=False, allow_none=True)
+    state_id = fields.UUID(required=False, allow_none=True)
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
         user_id = self.get_user_id()
+        project = None
         try:
             if data.get('task_group_id'):
                 task_group = TaskGroupService(id=data['task_group_id'])
@@ -25,9 +27,15 @@ class TasksGetSchema(JWTSchema):
             else:
                 if data.get('project_id'):
                     project = ProjectService(id=data['project_id'])
-                    project.is_user_associated(user_id)
                     if not project.is_user_associated(user_id):
                         abort(401, 'You don\'t have access to this team\'s tasks')
+                elif data.get('state_id'):
+                    raise ValidationError(
+                        'In order to filter by state_id, provide an task group or project too'
+                    )
+            if data.get('state_id'):
+                if not project.has_state(data['state_id']):
+                    abort(404, 'This state not found on project')
         except ValueError as e:
             abort(404, str(e))
 
@@ -40,6 +48,8 @@ class TasksGetSchema(JWTSchema):
             data['filters']['==']['project_id'] = data['project_id']
         else:
             data['filters']['==']['user_id'] = self.get_user_id()
+        if data.get('state_id'):
+            data['filters']['==']['state_id'] = data['state_id']
         return data
 
 
