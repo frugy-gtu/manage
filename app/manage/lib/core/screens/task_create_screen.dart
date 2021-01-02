@@ -23,6 +23,13 @@ Future<http.Response> createTask(
     }),
   );
 }
+Future<RequestResult<List<ProjectStateModel>>> statesOf(TeamProjectModel project) async =>
+  (await service.request<ProjectStateModel>(
+    method: RequestMethod.get,
+    url: '/projects/' + projectid + '/states/',
+    decode: (i)=> ProjectStateModel.fromJson(i),
+  )).castTo<List<ProjectStateModel>>();
+  ;
 
 class TaskCreateScreen extends StatefulWidget {
   TaskCreateScreen({Key key}) : super(key: key);
@@ -58,42 +65,50 @@ class TaskCreate extends StatefulWidget {
 
 class _TaskCreateState extends State<TaskCreate> {
   final number = TextEditingController();
-  DateTime date1 = DateTime.now();
+  DateTime schedule = DateTime.now();
+  DateTime duedate;
+  String selectedState;   // TODO : Initialize state here and group below
+  String selectedGroup;
   final TextEditingController _tasknameController = TextEditingController();
   final TextEditingController _definitionController = TextEditingController();
   final FocusNode _tasknameFocusNode = FocusNode();
   final FocusNode _defFocusNode = FocusNode();
-  final FocusNode _dateFocusNode = FocusNode();
   final FocusNode _submitFocusNode = FocusNode();
+  final FocusNode _scheduleFocusNode = FocusNode();
+  final FocusNode _duedateFocusNode = FocusNode();
 
+  final format = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   String get _taskname => _tasknameController.text;
   void _nameComplete() {
     FocusScope.of(context).requestFocus(_defFocusNode);
   }
 
   void _defComplete() {
-    FocusScope.of(context).requestFocus(_dateFocusNode);
+    FocusScope.of(context).requestFocus(_duedateFocusNode);
   }
 
-  void _dateComplete() {
+  void _duedateComplete() {
     FocusScope.of(context).requestFocus(_submitFocusNode);
   }
 
-  void _notComplete() {
-    FocusScope.of(context).requestFocus(_tasknameFocusNode);
+  void _scheduleComplete() {
+    FocusScope.of(context).requestFocus(_duedateFocusNode);
   }
 
   void _submit() {
-    print(date1);
+    print(schedule);
+    print(duedate);
+    print(selectedState);
+    print(selectedGroup);
     {
       createTask(_tasknameController.text, _definitionController.text,
-          date1.toString());
+          duedate.toString());
       // TODO : add next page to move
     }
   }
 
   List<Widget> _buildChildren() {
-    bool submitEnabled = _taskname.isNotEmpty;
+    bool submitEnabled = _taskname.isNotEmpty && duedate != null;
 
     return [
       TextField(
@@ -113,28 +128,100 @@ class _TaskCreateState extends State<TaskCreate> {
         keyboardType: TextInputType.multiline,
         maxLines: 5,
         decoration: InputDecoration(
-          labelText: 'Description',
-          hintText: 'Enter Description Here',
+          labelText: 'Details',
+          hintText: 'Enter Details Here',
         ),
         autocorrect: false,
         textInputAction: TextInputAction.next,
         onEditingComplete: _defComplete,
       ),
-      DateTimePickerFormField(
-        focusNode: _dateFocusNode,
-        keyboardType: TextInputType.datetime,
-        inputType: InputType.both,
-        format: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
-        editable: false,
-        decoration: InputDecoration(
-          labelText: 'DateTime',
-          floatingLabelBehavior: FloatingLabelBehavior.never,
+      SizedBox(height: 30),
+      Column(children: <Widget>[
+        Text('Deadline'),
+        DateTimeField(
+          focusNode: _duedateFocusNode,
+          format: format,
+          onShowPicker: (context, currentValue) async {
+            final date = await showDatePicker(
+                context: context,
+                firstDate: DateTime.now(),
+                initialDate: new DateTime.now(),
+                lastDate: DateTime(2050));
+            if (date != null) {
+              final time = await showTimePicker(
+                  context: context,
+                  initialTime: new TimeOfDay(hour: 0, minute: 0));
+              return DateTimeField.combine(date, time);
+            } else {
+              return currentValue;
+            }
+          },
+          onEditingComplete: _duedateComplete,
+          onChanged: (dt) {
+            setState(() => duedate = dt);
+            print('Selected date: $duedate');
+          },
         ),
-        onChanged: (dt) {
-          setState(() => date1 = dt);
-          print('Selected date: $date1');
-          submitEnabled ? _dateComplete() : _notComplete();
+      ]),
+      SizedBox(height: 30),
+      Column(children: <Widget>[
+        Text('Schedule Date'),
+        DateTimeField(
+          focusNode: _scheduleFocusNode,
+          format: format,
+          onShowPicker: (context, currentValue) async {
+            final date = await showDatePicker(
+                context: context,
+                firstDate: DateTime(2010),
+                initialDate: DateTime.now(),
+                lastDate: duedate != null ? duedate : DateTime(2050));
+            if (date != null) {
+              final time = await showTimePicker(
+                context: context,
+                initialTime:
+                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              );
+              return DateTimeField.combine(date, time);
+            } else {
+              return currentValue;
+            }
+          },
+          onEditingComplete: _scheduleComplete,
+          onChanged: (dt) {
+            setState(() => schedule = dt);
+            print('Selected date: $schedule');
+          },
+        ),
+      ]),
+      SizedBox(height: 30),
+      DropdownButton<String>(
+        value: selectedState,
+        onChanged: (String newValue) {
+          setState(() {
+            selectedState = newValue;
+          });
         },
+        items: .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+      SizedBox(height: 30),
+      DropdownButton<String>(
+        value: selectedGroup,
+        onChanged: (String newValue) {
+          setState(() {
+            selectedGroup = newValue;
+          });
+        },
+        items: .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
       ),
       SizedBox(height: 30),
       RaisedButton(

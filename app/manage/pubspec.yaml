@@ -28,7 +28,7 @@ dependencies:
   provider: ^4.3.2+3
   path_provider: ^1.6.24
   flutter_cupertino_date_picker: ^1.0.26+2    # added wtih Manage 16
-  datetime_picker_formfield: ^0.1.8           # added with Manage 16
+  datetime_picker_formfield: ^1.0.0     # added with Manage 16
   http : ^0.12.2 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
