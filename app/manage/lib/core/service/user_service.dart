@@ -16,7 +16,7 @@ Future<RequestResult> login(UserModel model) async => service.request(
       Auth.status = AuthStatus.logged_in;
       Auth.user = GeneralUserModel(
           email: 'demo@gmail.com',
-          username: 'DemoDemo',
+          username: 'isot',
           createdAt: '02/02/2021');
     });
 

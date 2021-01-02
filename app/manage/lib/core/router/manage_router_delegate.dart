@@ -164,7 +164,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         state.update(ManageRoute.team, team: state.team);
         break;
       case ManageRoute.user_profile:
-        state.update(state.prevRoute);
+        state.update(state.prevRoute, team: state.team);
         break;
       default:
         state.update(ManageRoute.teams);

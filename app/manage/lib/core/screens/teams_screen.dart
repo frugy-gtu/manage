@@ -27,7 +27,8 @@ class TeamsScreen extends StatelessWidget {
             icon: Icon(Icons.account_circle),
             enableFeedback: false,
             onPressed: () {
-              context.read<ManageRouteState>().update(ManageRoute.user_profile);
+              context.read<ManageRouteState>().update(ManageRoute.user_profile,
+                  prevRoute: ManageRoute.teams);
             },
             splashRadius: 20,
           ),
@@ -36,25 +37,23 @@ class TeamsScreen extends StatelessWidget {
       body: FutureBuilder(
         future: controller.teams(),
         builder: (context, snapshot) {
-          if(snapshot.connectionState ==
-            ConnectionState.done) {
-            if(snapshot.hasError) {
-              return Center(child: Text(snapshot.error),);
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error),
+              );
             }
             return _TeamsScreenBody(snapshot.data);
-          }
-          else {
+          } else {
             return Center(child: CircularProgressIndicator());
           }
         },
       ),
     );
   }
-
 }
 
 class _TeamsScreenBody extends StatelessWidget {
-
   final List<TeamModel> teams;
 
   _TeamsScreenBody(this.teams);
