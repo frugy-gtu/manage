@@ -47,6 +47,7 @@ class Auth {
     switch (status) {
       case AuthStatus.logged_out:
         _box.put('status', 0);
+        _user = null;
         break;
       default:
         _box.put('status', 1);
