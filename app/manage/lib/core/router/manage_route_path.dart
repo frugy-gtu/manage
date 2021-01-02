@@ -24,6 +24,11 @@ class ManageTeamCreatePath extends ManageRoutePath {
   const ManageTeamCreatePath();
 }
 
+class ManageProjectPath extends ManageRoutePath {
+  final String id;
+  const ManageProjectPath(this.id);
+}
+
 class ManageProjectCreatePath extends ManageRoutePath {
   final String id;
   const ManageProjectCreatePath(this.id);

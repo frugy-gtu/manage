@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/model/team_model.dart';
+import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
 import 'package:manage/core/screens/profile_screen.dart';
 import 'package:manage/core/screens/project_create_screen.dart';
+import 'package:manage/core/screens/project_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/team_invite_screen.dart';
@@ -63,7 +65,16 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
-    } else if (path is ManageUnknownPath) {
+    } else if (path is ManageProjectPath) {
+      state.update(
+        ManageRoute.project,
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.id,
+        ),
+      );
+    }
+    if (path is ManageUnknownPath) {
       state.update(ManageRoute.unknown);
     }
   }
@@ -109,6 +120,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
           state.route == ManageRoute.member_profile ||
+          state.route == ManageRoute.project ||
           (state.route == ManageRoute.user_profile &&
               state.prevRoute == ManageRoute.team)) {
         pages.add(MaterialPage(
@@ -127,6 +139,13 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           pages.add(MaterialPage(
             key: ValueKey('MemberProfilePage'),
             child: ProfileScreen(state.member),
+          ));
+        }
+
+        if(state.route == ManageRoute.project) {
+          pages.add(MaterialPage(
+            key: ValueKey('ProjectPage'),
+            child: ProjectScreen(state.project),
           ));
         }
 
@@ -161,6 +180,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       case ManageRoute.project_create:
       case ManageRoute.team_invite:
       case ManageRoute.member_profile:
+      case ManageRoute.project:
         state.update(ManageRoute.team, team: state.team);
         break;
       case ManageRoute.user_profile:
