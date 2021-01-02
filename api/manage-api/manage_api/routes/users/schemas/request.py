@@ -1,4 +1,11 @@
-from marshmallow import fields, Schema, post_load, validates_schema, ValidationError
+from marshmallow import (
+    fields,
+    Schema,
+    pre_load,
+    post_load,
+    validates_schema,
+    ValidationError,
+)
 from manage_api.db.services import UserService
 
 
@@ -10,11 +17,11 @@ class LoginSchema(Schema):
     @post_load
     def post_load(self, data, **kwargs):
         try:
-            if 'email' in data:
-                if 'username' in data:
+            if data.get('email'):
+                if data.get('username'):
                     raise ValidationError('Don\'t user both username and email')
                 user = UserService(email=data['email'])
-            elif 'username' in data:
+            elif data.get('username'):
                 user = UserService(username=data['username'])
             else:
                 raise ValidationError('Provide an email or username')

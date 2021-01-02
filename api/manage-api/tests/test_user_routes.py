@@ -90,6 +90,9 @@ def test_user_signup_post_email_username_password(flask_test_client):
     assert user is not None
     assert user.username == user_data['username']
     assert user.email == user_data['email']
+    assert db_models.Team.query.count() == 1
+    team = db_models.Team.query.first()
+    assert team.user_id == user.id
 
 
 def test_user_signup_post_used_email_username_password(flask_test_client):
