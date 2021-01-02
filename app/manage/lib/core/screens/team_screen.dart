@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:manage/core/controller/team_screen_controller.dart';
 import 'package:manage/core/model/team_project_model.dart';
-import 'package:manage/core/model/team_user_model.dart';
+import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
 import 'package:provider/provider.dart';
@@ -100,6 +100,7 @@ class _TeamScreenBodyView extends StatelessWidget {
               future: _controller.members(),
               onSuccess: (data) => _TeamMembersView(
                 members: data,
+                controller: _controller,
               ),
             ),
           ),
@@ -153,13 +154,15 @@ class _TeamProjectsView extends StatelessWidget {
 }
 
 class _TeamMembersView extends StatelessWidget {
+  final TeamScreenController controller;
   const _TeamMembersView({
     Key key,
-    @required List<TeamUserModel> members,
+    @required List<GeneralUserModel> members,
+    @required this.controller,
   })  : _members = members,
         super(key: key);
 
-  final List<TeamUserModel> _members;
+  final List<GeneralUserModel> _members;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +180,7 @@ class _TeamMembersView extends StatelessWidget {
               itemExtent: 60.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
-                  onTap: () {},
+                  onTap: () => controller.onMemberTap(context, _members[index]),
                   child: Row(
                     children: [
                       Spacer(),

@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'team_user_model.dart';
+part of 'general_user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TeamUserModel _$TeamUserModelFromJson(Map<String, dynamic> json) {
-  return TeamUserModel(
+GeneralUserModel _$GeneralUserModelFromJson(Map<String, dynamic> json) {
+  return GeneralUserModel(
     email: json['email'] as String,
-    password: json['password'] as String,
+    id: json['id'] as String,
     username: json['username'] as String,
     createdAt: json['created_at'] as String,
   );
 }
 
-Map<String, dynamic> _$TeamUserModelToJson(TeamUserModel instance) =>
+Map<String, dynamic> _$GeneralUserModelToJson(GeneralUserModel instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'password': instance.password,
-      'email': instance.email,
       'created_at': instance.createdAt,
+      'email': instance.email,
+      'username': instance.username,
+      'id': instance.id,
     };
