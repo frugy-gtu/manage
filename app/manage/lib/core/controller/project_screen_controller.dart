@@ -14,9 +14,9 @@ class ProjectScreenController extends ChangeNotifier {
   List<TaskGroupModel> _taskGroups;
   TabController tabController;
 
-  ProjectScreenController(
-    {@required TeamProjectModel project,}
-  ) : _project = project;
+  ProjectScreenController({
+    @required TeamProjectModel project,
+  }) : _project = project;
 
   ProjectScreenController.withTab(
       {@required TeamProjectModel project,
@@ -62,6 +62,21 @@ class ProjectScreenController extends ChangeNotifier {
     }
 
     return result.data;
+  }
+
+  Color getStateColor(ProjectStateModel state) {
+    switch (state.name) {
+      case 'TODO':
+        return Color.fromRGBO(244, 146, 59, 1);
+      case 'IN-PROGRESS':
+        return Color.fromRGBO(0, 0, 174, 1);
+      case 'DONE':
+        return Color.fromRGBO(68, 188, 68, 1);
+      case 'CANCEL':
+        return Colors.red;
+    }
+
+    return Colors.black;
   }
 
   @override

@@ -3,7 +3,6 @@ import 'package:manage/core/controller/project_screen_controller.dart';
 import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
-import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
 
 class ProjectScreen extends StatefulWidget {
@@ -142,8 +141,7 @@ class _TasksWithStateView extends StatelessWidget {
                         ),
                         Expanded(child: SizedBox()),
                         Text(
-                          formatter
-                              .format(DateTime.parse(_tasks[index].deadline)),
+                          _tasks[index].deadline,
                           style: TextStyle(fontSize: 15.0),
                         ),
                         IconButton(
