@@ -28,7 +28,8 @@ class Teams(Resource):
     def post(self, **kwargs):
         data = request.parsed_obj
         team = TeamService.create(data)
-        return team
+        team.update_states(['todo', 'in-progress', 'done', 'cancel'])
+        return team.dump()
 
 
 @api.route('/<uuid:team_id>')
