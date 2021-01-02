@@ -400,3 +400,107 @@ def test_task_delete_with_jwt_not_associated_user(flask_test_client):
     )
     assert response.status_code == 401
     assert db_models.Task.query.count() == 1
+
+
+def test_task_state_put_without_jwt(flask_test_client):
+    user, project = create_user_and_project(states=['todo', 'done'])
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+        'user_id': user['id'],
+    }
+    task_1 = db_services.TaskService.create(task_1_data)
+    states = project.dump_states()
+    assert str(task_1['state_id']) == states[0]['id']
+    payload = {'state_id': states[1]['id']}
+    response: Response = flask_test_client.put(
+        f'/tasks/{task_1["id"]}/state',
+        json=payload,
+    )
+    data = response.get_json()
+    assert response.status_code == 401
+
+
+def test_task_state_put_with_jwt(flask_test_client):
+    user, project = create_user_and_project(states=['todo', 'done'])
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+        'user_id': user['id'],
+    }
+    task_1 = db_services.TaskService.create(task_1_data)
+    states = project.dump_states()
+    assert str(task_1['state_id']) == states[0]['id']
+    payload = {'state_id': states[1]['id']}
+    response: Response = flask_test_client.put(
+        f'/tasks/{task_1["id"]}/state',
+        headers=headers,
+        json=payload,
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['result'] == True
+    task = db_models.Task.query.first()
+    assert str(task.state_id) == states[1]['id']
+
+
+def test_task_state_put_with_jwt_same_state(flask_test_client):
+    user, project = create_user_and_project(states=['todo', 'done'])
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+        'user_id': user['id'],
+    }
+    task_1 = db_services.TaskService.create(task_1_data)
+    states = project.dump_states()
+    assert str(task_1['state_id']) == states[0]['id']
+    payload = {'state_id': states[0]['id']}
+    response: Response = flask_test_client.put(
+        f'/tasks/{task_1["id"]}/state',
+        headers=headers,
+        json=payload,
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data['result'] == False
+    task = db_models.Task.query.first()
+    assert str(task.state_id) == states[0]['id']
+
+
+def test_task_state_put_with_jwt_not_associated_user(flask_test_client):
+    user, project = create_user_and_project(states=['todo', 'done'])
+    user2 = create_user(2)
+    access_token = user2.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    task_group_data_1 = {'name': 'test_task_group_1', 'project_id': project['id']}
+    task_group_1 = db_services.TaskGroupService.create(task_group_data_1)
+    task_1_data = {
+        'name': 'test_task',
+        'task_group_id': task_group_1['id'],
+        'deadline': '2020-12-28T11:59:22.490Z',
+        'user_id': user['id'],
+    }
+    task_1 = db_services.TaskService.create(task_1_data)
+    states = project.dump_states()
+    assert str(task_1['state_id']) == states[0]['id']
+    payload = {'state_id': states[1]['id']}
+    response: Response = flask_test_client.put(
+        f'/tasks/{task_1["id"]}/state',
+        headers=headers,
+        json=payload,
+    )
+    data = response.get_json()
+    assert response.status_code == 401
