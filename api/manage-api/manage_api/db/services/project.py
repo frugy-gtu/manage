@@ -7,6 +7,8 @@ from uuid import UUID
 from marshmallow import EXCLUDE, Schema
 
 from manage_api.db.models import db, update_db
+from manage_api.db.models.default_state import DefaultState, DefaultStateSchema
+from manage_api.db.models.state import State, StateSchema
 from manage_api.db.models.project import Project, ProjectSchema
 from manage_api.db.models.user_teams import UserTeams
 from manage_api.db.services.helpers import query_builder
@@ -63,7 +65,7 @@ class ProjectService(Paginable):
                 raise TypeError('Wrong db object type')
             self.obj = dbobject
         elif id:
-            obj = Project.query.get(id)
+            obj = self._query(joined_relations=joined_relations).get(id)
             if obj is None:
                 raise ValueError('Project with this id is not found')
             self.obj = obj
@@ -82,6 +84,17 @@ class ProjectService(Paginable):
             raise ValueError(f'Invalid Data: {validation}')
         dbobject: Project = schema.load(data)
         db.session.add(dbobject)
+        update_db(False)
+        # Create states
+        default_states: List[DefaultState] = (
+            DefaultState.query.filter(DefaultState.team_id == dbobject.team_id)
+            .order_by(DefaultState.rank)
+            .all()
+        )
+        for rank, default_state in enumerate(default_states):
+            db.session.add(
+                State(name=default_state.name, rank=rank, project_id=dbobject.id)
+            )
         update_db(commit)
         return cls(dbobject)
 
@@ -126,6 +139,20 @@ class ProjectService(Paginable):
                     fields_.append(relation)
             return ProjectSchema(*args, partial=fields_, **kwargs)
         return ProjectSchema(*args, partial=True, **kwargs)
+
+    def dump_states(self) -> Dict[str, Any]:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        query = State.query.filter(State.project_id == self.obj.id)
+        return StateSchema(many=True).dump(query.all())
+
+    def has_state(self, state_id: Union[str, UUID]) -> bool:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        query = State.query.filter(State.project_id == self.obj.id).filter(
+            State.id == state_id
+        )
+        return query.count() == 1
 
     def is_user_associated(self, user_id: Union[str, UUID]) -> bool:
         if self.obj is None:
