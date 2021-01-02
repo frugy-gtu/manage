@@ -17,14 +17,6 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.do_not_disturb),
-            onPressed: (){
-              //logout
-            }
-          ),
-        ],
       ),
       body: ProfileInfos(user: user),
     );
@@ -58,9 +50,9 @@ class ProfileInfos extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5.0,),
-            Text(user.username, style: TextStyle(fontSize: 30.0)),
+            Text(user.username, style: TextStyle(fontSize: 20.0)),
             SizedBox(height: 5.0,),
-            Text(user.email, style: TextStyle(fontSize: 30.0)),
+            Text(user.email, style: TextStyle(fontSize: 15.0)),
           ],
         ),
       ),
