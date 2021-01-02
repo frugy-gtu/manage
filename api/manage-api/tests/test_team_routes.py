@@ -1,4 +1,3 @@
-from manage_api.db.models.user_teams import UserTeams
 from flask import Response
 from flask.testing import FlaskClient
 from manage_api.db import models as db_models
@@ -736,7 +735,10 @@ def test_team_users_post_without_jwt(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 1
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -774,7 +776,10 @@ def test_team_users_post_with_jwt(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -812,7 +817,10 @@ def test_team_users_post_with_jwt_existing(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -851,7 +859,10 @@ def test_team_users_post_with_jwt(flask_test_client):
     assert data['result'] is False
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -894,10 +905,16 @@ def test_team_users_post_with_jwt_not_manager(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user3['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user3['id']
+        ).count()
+        == 1
     )
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -930,7 +947,10 @@ def test_team_users_post_without_jwt_using_username(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 1
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -968,7 +988,10 @@ def test_team_users_post_with_jwt_using_username(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1006,7 +1029,10 @@ def test_team_users_post_with_jwt_using_username(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1045,7 +1071,10 @@ def test_team_users_post_with_jwt_existing_using_username(flask_test_client):
     assert data['result'] is False
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1088,10 +1117,16 @@ def test_team_users_post_with_jwt_not_manager_using_username(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user3['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user3['id']
+        ).count()
+        == 1
     )
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
