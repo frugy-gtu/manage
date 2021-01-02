@@ -28,7 +28,8 @@ class TeamScreenController extends ChangeNotifier {
   }
 
   Future<List<GeneralUserModel>> members() async {
-    RequestResult<List<GeneralUserModel>> result = await service.membersOf(team);
+    RequestResult<List<GeneralUserModel>> result =
+        await service.membersOf(team);
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }
@@ -49,10 +50,9 @@ class TeamScreenController extends ChangeNotifier {
   }
 
   void onFloatingActionPress(BuildContext context) {
-    if(tabController.index == 0) {
+    if (tabController.index == 0) {
       context.read<ManageRouteState>().update(ManageRoute.project_create);
-    }
-    else {
+    } else {
       context.read<ManageRouteState>().update(ManageRoute.team_invite);
     }
   }
@@ -62,12 +62,21 @@ class TeamScreenController extends ChangeNotifier {
     tabController.addListener(onTabIndexChange);
   }
 
+  void onProjectTap(BuildContext context, TeamProjectModel project) {
+    context
+        .read<ManageRouteState>()
+        .update(ManageRoute.project, project: project);
+  }
+
   void onMemberTap(BuildContext context, GeneralUserModel user) {
-    if(user.username == Auth.user.username) {
-      context.read<ManageRouteState>().update(ManageRoute.user_profile, prevRoute: ManageRoute.team);
-    }
-    else
-      context.read<ManageRouteState>().update(ManageRoute.member_profile, member: user);
+    if (user.username == Auth.user.username) {
+      context
+          .read<ManageRouteState>()
+          .update(ManageRoute.user_profile, prevRoute: ManageRoute.team);
+    } else
+      context
+          .read<ManageRouteState>()
+          .update(ManageRoute.member_profile, member: user);
   }
 
   @override
