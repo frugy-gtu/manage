@@ -158,6 +158,13 @@ class TeamTagsPutSchema(JWTSchema):
     tags = fields.List(fields.String(), required=True, allow_none=False)
 
 
+class TeamStatesGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        data['team'] = _validate_user_is_manager(self.get_user_id())
+        return data
+
+
 class TeamStatesPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
     rank = fields.Integer(required=True, allow_none=False)
