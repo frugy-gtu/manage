@@ -100,6 +100,7 @@ class _TeamScreenBodyView extends StatelessWidget {
               future: _controller.members(),
               onSuccess: (data) => _TeamMembersView(
                 members: data,
+                controller: _controller,
               ),
             ),
           ),
@@ -153,9 +154,11 @@ class _TeamProjectsView extends StatelessWidget {
 }
 
 class _TeamMembersView extends StatelessWidget {
+  final TeamScreenController controller;
   const _TeamMembersView({
     Key key,
     @required List<GeneralUserModel> members,
+    @required this.controller,
   })  : _members = members,
         super(key: key);
 
@@ -177,7 +180,7 @@ class _TeamMembersView extends StatelessWidget {
               itemExtent: 60.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
-                  onTap: () {},
+                  onTap: () => controller.onMemberTap(context, _members[index]),
                   child: Row(
                     children: [
                       Spacer(),

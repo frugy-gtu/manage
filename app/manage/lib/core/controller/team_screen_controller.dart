@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/model/general_user_model.dart';
@@ -59,6 +60,14 @@ class TeamScreenController extends ChangeNotifier {
   void initState({@required TickerProvider vsync}) {
     tabController = TabController(length: tabs.length, vsync: vsync);
     tabController.addListener(onTabIndexChange);
+  }
+
+  void onMemberTap(BuildContext context, GeneralUserModel user) {
+    if(user.username == Auth.user.username) {
+      context.read<ManageRouteState>().update(ManageRoute.user_profile, prevRoute: ManageRoute.team);
+    }
+    else
+      context.read<ManageRouteState>().update(ManageRoute.member_profile, member: user);
   }
 
   @override

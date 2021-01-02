@@ -21,7 +21,7 @@ class Auth {
     }
   }
 
-  static get user {
+  static GeneralUserModel get user {
     if(isLoggedIn()) {
 
       if(_user != null) return _user;
