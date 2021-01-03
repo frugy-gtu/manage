@@ -14,6 +14,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -77,8 +78,7 @@ class _ProfileInfosState extends State<ProfileInfos> {
             ),
             if (isUserProfile)
               ElevatedButton(
-                onPressed: () =>
-                  _controller.onLogout(context),
+                onPressed: () => _controller.onLogout(context),
                 child: Text('Logout'),
               ),
           ],
