@@ -7,6 +7,7 @@ from uuid import UUID
 from marshmallow import EXCLUDE, Schema
 
 from manage_api.db.models import db, update_db
+from manage_api.db.models.default_state import DefaultState, DefaultStateSchema
 from manage_api.db.models.team import Team, TeamSchema
 from manage_api.db.models.user_teams import UserTeams
 from manage_api.db.services.helpers import query_builder
@@ -63,7 +64,7 @@ class TeamService(Paginable):
                 raise TypeError('Wrong db object type')
             self.obj = dbobject
         elif id:
-            obj = Team.query.get(id)
+            obj = self._query(joined_relations=joined_relations).get(id)
             if obj is None:
                 raise ValueError('Team with this id is not found')
             self.obj = obj
@@ -84,6 +85,8 @@ class TeamService(Paginable):
         db.session.add(dbobject)
         update_db(False)
         db.session.add(UserTeams(user_id=dbobject.user_id, team_id=dbobject.id))
+        update_db(False)
+        db.session.add(DefaultState(name='default-state', rank=0, team_id=dbobject.id))
         update_db(commit)
         return cls(dbobject)
 
@@ -129,7 +132,21 @@ class TeamService(Paginable):
             return TeamSchema(*args, partial=fields_, **kwargs)
         return TeamSchema(*args, partial=True, **kwargs)
 
+    def update_states(self, states: List[str], commit: bool = True):
+        DefaultState.query.filter(DefaultState.team_id == self.obj.id).delete()
+        for rank, state in enumerate(states):
+            db.session.add(DefaultState(name=state, rank=rank, team_id=self.obj.id))
+        update_db(commit)
+
+    def dump_default_states(self) -> Dict[str, Any]:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        query = DefaultState.query.filter(DefaultState.team_id == self.obj.id)
+        return DefaultStateSchema(many=True).dump(query.all())
+
     def add_user(self, user_id: Union[str, UUID], commit=True) -> bool:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
         user_team = UserTeams(user_id=user_id, team_id=self.obj.id)
         db.session.add(user_team)
         update_db(commit)

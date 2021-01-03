@@ -28,7 +28,8 @@ class Teams(Resource):
     def post(self, **kwargs):
         data = request.parsed_obj
         team = TeamService.create(data)
-        return team
+        team.update_states(['todo', 'in-progress', 'done', 'cancel'])
+        return team.dump()
 
 
 @api.route('/<uuid:team_id>')
@@ -156,9 +157,12 @@ class TeamTags(Resource):
 @api.route('/<uuid:team_id>/states')
 class TeamStates(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.TeamStatesGetSchema, api=api)
     @responds(schema=response_schemas.TeamState(many=True), api=api, status_code=200)
     def get(self, team_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        team: TeamService = params['team']
+        return team.dump_default_states()
 
     @jwt_required
     @accepts(schema=request_schemas.TeamStatesPostSchema, api=api)

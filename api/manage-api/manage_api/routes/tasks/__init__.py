@@ -65,7 +65,9 @@ class TaskState(Resource):
     @accepts(schema=request_schemas.TaskStatePutSchema, api=api)
     @responds(schema=response_schemas.BooleanResult, api=api, status_code=200)
     def put(self, task_id, **kwargs):
-        raise NotImplementedError()
+        data = request.parsed_obj
+        task = data['task']
+        return {'result': task.update_state(data['state_id'])}
 
 
 @api.route('/<uuid:task_id>/tag')

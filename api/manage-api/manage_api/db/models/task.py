@@ -20,15 +20,18 @@ class Task(Base):
         db.ForeignKey('task_group.id', ondelete='CASCADE'),
         nullable=False,
     )
+    state_id = db.Column(UUID(as_uuid=True), db.ForeignKey('state.id'), nullable=False)
 
     # relations
     load_strategies = {
         'user': joinedload,
+        'state': joinedload,
         'team': joinedload,
         'project': joinedload,
         'task_group': joinedload,
     }
     user = db.relationship('User', lazy='noload')
+    state = db.relationship('State', lazy='noload')
     team = db.relationship('Team', lazy='noload')
     project = db.relationship('Project', lazy='noload')
     task_group = db.relationship('TaskGroup', lazy='noload')
@@ -43,8 +46,10 @@ class TaskSchema(BaseSchema):
     team_id = fields.UUID(required=True, allow_none=False)
     project_id = fields.UUID(required=True, allow_none=False)
     task_group_id = fields.UUID(required=True, allow_none=False)
+    state_id = fields.UUID(required=True, allow_none=False)
     # relations
     user = fields.Nested('UserSchema', dump_only=True)
+    state = fields.Nested('StateSchema', dump_only=True)
     team = fields.Nested('TeamSchema', dump_only=True)
     project = fields.Nested('ProjectSchema', dump_only=True)
     task_group = fields.Nested('TaskGroupSchema', dump_only=True)

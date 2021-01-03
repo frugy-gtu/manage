@@ -92,6 +92,13 @@ class ProjectTagsPutSchema(JWTSchema):
     tags = fields.List(fields.String(), required=True, allow_none=False)
 
 
+class ProjectStatesGetSchema(JWTSchema):
+    @post_load
+    def post_load(self, data, **kwargs):
+        data['project'] = _validate_user_is_manager(self.get_user_id())
+        return data
+
+
 class ProjectStatesPostSchema(JWTSchema):
     name = fields.String(required=True, allow_none=False)
     rank = fields.Integer(required=True, allow_none=False)
