@@ -28,7 +28,7 @@ class TeamsScreen extends StatelessWidget {
             enableFeedback: false,
             onPressed: () {
               context.read<ManageRouteState>().update(ManageRoute.user_profile,
-                  prevRoute: ManageRoute.teams);
+                  prevUserProfileRoute: ManageRoute.teams);
             },
             splashRadius: 20,
           ),

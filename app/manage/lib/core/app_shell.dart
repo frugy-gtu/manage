@@ -32,7 +32,6 @@ class _AppShellState extends State<AppShell> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Defer back button dispatching to the child router
     _backButtonDispatcher = Router.of(context)
         .backButtonDispatcher
         .createChildBackButtonDispatcher();
@@ -40,10 +39,6 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = widget.state;
-
-    // Claim priority, If there are parallel sub router, you will need
-    // to pick which one should take priority;
     _backButtonDispatcher.takePriority();
 
     return Scaffold(
@@ -61,9 +56,9 @@ class _AppShellState extends State<AppShell> {
           BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
-        currentIndex: appState.tab.index,
+        currentIndex: widget.state.tab.index,
         onTap: (newIndex) {
-          appState.tab = BottomBarTab.values[newIndex];
+          widget.state.tab = BottomBarTab.values[newIndex];
         },
       ),
     );

@@ -74,7 +74,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     } else if (path is ManageTeamInvitePath) {
       state.update(ManageRoute.team_invite);
     } else if (path is ManageUserProfileFromTeamsPath) {
-      state.update(ManageRoute.user_profile, prevRoute: ManageRoute.teams);
+      state.update(ManageRoute.user_profile, prevUserProfileRoute: ManageRoute.teams);
     } else if (path is ManageMemberProfilePath) {
       state.update(
         ManageRoute.member_profile,

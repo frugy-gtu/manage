@@ -57,7 +57,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       ));
 
       if (state.route == ManageRoute.user_profile) {
-        if (state.prevRoute == ManageRoute.teams) {
+        if (state.prevUserProfileRoute == ManageRoute.teams) {
           pages.add(MaterialPage(
             key: ValueKey('UserProfileFromTeamsPage'),
             child: ProfileScreen(Auth.user),
@@ -77,7 +77,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           state.route == ManageRoute.team_invite ||
           state.route == ManageRoute.member_profile ||
           (state.route == ManageRoute.user_profile &&
-              state.prevRoute == ManageRoute.team)) {
+              state.prevUserProfileRoute == ManageRoute.team)) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
           child: TeamScreen(team: state.team),
@@ -128,7 +128,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
         state.update(ManageRoute.team, team: state.team);
         break;
       case ManageRoute.user_profile:
-        state.update(state.prevRoute, team: state.team);
+        state.update(state.prevUserProfileRoute, team: state.team);
         break;
       default:
         state.update(ManageRoute.teams);

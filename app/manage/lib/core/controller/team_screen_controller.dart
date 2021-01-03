@@ -64,7 +64,7 @@ class TeamScreenController extends ChangeNotifier {
 
   void onMemberTap(BuildContext context, GeneralUserModel user) {
     if(user.username == Auth.user.username) {
-      context.read<ManageRouteState>().update(ManageRoute.user_profile, prevRoute: ManageRoute.team);
+      context.read<ManageRouteState>().update(ManageRoute.user_profile, prevUserProfileRoute: ManageRoute.team);
     }
     else
       context.read<ManageRouteState>().update(ManageRoute.member_profile, member: user);

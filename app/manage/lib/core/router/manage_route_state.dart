@@ -6,14 +6,14 @@ import '../model/team_model.dart';
 
 class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
-  ManageRoute _prevRoute;
+  ManageRoute _prevUserProfileRoute;
   TeamModel _team;
   GeneralUserModel _member;
   GeneralUserModel user;
   BottomBarTab _selectedTab = BottomBarTab.teams;
 
   ManageRoute get route => _route;
-  ManageRoute get prevRoute => _prevRoute;
+  ManageRoute get prevUserProfileRoute => _prevUserProfileRoute;
 
   TeamModel get team => _team;
 
@@ -27,7 +27,9 @@ class ManageRouteState extends ChangeNotifier {
   }
 
   void update(ManageRoute route,
-      {TeamModel team, GeneralUserModel member, ManageRoute prevRoute}) {
+      {TeamModel team,
+      GeneralUserModel member,
+      ManageRoute prevUserProfileRoute}) {
     assert(route != null);
 
     if (route == ManageRoute.team) {
@@ -41,8 +43,8 @@ class ManageRouteState extends ChangeNotifier {
     }
 
     if (route == ManageRoute.user_profile) {
-      assert(prevRoute != null);
-      _prevRoute = prevRoute;
+      assert(prevUserProfileRoute != null);
+      _prevUserProfileRoute = prevUserProfileRoute;
     }
 
     _route = route;
