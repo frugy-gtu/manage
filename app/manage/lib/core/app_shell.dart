@@ -52,10 +52,14 @@ class _AppShellState extends State<AppShell> {
         backButtonDispatcher: _backButtonDispatcher,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        unselectedItemColor: Colors.black54,
+        selectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Teams'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.stacked_bar_chart), label: 'Projects'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         currentIndex: appState.tab.index,
         onTap: (newIndex) {
