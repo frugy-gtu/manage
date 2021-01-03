@@ -1,6 +1,7 @@
 import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/login_result_model.dart';
 import 'package:manage/core/model/login_model.dart';
+import 'package:manage/core/model/sign_up_model.dart';
 import 'package:manage/core/service/request_method.dart';
 import 'package:manage/core/service/request_result.dart';
 
@@ -17,7 +18,7 @@ Future<RequestResult> login(LoginModel model) async => service.request(
       Auth.user = result.user;
     });
 
-Future<RequestResult> signUp(LoginModel model) async => service.request(
+Future<RequestResult> signUp(SignUpModel model) async => service.request(
       method: RequestMethod.post,
       url: '/users/signup',
       jsonData: model.toJson(),
