@@ -1,3 +1,4 @@
+import 'package:manage/core/model/project_model.dart';
 import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_group_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
@@ -21,3 +22,11 @@ Future<RequestResult<List<TaskGroupModel>>> taskGroupsOf(TeamProjectModel projec
       decode: (i) => TaskGroupModel.fromJson(i),
     ))
         .castTo<List<TaskGroupModel>>();
+
+Future<RequestResult<List<ProjectModel>>> projects() async =>
+    (await service.request<ProjectModel>(
+      method: RequestMethod.get,
+      url: '/projects/',
+      decode: (i) => ProjectModel.fromJson(i),
+    ))
+        .castTo<List<ProjectModel>>();

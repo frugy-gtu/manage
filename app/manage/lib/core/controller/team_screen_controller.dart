@@ -42,10 +42,10 @@ class TeamScreenController extends ChangeNotifier {
     }
   }
 
-  Icon floatingActionButtonIcon() {
+  Icon floatingActionButtonIcon(BuildContext context) {
     return tabController.index == 0
-        ? Icon(Icons.add_circle_outlined)
-        : Icon(Icons.person_add);
+        ? Icon(Icons.add, color: Theme.of(context).colorScheme.primary,)
+        : Icon(Icons.person_add, color: Theme.of(context).colorScheme.primary);
   }
 
   void onFloatingActionPress(BuildContext context) {
