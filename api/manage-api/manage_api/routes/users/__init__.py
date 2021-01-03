@@ -35,13 +35,14 @@ class Signup(Resource):
         del data['profile']
         user = UserService.create(data)
         profile = user.upsert_profile(profile_data)
-        _ = TeamService.create(
+        team = TeamService.create(
             {
                 'name': f'{user["username"]}\'s team',
                 'abbreviation': f'{user["username"][0].upper()}T',
                 'user_id': user['id'],
             }
         )
+        team.update_states(['todo', 'in-progress', 'done', 'cancel'])
         result = user.dump()
         result['profile'] = profile
         return result
