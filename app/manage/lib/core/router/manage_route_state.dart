@@ -9,21 +9,39 @@ class ManageRouteState extends ChangeNotifier {
   ManageRoute _prevUserProfileRoute;
   TeamModel _team;
   GeneralUserModel _member;
-  GeneralUserModel user;
-  BottomBarTab _selectedTab = BottomBarTab.teams;
+
+  static BottomBarTab _selectedTab = BottomBarTab.teams;
+
+  static List<ManageRouteState> _tabRoutes = [
+    ManageRouteState(ManageRoute.teams),
+    ManageRouteState(ManageRoute.teams),
+    ManageRouteState(ManageRoute.user_profile),
+    ManageRouteState(ManageRoute.teams),
+  ];
+
+  ManageRouteState([ManageRoute route = ManageRoute.teams]) : _route = route;
+
+  void _copy(ManageRouteState value) {
+    _route = value._route;
+    _prevUserProfileRoute = value._prevUserProfileRoute;
+    _team = value._team;
+    _member = value._member;
+  }
 
   ManageRoute get route => _route;
   ManageRoute get prevUserProfileRoute => _prevUserProfileRoute;
-
   TeamModel get team => _team;
-
   GeneralUserModel get member => _member;
 
   BottomBarTab get tab => _selectedTab;
 
   set tab(BottomBarTab value) {
-    _selectedTab = value;
-    notifyListeners();
+    if (_selectedTab != value) {
+      _tabRoutes[_selectedTab.index]._copy(this);
+      _copy(_tabRoutes[value.index]);
+      _selectedTab = value;
+      notifyListeners();
+    }
   }
 
   void update(ManageRoute route,
