@@ -1,5 +1,4 @@
 import 'package:manage/core/cache/auth.dart';
-import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/login_result_model.dart';
 import 'package:manage/core/model/login_model.dart';
 import 'package:manage/core/service/request_method.dart';
@@ -12,12 +11,10 @@ Future<RequestResult> login(LoginModel model) async => service.request(
     url: '/users/login',
     jsonData: model.toJson(),
     successCallback: (success) {
-      Auth.accessToken = LoginResultModel.fromJson(success.data).accessToken;
+      LoginResultModel result = LoginResultModel.fromJson(success.data);
+      Auth.accessToken = result.accessToken;
       Auth.status = AuthStatus.logged_in;
-      Auth.user = UserModel(
-          email: 'demo@demo.com',
-          username: 'demo',
-          );
+      Auth.user = result.user;
     });
 
 Future<RequestResult> signUp(LoginModel model) async => service.request(

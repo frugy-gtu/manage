@@ -23,13 +23,15 @@ class LoginController extends ChangeNotifier {
       RequestResult status = await service
           .login(LoginModel(email: email.text, password: password.text));
       if (status.status == Status.success) {
-        context.read<ManageRouteState>().update(ManageRoute.teams);
+        context.read<ManageRouteState>()
+          ..resetRoutes()
+          ..update(ManageRoute.teams);
         return;
       } else {
         _credentialsError = status.msg;
       }
-    }
-    else _credentialsError = '';
+    } else
+      _credentialsError = '';
 
     _emailError = email.text.isEmpty ? 'Enter your email' : '';
     _passwordError = password.text.isEmpty ? 'Enter your password' : '';

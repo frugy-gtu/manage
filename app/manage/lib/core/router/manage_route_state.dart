@@ -13,12 +13,7 @@ class ManageRouteState extends ChangeNotifier {
 
   static BottomBarTab _selectedTab = BottomBarTab.teams;
 
-  static List<ManageRouteState> _tabRoutes = [
-    ManageRouteState(ManageRoute.teams),
-    ManageRouteState(ManageRoute.projects),
-    ManageRouteState(ManageRoute.profile),
-    ManageRouteState(ManageRoute.settings),
-  ];
+  static List<ManageRouteState> _tabRoutes = _initialRoutes();
 
   ManageRouteState([ManageRoute route = ManageRoute.teams]) : _route = route;
 
@@ -29,6 +24,18 @@ class ManageRouteState extends ChangeNotifier {
     _project = value._project;
   }
 
+  void resetRoutes() {
+    _tabRoutes = _initialRoutes();
+    _selectedTab = BottomBarTab.teams;
+  }
+
+  static List<ManageRouteState> _initialRoutes() => [
+        ManageRouteState(ManageRoute.teams),
+        ManageRouteState(ManageRoute.projects),
+        ManageRouteState(ManageRoute.profile),
+        ManageRouteState(ManageRoute.settings),
+      ];
+
   ManageRoute get route => _route;
   TeamModel get team => _team;
   UserModel get member => _member;
@@ -37,18 +44,16 @@ class ManageRouteState extends ChangeNotifier {
   BottomBarTab get tab => _selectedTab;
 
   set tab(BottomBarTab value) {
-    if (_selectedTab != value) {
-      _tabRoutes[_selectedTab.index]._copy(this);
-      _copy(_tabRoutes[value.index]);
-      _selectedTab = value;
-      notifyListeners();
-    }
+    _tabRoutes[_selectedTab.index]._copy(this);
+    _copy(_tabRoutes[value.index]);
+    _selectedTab = value;
+    notifyListeners();
   }
 
   void update(
     ManageRoute route, {
-      TeamModel team,
-      TeamProjectModel project,
+    TeamModel team,
+    TeamProjectModel project,
     UserModel member,
   }) {
     assert(route != null);
