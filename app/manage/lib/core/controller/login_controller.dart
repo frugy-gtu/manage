@@ -22,9 +22,6 @@ class LoginController extends ChangeNotifier {
     if (_checkStatus()) {
       RequestResult status = await service
           .login(UserModel(email: email.text, password: password.text));
-      print(status.status);
-      print('sex');
-      print('asd + ${status.msg}');
       if (status.status == Status.success) {
         context.read<ManageRouteState>().update(ManageRoute.teams);
         return;

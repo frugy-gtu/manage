@@ -82,7 +82,6 @@ Future<RequestResult> request<T>(
   }
 
   if (response.success == null) {
-    print('faillleeed');
     failureCallback?.call(response.fail);
     if (response.fail.statusCode == 400) {
       GeneratedErrorModel error =
@@ -91,9 +90,8 @@ Future<RequestResult> request<T>(
       return RequestResult(Status.fail,
           msg: errorMsg ?? 'Something went wrong.');
     } else {
-      String msg = ErrorModel.fromJson(response.fail.data).message;
       return RequestResult(Status.fail,
-          msg: msg);
+          msg: ErrorModel.fromJson(response.fail.data).message);
     }
   }
 
