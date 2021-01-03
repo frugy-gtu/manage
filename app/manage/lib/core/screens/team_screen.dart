@@ -51,9 +51,9 @@ class _TeamScreenFloatingActionButton extends StatelessWidget {
     return Consumer<TeamScreenController>(
       builder: (context, controller, child) => FloatingActionButton(
         onPressed: () => controller.onFloatingActionPress(context),
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        child: controller.floatingActionButtonIcon(),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        child: controller.floatingActionButtonIcon(context),
       ),
     );
   }
@@ -145,7 +145,7 @@ class _TeamProjectsView extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .headline6
-                              .copyWith(color: Colors.white))),
+                              .copyWith(color: Theme.of(context).colorScheme.primary))),
                 ),
                 childCount: _projects.length,
               ),
@@ -190,7 +190,7 @@ class _TeamMembersView extends StatelessWidget {
                       Spacer(),
                       Icon(
                         Icons.account_circle,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       Spacer(flex: 2),
                       Flexible(
@@ -199,7 +199,7 @@ class _TeamMembersView extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
-                                .copyWith(color: Colors.white)),
+                                .copyWith(color: Theme.of(context).colorScheme.primary)),
                       ),
                     ],
                   ),

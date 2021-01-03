@@ -44,11 +44,12 @@ class Theme {
   })();
 
   static final _dark = ThemeData.dark().copyWith(
-      appBarTheme: AppBarTheme(
-        centerTitle: true,
-        elevation: 0,
-        brightness: Brightness.dark,
-      ),
+    appBarTheme: AppBarTheme(
+      centerTitle: true,
+      elevation: 0,
+      brightness: Brightness.dark,
+    ),
+    colorScheme: ColorScheme.dark().copyWith(),
   );
 
   /// This method called accordingly to system's

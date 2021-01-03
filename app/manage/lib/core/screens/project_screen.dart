@@ -34,9 +34,9 @@ class _ProjectScreenState extends State<ProjectScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _controller.onFloatingActionPress(context),
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
