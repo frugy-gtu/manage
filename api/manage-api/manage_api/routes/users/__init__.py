@@ -38,7 +38,7 @@ class Signup(Resource):
         _ = TeamService.create(
             {
                 'name': f'{user["username"]}\'s team',
-                'abbreviation': f'{user["username"][:2]}T',
+                'abbreviation': f'{user["username"][0].upper()}T',
                 'user_id': user['id'],
             }
         )
