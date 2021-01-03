@@ -98,12 +98,14 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
-    } else if (path is ManageProjectPath) {
+    } else if (path is ProjectTeamPath) {
       state.update(
         ManageRoute.project,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
         project: TeamProjectModel(
           name: 'Not implemented',
-          id: path.id,
+          id: path.projectId,
         ),
       );
     }

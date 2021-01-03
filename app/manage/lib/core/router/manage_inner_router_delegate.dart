@@ -5,6 +5,7 @@ import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/profile_screen.dart';
 import 'package:manage/core/screens/project_create_screen.dart';
+import 'package:manage/core/screens/project_screen.dart';
 import 'package:manage/core/screens/projects_screen.dart';
 import 'package:manage/core/screens/settings_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
@@ -68,6 +69,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       }
 
       if (state.route == ManageRoute.team ||
+          state.route == ManageRoute.project ||
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
           state.route == ManageRoute.member) {
@@ -80,6 +82,13 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           pages.add(MaterialPage(
             key: ValueKey('MemberPage'),
             child: ProfileScreen(state.member),
+          ));
+        }
+
+        if(state.route == ManageRoute.project) {
+          pages.add(MaterialPage(
+            key: ValueKey('ProjectPage'),
+            child: ProjectScreen(state.project),
           ));
         }
 
@@ -126,6 +135,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       case ManageRoute.project_create:
       case ManageRoute.team_invite:
       case ManageRoute.member:
+      case ManageRoute.project:
         state.update(ManageRoute.team, team: state.team);
         break;
       default:

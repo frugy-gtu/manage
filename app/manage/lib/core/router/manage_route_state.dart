@@ -26,14 +26,15 @@ class ManageRouteState extends ChangeNotifier {
     _route = value._route;
     _team = value._team;
     _member = value._member;
+    _project = value._project;
   }
 
   ManageRoute get route => _route;
   TeamModel get team => _team;
   GeneralUserModel get member => _member;
+  TeamProjectModel get project => _project;
 
   BottomBarTab get tab => _selectedTab;
-  TeamProjectModel get project => _project;
 
   set tab(BottomBarTab value) {
     if (_selectedTab != value) {
