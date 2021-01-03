@@ -15,8 +15,8 @@ Future<RequestResult> login(UserModel model) async => service.request(
       Auth.accessToken = TokenModel.fromJson(success.data).accessToken;
       Auth.status = AuthStatus.logged_in;
       Auth.user = GeneralUserModel(
-          email: 'demo@gmail.com',
-          username: 'isot',
+          email: 'demo@demo.com',
+          username: 'demo',
           createdAt: '02/02/2021');
     });
 

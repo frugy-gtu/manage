@@ -65,6 +65,12 @@ class TeamScreenController extends ChangeNotifier {
     tabController.addListener(onTabIndexChange);
   }
 
+  void onProjectTap(BuildContext context, TeamProjectModel project) {
+    context
+        .read<ManageRouteState>()
+        .update(ManageRoute.project, project: project);
+  }
+
   void onMemberTap(BuildContext context, GeneralUserModel user) {
     context
         .read<ManageRouteState>()

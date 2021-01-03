@@ -51,6 +51,10 @@ class ManageRouteInformationParser
 
         return TeamPath(uri.pathSegments[1]);
       }
+
+      if(uri.pathSegments[0] == 'projects') {
+        return ManageProjectPath(uri.pathSegments[1]);
+      }
     }
 
     if (uri.pathSegments.length == 3) {
@@ -123,6 +127,10 @@ class ManageRouteInformationParser
       return RouteInformation(
           location:
               '/teams/${configuration.teamId}/member/${configuration.memberId}');
+    }
+
+    if (configuration is ManageProjectPath) {
+      return RouteInformation(location: '/projects/${configuration.id}');
     }
 
     return null;

@@ -3,6 +3,7 @@ import 'package:manage/core/app_shell.dart';
 import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/model/team_model.dart';
+import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
@@ -97,7 +98,16 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
-    } else if (path is UnknownPath) {
+    } else if (path is ManageProjectPath) {
+      state.update(
+        ManageRoute.project,
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.id,
+        ),
+      );
+    }
+    if (path is UnknownPath) {
       state.update(ManageRoute.unknown);
     }
   }
