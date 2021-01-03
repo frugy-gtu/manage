@@ -51,10 +51,6 @@ class ManageRouteInformationParser
 
         return TeamPath(uri.pathSegments[1]);
       }
-
-      if(uri.pathSegments[0] == 'projects') {
-        return ManageProjectPath(uri.pathSegments[1]);
-      }
     }
 
     if (uri.pathSegments.length == 3) {
@@ -66,6 +62,8 @@ class ManageRouteInformationParser
         if (uri.pathSegments[2] == 'invite') {
           return TeamInvitePath(uri.pathSegments[1]);
         }
+
+        return ProjectTeamPath(uri.pathSegments[1], uri.pathSegments[2]);
       }
     }
 
@@ -129,8 +127,10 @@ class ManageRouteInformationParser
               '/teams/${configuration.teamId}/member/${configuration.memberId}');
     }
 
-    if (configuration is ManageProjectPath) {
-      return RouteInformation(location: '/projects/${configuration.id}');
+    if (configuration is ProjectTeamPath) {
+      return RouteInformation(
+          location:
+              '/teams/${configuration.teamId}/${configuration.projectId}');
     }
 
     return null;
