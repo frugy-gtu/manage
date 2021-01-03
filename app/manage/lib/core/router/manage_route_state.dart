@@ -6,7 +6,6 @@ import '../model/team_model.dart';
 
 class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
-  ManageRoute _prevUserProfileRoute;
   TeamModel _team;
   GeneralUserModel _member;
 
@@ -15,7 +14,7 @@ class ManageRouteState extends ChangeNotifier {
   static List<ManageRouteState> _tabRoutes = [
     ManageRouteState(ManageRoute.teams),
     ManageRouteState(ManageRoute.teams),
-    ManageRouteState(ManageRoute.user_profile),
+    ManageRouteState(ManageRoute.profile),
     ManageRouteState(ManageRoute.teams),
   ];
 
@@ -23,13 +22,11 @@ class ManageRouteState extends ChangeNotifier {
 
   void _copy(ManageRouteState value) {
     _route = value._route;
-    _prevUserProfileRoute = value._prevUserProfileRoute;
     _team = value._team;
     _member = value._member;
   }
 
   ManageRoute get route => _route;
-  ManageRoute get prevUserProfileRoute => _prevUserProfileRoute;
   TeamModel get team => _team;
   GeneralUserModel get member => _member;
 
@@ -44,10 +41,11 @@ class ManageRouteState extends ChangeNotifier {
     }
   }
 
-  void update(ManageRoute route,
-      {TeamModel team,
-      GeneralUserModel member,
-      ManageRoute prevUserProfileRoute}) {
+  void update(
+    ManageRoute route, {
+    TeamModel team,
+    GeneralUserModel member,
+  }) {
     assert(route != null);
 
     if (route == ManageRoute.team) {
@@ -55,14 +53,9 @@ class ManageRouteState extends ChangeNotifier {
       _team = team;
     }
 
-    if (route == ManageRoute.member_profile) {
+    if (route == ManageRoute.member) {
       assert(member != null);
       _member = member;
-    }
-
-    if (route == ManageRoute.user_profile) {
-      assert(prevUserProfileRoute != null);
-      _prevUserProfileRoute = prevUserProfileRoute;
     }
 
     _route = route;

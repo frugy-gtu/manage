@@ -2,53 +2,48 @@ abstract class ManageRoutePath {
   const ManageRoutePath();
 }
 
-class ManageLoginPath extends ManageRoutePath {
-  const ManageLoginPath();
+class LoginPath extends ManageRoutePath {
+  const LoginPath();
 }
 
-class ManageSignUpPath extends ManageRoutePath {
-  const ManageSignUpPath();
+class SignUpPath extends ManageRoutePath {
+  const SignUpPath();
 }
 
-class ManageTeamsPath extends ManageRoutePath {
-  const ManageTeamsPath();
+class TeamsPath extends ManageRoutePath {
+  const TeamsPath();
 }
 
-class ManageTeamPath extends ManageRoutePath {
+class ProfilePath extends ManageRoutePath {
+  const ProfilePath();
+}
+
+class TeamPath extends ManageRoutePath {
   final String id;
 
-  const ManageTeamPath(this.id);
+  const TeamPath(this.id);
 }
 
-class ManageTeamCreatePath extends ManageRoutePath {
-  const ManageTeamCreatePath();
+class TeamCreatePath extends ManageRoutePath {
+  const TeamCreatePath();
 }
 
-class ManageProjectCreatePath extends ManageRoutePath {
+class ProjectCreatePath extends ManageRoutePath {
   final String id;
-  const ManageProjectCreatePath(this.id);
+  const ProjectCreatePath(this.id);
 }
 
-class ManageTeamInvitePath extends ManageRoutePath {
+class TeamInvitePath extends ManageRoutePath {
   final String id;
-  const ManageTeamInvitePath(this.id);
+  const TeamInvitePath(this.id);
 }
 
-class ManageUserProfileFromTeamsPath extends ManageRoutePath {
-  const ManageUserProfileFromTeamsPath();
-}
-
-class ManageUserProfileFromTeamPath extends ManageRoutePath {
-  final String id;
-  const ManageUserProfileFromTeamPath(this.id);
-}
-
-class ManageMemberProfilePath extends ManageRoutePath{
+class MemberProfileTeamPath extends ManageRoutePath{
   final String teamId;
-  final String userId;
-  const ManageMemberProfilePath(this.teamId, this.userId);
+  final String memberId;
+  const MemberProfileTeamPath(this.teamId, this.memberId);
 }
 
-class ManageUnknownPath extends ManageRoutePath {
-  const ManageUnknownPath();
+class UnknownPath extends ManageRoutePath {
+  const UnknownPath();
 }

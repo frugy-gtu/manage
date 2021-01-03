@@ -9,7 +9,7 @@ class ProfileScreenController {
   ProfileScreenController();
 
   bool isUserProfile(BuildContext context) {
-    if(context.read<ManageRouteState>().route == ManageRoute.user_profile) {
+    if(context.read<ManageRouteState>().route == ManageRoute.profile) {
       return true;
     }
 

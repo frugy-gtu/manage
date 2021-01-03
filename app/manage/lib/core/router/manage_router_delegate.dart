@@ -59,31 +59,41 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
   @override
   Future<void> setNewRoutePath(ManageRoutePath path) async {
     //TODO: Implement getting models with querying.
-    if (path is ManageLoginPath) {
+    if (path is LoginPath) {
       state.update(ManageRoute.login);
-    } else if (path is ManageSignUpPath) {
+    } else if (path is SignUpPath) {
       state.update(ManageRoute.signup);
-    } else if (path is ManageTeamsPath) {
+    } else if (path is TeamsPath) {
       state.update(ManageRoute.teams);
-    } else if (path is ManageTeamPath) {
+    } else if (path is ProfilePath) {
+      state.update(
+        ManageRoute.profile,
+      );
+    } else if (path is TeamPath) {
       state.update(ManageRoute.team,
           team: TeamModel(
               name: 'Not implemented', abbreviation: 'NI', id: path.id));
-    } else if (path is ManageProjectCreatePath) {
-      state.update(ManageRoute.project_create);
-    } else if (path is ManageTeamInvitePath) {
-      state.update(ManageRoute.team_invite);
-    } else if (path is ManageUserProfileFromTeamsPath) {
-      state.update(ManageRoute.user_profile, prevUserProfileRoute: ManageRoute.teams);
-    } else if (path is ManageMemberProfilePath) {
+    } else if (path is TeamCreatePath) {
+      state.update(ManageRoute.team_create);
+    } else if (path is ProjectCreatePath) {
+      state.update(ManageRoute.project_create,
+          team: TeamModel(
+              name: 'Not implemented', abbreviation: 'NI', id: path.id));
+    } else if (path is TeamInvitePath) {
+      state.update(ManageRoute.team_invite,
+          team: TeamModel(
+              name: 'Not implemented', abbreviation: 'NI', id: path.id));
+    } else if (path is MemberProfileTeamPath) {
       state.update(
-        ManageRoute.member_profile,
+        ManageRoute.member,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
         member: GeneralUserModel(
             email: 'Not implemented',
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
-    } else if (path is ManageUnknownPath) {
+    } else if (path is UnknownPath) {
       state.update(ManageRoute.unknown);
     }
   }
