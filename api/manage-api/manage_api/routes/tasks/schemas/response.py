@@ -16,7 +16,7 @@ class Task(Base):
     schedule = fields.String()
     deadline = fields.String()
     task_group_id = fields.UUID()
-    task_state_id = fields.UUID()
+    state_id = fields.UUID()
     task_tag_id = fields.UUID()
     project_id = fields.UUID()
 

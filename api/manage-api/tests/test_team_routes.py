@@ -1,4 +1,3 @@
-from manage_api.db.models.user_teams import UserTeams
 from flask import Response
 from flask.testing import FlaskClient
 from manage_api.db import models as db_models
@@ -736,7 +735,10 @@ def test_team_users_post_without_jwt(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 1
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -774,7 +776,10 @@ def test_team_users_post_with_jwt(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -812,7 +817,10 @@ def test_team_users_post_with_jwt_existing(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -851,7 +859,10 @@ def test_team_users_post_with_jwt(flask_test_client):
     assert data['result'] is False
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -894,10 +905,16 @@ def test_team_users_post_with_jwt_not_manager(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user3['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user3['id']
+        ).count()
+        == 1
     )
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -930,7 +947,10 @@ def test_team_users_post_without_jwt_using_username(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 1
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -968,7 +988,10 @@ def test_team_users_post_with_jwt_using_username(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1006,7 +1029,10 @@ def test_team_users_post_with_jwt_using_username(flask_test_client):
     assert data['result'] is True
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1045,7 +1071,10 @@ def test_team_users_post_with_jwt_existing_using_username(flask_test_client):
     assert data['result'] is False
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 1
     )
 
 
@@ -1088,10 +1117,16 @@ def test_team_users_post_with_jwt_not_manager_using_username(flask_test_client):
     assert response.status_code == 401
     assert db_models.UserTeams.query.count() == 2
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user3['id']).count() == 1
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user3['id']
+        ).count()
+        == 1
     )
     assert (
-        db_models.UserTeams.query.filter(UserTeams.user_id == user2['id']).count() == 0
+        db_models.UserTeams.query.filter(
+            db_models.UserTeams.user_id == user2['id']
+        ).count()
+        == 0
     )
 
 
@@ -1126,3 +1161,117 @@ def test_team_users_post_with_jwt_using_wrong_username(flask_test_client):
     )
     assert response.status_code == 404
     assert db_models.UserTeams.query.count() == 1
+
+
+def test_teams_post_with_jwt_states_created(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+    }
+    response: Response = flask_test_client.post(
+        '/teams/', json=team_data, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 201
+    assert data['abbreviation'] == team_data['abbreviation']
+    assert data['name'] == team_data['name']
+    states = db_models.DefaultState.query.all()
+    assert len(states) > 0
+    for state in states:
+        assert str(state.team_id) == data['id']
+
+
+def test_team_states_get_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    team.update_states(['state1', 'state2', 'state3'])
+    response: Response = flask_test_client.get(
+        f'/teams/{team["id"]}/states',
+    )
+    data = response.get_json()
+    assert response.status_code == 401
+
+
+def test_team_states_get_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    state_data = ['state1', 'state2', 'state3']
+    team.update_states(state_data)
+    response: Response = flask_test_client.get(
+        f'/teams/{team["id"]}/states', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert len(data) == 3
+    states = db_models.DefaultState.query.order_by(db_models.DefaultState.rank).all()
+    assert len(states) == 3
+    for i in range(3):
+        assert states[i].name == state_data[i]
+        assert states[i].team_id == team['id']
+
+
+def test_team_projects_post_with_jwt_states_created(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data_1 = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team_1 = db_services.TeamService.create(team_data_1)
+    state_data = ['state1', 'state2', 'state3']
+    team_1.update_states(['state1', 'state2', 'state3'])
+    project_data_1 = {'name': 'test_project_1'}
+    response: Response = flask_test_client.post(
+        f'/teams/{team_1["id"]}/projects', json=project_data_1, headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 201
+    assert db_models.Project.query.count() == 1
+    project = db_models.Project.query.get(data['id'])
+    assert project is not None
+    assert project.name == project_data_1['name']
+    assert db_models.TaskGroup.query.count() == 1
+    task_group = db_models.TaskGroup.query.first()
+    assert task_group.project_id == project.id
+    states = db_models.State.query.order_by(db_models.State.rank).all()
+    assert len(states) == 3
+    for i in range(3):
+        assert states[i].name == state_data[i]
+        assert str(states[i].project_id) == data['id']

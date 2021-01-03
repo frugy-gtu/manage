@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:manage/core/app_shell.dart';
 import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/general_user_model.dart';
 import 'package:manage/core/model/team_model.dart';
+import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/login_screen.dart';
-import 'package:manage/core/screens/profile_screen.dart';
-import 'package:manage/core/screens/project_create_screen.dart';
 import 'package:manage/core/screens/sign_up_screen.dart';
-import 'package:manage/core/screens/team_create_screen.dart';
-import 'package:manage/core/screens/team_invite_screen.dart';
-import 'package:manage/core/screens/team_screen.dart';
-import 'package:manage/core/screens/teams_screen.dart';
 
 class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {
@@ -28,8 +24,33 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      pages: _pages,
-      onPopPage: _onPopPage,
+      pages: [
+        if (!Auth.isLoggedIn()) ...[
+          MaterialPage(
+            key: ValueKey('LoginPage'),
+            child: LoginScreen(),
+          ),
+          if (state.route == ManageRoute.signup)
+            MaterialPage(
+              key: ValueKey('SignUpPage'),
+              child: SignUpScreen(),
+            ),
+        ] else
+          MaterialPage(
+              key: ValueKey('BottomNavigationBar'),
+              child: AppShell(
+                state: state,
+              )),
+      ],
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+
+        state.update(ManageRoute.login);
+
+        return true;
+      },
     );
   }
 
@@ -39,137 +60,57 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
   @override
   Future<void> setNewRoutePath(ManageRoutePath path) async {
     //TODO: Implement getting models with querying.
-    if (path is ManageLoginPath) {
+    if (path is LoginPath) {
       state.update(ManageRoute.login);
-    } else if (path is ManageSignUpPath) {
+    } else if (path is SignUpPath) {
       state.update(ManageRoute.signup);
-    } else if (path is ManageTeamsPath) {
+    } else if (path is TeamsPath) {
       state.update(ManageRoute.teams);
-    } else if (path is ManageTeamPath) {
+    } else if (path is ProjectsPath) {
+      state.update(ManageRoute.projects);
+    } else if (path is SettingsPath) {
+      state.update(ManageRoute.settings);
+    } else if (path is ProfilePath) {
+      state.update(
+        ManageRoute.profile,
+      );
+    } else if (path is TeamPath) {
       state.update(ManageRoute.team,
           team: TeamModel(
               name: 'Not implemented', abbreviation: 'NI', id: path.id));
-    } else if (path is ManageProjectCreatePath) {
-      state.update(ManageRoute.project_create);
-    } else if (path is ManageTeamInvitePath) {
-      state.update(ManageRoute.team_invite);
-    } else if (path is ManageUserProfileFromTeamsPath) {
-      state.update(ManageRoute.user_profile, prevRoute: ManageRoute.teams);
-    } else if (path is ManageMemberProfilePath) {
+    } else if (path is TeamCreatePath) {
+      state.update(ManageRoute.team_create);
+    } else if (path is ProjectCreatePath) {
+      state.update(ManageRoute.project_create,
+          team: TeamModel(
+              name: 'Not implemented', abbreviation: 'NI', id: path.id));
+    } else if (path is TeamInvitePath) {
+      state.update(ManageRoute.team_invite,
+          team: TeamModel(
+              name: 'Not implemented', abbreviation: 'NI', id: path.id));
+    } else if (path is MemberProfileTeamPath) {
       state.update(
-        ManageRoute.member_profile,
+        ManageRoute.member,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
         member: GeneralUserModel(
             email: 'Not implemented',
             createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
-    } else if (path is ManageUnknownPath) {
+    } else if (path is ProjectTeamPath) {
+      state.update(
+        ManageRoute.project,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.projectId,
+        ),
+      );
+    }
+    if (path is UnknownPath) {
       state.update(ManageRoute.unknown);
     }
-  }
-
-  List<Page<dynamic>> get _pages {
-    List<Page<dynamic>> pages = [];
-
-    if (!Auth.isLoggedIn()) {
-      pages.add(MaterialPage(
-        key: ValueKey('LoginPage'),
-        child: LoginScreen(),
-      ));
-
-      if (state.route == ManageRoute.signup) {
-        pages.add(MaterialPage(
-          key: ValueKey('SignUpPage'),
-          child: SignUpScreen(),
-        ));
-      }
-    } else {
-      pages.add(MaterialPage(
-        key: ValueKey('TeamsPage'),
-        child: TeamsScreen(),
-      ));
-
-      if (state.route == ManageRoute.user_profile) {
-        if (state.prevRoute == ManageRoute.teams) {
-          pages.add(MaterialPage(
-            key: ValueKey('UserProfileFromTeamsPage'),
-            child: ProfileScreen(Auth.user),
-          ));
-        }
-      }
-
-      if (state.route == ManageRoute.team_create) {
-        pages.add(MaterialPage(
-          key: ValueKey('TeamCreatePage'),
-          child: TeamCreateScreen(),
-        ));
-      }
-
-      if (state.route == ManageRoute.team ||
-          state.route == ManageRoute.project_create ||
-          state.route == ManageRoute.team_invite ||
-          state.route == ManageRoute.member_profile ||
-          (state.route == ManageRoute.user_profile &&
-              state.prevRoute == ManageRoute.team)) {
-        pages.add(MaterialPage(
-          key: ValueKey('TeamPage'),
-          child: TeamScreen(team: state.team),
-        ));
-
-        if (state.route == ManageRoute.user_profile) {
-          pages.add(MaterialPage(
-            key: ValueKey('UserProfileFromTeamPage'),
-            child: ProfileScreen(Auth.user),
-          ));
-        }
-
-        if (state.route == ManageRoute.member_profile) {
-          pages.add(MaterialPage(
-            key: ValueKey('MemberProfilePage'),
-            child: ProfileScreen(state.member),
-          ));
-        }
-
-        if (state.route == ManageRoute.project_create) {
-          pages.add(MaterialPage(
-            key: ValueKey('ProjectCreatePage'),
-            child: ProjectCreateScreen(state.team),
-          ));
-        }
-
-        if (state.route == ManageRoute.team_invite) {
-          pages.add(MaterialPage(
-            key: ValueKey('TeamInvitePage'),
-            child: TeamInviteScreen(state.team),
-          ));
-        }
-      }
-    }
-
-    return pages;
-  }
-
-  bool _onPopPage(Route<dynamic> route, dynamic result) {
-    if (!route.didPop(result)) {
-      return false;
-    }
-
-    switch (state.route) {
-      case ManageRoute.signup:
-        state.update(ManageRoute.login);
-        break;
-      case ManageRoute.project_create:
-      case ManageRoute.team_invite:
-      case ManageRoute.member_profile:
-        state.update(ManageRoute.team, team: state.team);
-        break;
-      case ManageRoute.user_profile:
-        state.update(state.prevRoute, team: state.team);
-        break;
-      default:
-        state.update(ManageRoute.teams);
-    }
-
-    return true;
   }
 }

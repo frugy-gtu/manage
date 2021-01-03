@@ -910,3 +910,57 @@ def test_project_task_group_delete_with_jwt_not_manager(flask_test_client):
     assert db_models.TaskGroup.query.count() == 1
     task_group = db_models.TaskGroup.query.get(task_group_1['id'])
     assert task_group is not None
+
+
+def test_project_states_get_without_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    team.update_states(['state1', 'state2', 'state3'])
+    project_data = {'name': 'test_project_1', 'team_id': team['id']}
+    project = db_services.ProjectService.create(project_data)
+    response: Response = flask_test_client.get(
+        f'/projects/{project["id"]}/states',
+    )
+    assert response.status_code == 401
+
+
+def test_project_states_get_with_jwt(flask_test_client):
+    user_data = {
+        'username': 'test_user',
+        'email': 'test@user.com',
+        'password': '123123asd',
+    }
+    user = db_services.UserService.create(user_data)
+    access_token = user.create_access_token()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    team_data = {
+        'name': 'test_team_1',
+        'abbreviation': 'tt1',
+        'user_id': user['id'],
+    }
+    team = db_services.TeamService.create(team_data)
+    state_data = ['state1', 'state2', 'state3']
+    team.update_states(state_data)
+    project_data = {'name': 'test_project_1', 'team_id': team['id']}
+    project = db_services.ProjectService.create(project_data)
+    response: Response = flask_test_client.get(
+        f'/projects/{project["id"]}/states', headers=headers
+    )
+    data = response.get_json()
+    assert response.status_code == 200
+    assert len(data) == 3
+    states = db_models.State.query.order_by(db_models.State.rank).all()
+    assert len(states) == 3
+    for i in range(3):
+        assert states[i].name == state_data[i]
+        assert states[i].project_id == project['id']

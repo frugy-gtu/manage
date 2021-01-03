@@ -9,6 +9,7 @@ from marshmallow import EXCLUDE, Schema
 from manage_api.db.models import db, update_db
 from manage_api.db.models import task_group
 from manage_api.db.models.project import Project
+from manage_api.db.models.state import State
 from manage_api.db.models.task import Task, TaskSchema
 from manage_api.db.models.task_group import TaskGroup
 from manage_api.db.services.helpers import query_builder
@@ -65,7 +66,7 @@ class TaskService(Paginable):
                 raise TypeError('Wrong db object type')
             self.obj = dbobject
         elif id:
-            obj = Task.query.get(id)
+            obj = self._query(joined_relations=joined_relations).get(id)
             if obj is None:
                 raise ValueError('Task with this id is not found')
             self.obj = obj
@@ -75,12 +76,19 @@ class TaskService(Paginable):
 
     @classmethod
     def create(cls, data: Dict, validate_unknown=True, commit=True) -> TaskService:
-        if 'project_id' not in data:
+        if not data.get('project_id'):
             task_group = TaskGroup.query.get(data['task_group_id'])
             data['project_id'] = task_group.project_id
-        if 'team_id' not in data:
+        if not data.get('team_id'):
             project = Project.query.get(data['project_id'])
             data['team_id'] = project.team_id
+        if not data.get('state_id'):
+            data['state_id'] = (
+                State.query.filter(State.project_id == data['project_id'])
+                .order_by(State.rank)
+                .first()
+                .id
+            )
         if validate_unknown:
             schema = TaskSchema()
         else:
@@ -148,6 +156,15 @@ class TaskService(Paginable):
             if hasattr(self.obj, k):
                 setattr(self.obj, k, v)
         update_db(commit)
+
+    def update_state(self, state_id: Union[str, UUID], commit=True) -> bool:
+        if self.obj is None:
+            raise RuntimeError('Database object is null')
+        if str(self.obj.state_id) == str(state_id):
+            return False
+        self.obj.state_id = state_id
+        update_db(commit)
+        return True
 
     def delete(self, commit=True):
         if self.obj is None:

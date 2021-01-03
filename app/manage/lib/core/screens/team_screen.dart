@@ -90,6 +90,7 @@ class _TeamScreenBodyView extends StatelessWidget {
               future: _controller.projects(),
               onSuccess: (data) => _TeamProjectsView(
                 projects: data,
+                controller: _controller,
               ),
             ),
           ),
@@ -114,10 +115,13 @@ class _TeamProjectsView extends StatelessWidget {
   const _TeamProjectsView({
     Key key,
     @required List<TeamProjectModel> projects,
+    @required TeamScreenController controller,
   })  : _projects = projects,
+  _controller = controller,
         super(key: key);
 
   final List<TeamProjectModel> _projects;
+  final TeamScreenController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +139,7 @@ class _TeamProjectsView extends StatelessWidget {
               itemExtent: 50.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
-                  onTap: () {},
+                  onTap: () => _controller.onProjectTap(context, _projects[index]),
                   child: Center(
                       child: Text('${_projects[index].name}',
                           style: Theme.of(context)

@@ -91,7 +91,7 @@ Future<RequestResult> request<T>(
           msg: errorMsg ?? 'Something went wrong.');
     } else {
       return RequestResult(Status.fail,
-          msg: ErrorModel.fromJson(response.fail.data).msg);
+          msg: ErrorModel.fromJson(response.fail.data).message);
     }
   }
 

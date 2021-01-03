@@ -8,6 +8,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Manage'),
+        automaticallyImplyLeading: false,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(

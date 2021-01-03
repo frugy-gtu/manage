@@ -1,7 +1,7 @@
 from marshmallow import fields, post_load
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base import Base, BaseSchema
-from .db import db
+from .db import db, joinedload, selectinload
 
 
 class User(Base):
@@ -15,8 +15,13 @@ class User(Base):
         default=True,
         server_default=db.text('false'),
     )
-
+    # relations
+    load_strategies = {
+        'teams': selectinload,
+        'profile': joinedload,
+    }
     teams = db.relationship('Team', secondary='user_teams', lazy='noload')
+    profile = db.relationship('UserProfile', lazy='noload', uselist=False)
 
     def hash_password(self):
         self.password = generate_password_hash(self.password)
@@ -30,6 +35,9 @@ class UserSchema(BaseSchema):
     email = fields.String(required=True, allow_none=False)
     password = fields.String(required=True, allow_none=False)
     is_active = fields.Boolean(required=False, allow_none=False)
+    # relations
+    teams = fields.Nested('TeamSchema', dump_only=True, many=True)
+    profile = fields.Nested('UserProfileSchema', dump_only=True)
 
     @post_load
     def create_obj(self, data, **kwargs):

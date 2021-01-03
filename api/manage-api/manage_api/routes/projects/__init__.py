@@ -81,9 +81,12 @@ class ProjectTags(Resource):
 @api.route('/<uuid:project_id>/states')
 class ProjectStates(Resource):
     @jwt_required
+    @accepts(query_params_schema=request_schemas.ProjectStatesGetSchema, api=api)
     @responds(schema=response_schemas.ProjectState(many=True), api=api, status_code=200)
     def get(self, project_id, **kwargs):
-        raise NotImplementedError()
+        params = request.parsed_query_params
+        project: ProjectService = params['project']
+        return project.dump_states()
 
     @jwt_required
     @accepts(schema=request_schemas.ProjectStatesPostSchema, api=api)

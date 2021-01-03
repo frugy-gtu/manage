@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:manage/core/cache/auth.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/model/general_user_model.dart';
@@ -28,7 +27,8 @@ class TeamScreenController extends ChangeNotifier {
   }
 
   Future<List<GeneralUserModel>> members() async {
-    RequestResult<List<GeneralUserModel>> result = await service.membersOf(team);
+    RequestResult<List<GeneralUserModel>> result =
+        await service.membersOf(team);
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }
@@ -49,11 +49,14 @@ class TeamScreenController extends ChangeNotifier {
   }
 
   void onFloatingActionPress(BuildContext context) {
-    if(tabController.index == 0) {
-      context.read<ManageRouteState>().update(ManageRoute.project_create);
-    }
-    else {
-      context.read<ManageRouteState>().update(ManageRoute.team_invite);
+    if (tabController.index == 0) {
+      context
+          .read<ManageRouteState>()
+          .update(ManageRoute.project_create, team: team);
+    } else {
+      context
+          .read<ManageRouteState>()
+          .update(ManageRoute.team_invite, team: team);
     }
   }
 
@@ -62,12 +65,16 @@ class TeamScreenController extends ChangeNotifier {
     tabController.addListener(onTabIndexChange);
   }
 
+  void onProjectTap(BuildContext context, TeamProjectModel project) {
+    context
+        .read<ManageRouteState>()
+        .update(ManageRoute.project, project: project);
+  }
+
   void onMemberTap(BuildContext context, GeneralUserModel user) {
-    if(user.username == Auth.user.username) {
-      context.read<ManageRouteState>().update(ManageRoute.user_profile, prevRoute: ManageRoute.team);
-    }
-    else
-      context.read<ManageRouteState>().update(ManageRoute.member_profile, member: user);
+    context
+        .read<ManageRouteState>()
+        .update(ManageRoute.member, team: team, member: user);
   }
 
   @override
