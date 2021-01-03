@@ -10,6 +10,7 @@ from marshmallow import EXCLUDE, Schema
 from manage_api.db.models import db, update_db
 from manage_api.db.models.team import Team
 from manage_api.db.models.user import User, UserSchema
+from manage_api.db.models.user_profile import UserProfile, UserProfileSchema
 from manage_api.db.models.user_teams import UserTeams
 from manage_api.db.services.helpers import query_builder
 from manage_api.db.services.pagination import Paginable
@@ -84,17 +85,25 @@ class UserService(Paginable):
                 raise TypeError('Wrong db object type')
             self.obj = dbobject
         elif id:
-            obj = User.query.get(id)
+            obj = self._query(joined_relations=joined_relations).get(id)
             if obj is None:
                 raise ValueError('User with this id is not found')
             self.obj = obj
         elif email:
-            obj = User.query.filter(User.email == email).first()
+            obj = (
+                self._query(joined_relations=joined_relations)
+                .filter(User.email == email)
+                .first()
+            )
             if not obj:
                 raise ValueError('User with this email not found')
             self.obj = obj
         elif username:
-            obj = User.query.filter(User.username == username).first()
+            obj = (
+                self._query(joined_relations=joined_relations)
+                .filter(User.username == username)
+                .first()
+            )
             if not obj:
                 raise ValueError('User with this username not found')
             self.obj = obj
@@ -159,6 +168,31 @@ class UserService(Paginable):
             return UserSchema(*args, partial=fields_, **kwargs)
         return UserSchema(*args, partial=True, **kwargs)
 
+    def upsert_profile(
+        self, profile_data: Dict[str, Any], commit: bool = True
+    ) -> Dict[str, Any]:
+        profile = UserProfile.query.filter(UserProfile.user_id == self.obj.id).first()
+        if 'user_id' in profile_data:
+            del profile_data['user_id']
+        if profile:
+            for k, v in profile_data.items():
+                if hasattr(profile, k):
+                    setattr(profile, k, v)
+        else:
+            schema = UserProfileSchema(unknown=EXCLUDE)
+            profile_data['user_id'] = self.obj.id
+            profile = schema.load(profile_data)
+            db.session.add(profile)
+        update_db(commit)
+        return UserProfileSchema().dump(profile)
+
+    def dump_profile(self) -> Dict[str, Any]:
+        profile = UserProfile.query.filter(UserProfile.user_id == self.obj.id).first()
+        if profile:
+            return UserProfileSchema().dump(profile)
+        else:
+            return {}
+
     def create_access_token(self):
         return create_access_token(identity={'id': str(self.obj.id)})
 
@@ -203,6 +237,7 @@ class UserService(Paginable):
                 query = query.join(UserTeams, UserTeams.user_id == User.id).filter(
                     UserTeams.team_id == team
                 )
+        query = query.order_by(User.username)
         return query
 
     # Operator overloading
@@ -211,7 +246,7 @@ class UserService(Paginable):
         return self.get(key, strict=True)
 
     def __dict__(self):
-        return UserSchema().dump(self.obj)
+        return self._schema.dump(self.obj)
 
     def __iter__(self):  # dict() list()
         for k, v in self.__dict__().items():

@@ -4,6 +4,7 @@ from .task import Task, TaskSchema
 from .task_group import TaskGroup, TaskGroupSchema
 from .team import Team, TeamSchema
 from .user import User, UserSchema
+from .user_profile import UserProfile, UserProfileSchema
 from .user_teams import UserTeams
 
 __all__ = [
@@ -19,5 +20,7 @@ __all__ = [
     'TeamSchema',
     'User',
     'UserSchema',
+    'UserProfile',
+    'UserProfileSchema',
     'UserTeams',
 ]
