@@ -50,64 +50,66 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
   List<Page<dynamic>> get _pages {
     List<Page<dynamic>> pages = [];
 
-    pages.add(MaterialPage(
-      key: ValueKey('TeamsPage'),
-      child: TeamsScreen(),
-    ));
-
-    if (state.route == ManageRoute.user_profile) {
-      if (state.prevRoute == ManageRoute.teams) {
-        pages.add(MaterialPage(
-          key: ValueKey('UserProfileFromTeamsPage'),
-          child: ProfileScreen(Auth.user),
-        ));
-      }
-    }
-
-    if (state.route == ManageRoute.team_create) {
+    if (state.tab == BottomBarTab.teams) {
       pages.add(MaterialPage(
-        key: ValueKey('TeamCreatePage'),
-        child: TeamCreateScreen(),
-      ));
-    }
-
-    if (state.route == ManageRoute.team ||
-        state.route == ManageRoute.project_create ||
-        state.route == ManageRoute.team_invite ||
-        state.route == ManageRoute.member_profile ||
-        (state.route == ManageRoute.user_profile &&
-            state.prevRoute == ManageRoute.team)) {
-      pages.add(MaterialPage(
-        key: ValueKey('TeamPage'),
-        child: TeamScreen(team: state.team),
+        key: ValueKey('TeamsPage'),
+        child: TeamsScreen(),
       ));
 
       if (state.route == ManageRoute.user_profile) {
+        if (state.prevRoute == ManageRoute.teams) {
+          pages.add(MaterialPage(
+            key: ValueKey('UserProfileFromTeamsPage'),
+            child: ProfileScreen(Auth.user),
+          ));
+        }
+      }
+
+      if (state.route == ManageRoute.team_create) {
         pages.add(MaterialPage(
-          key: ValueKey('UserProfileFromTeamPage'),
-          child: ProfileScreen(Auth.user),
+          key: ValueKey('TeamCreatePage'),
+          child: TeamCreateScreen(),
         ));
       }
 
-      if (state.route == ManageRoute.member_profile) {
+      if (state.route == ManageRoute.team ||
+          state.route == ManageRoute.project_create ||
+          state.route == ManageRoute.team_invite ||
+          state.route == ManageRoute.member_profile ||
+          (state.route == ManageRoute.user_profile &&
+              state.prevRoute == ManageRoute.team)) {
         pages.add(MaterialPage(
-          key: ValueKey('MemberProfilePage'),
-          child: ProfileScreen(state.member),
+          key: ValueKey('TeamPage'),
+          child: TeamScreen(team: state.team),
         ));
-      }
 
-      if (state.route == ManageRoute.project_create) {
-        pages.add(MaterialPage(
-          key: ValueKey('ProjectCreatePage'),
-          child: ProjectCreateScreen(state.team),
-        ));
-      }
+        if (state.route == ManageRoute.user_profile) {
+          pages.add(MaterialPage(
+            key: ValueKey('UserProfileFromTeamPage'),
+            child: ProfileScreen(Auth.user),
+          ));
+        }
 
-      if (state.route == ManageRoute.team_invite) {
-        pages.add(MaterialPage(
-          key: ValueKey('TeamInvitePage'),
-          child: TeamInviteScreen(state.team),
-        ));
+        if (state.route == ManageRoute.member_profile) {
+          pages.add(MaterialPage(
+            key: ValueKey('MemberProfilePage'),
+            child: ProfileScreen(state.member),
+          ));
+        }
+
+        if (state.route == ManageRoute.project_create) {
+          pages.add(MaterialPage(
+            key: ValueKey('ProjectCreatePage'),
+            child: ProjectCreateScreen(state.team),
+          ));
+        }
+
+        if (state.route == ManageRoute.team_invite) {
+          pages.add(MaterialPage(
+            key: ValueKey('TeamInvitePage'),
+            child: TeamInviteScreen(state.team),
+          ));
+        }
       }
     }
 

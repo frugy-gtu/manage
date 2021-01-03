@@ -46,16 +46,7 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           return false;
         }
 
-        switch (state.route) {
-          case ManageRoute.signup:
-            state.update(ManageRoute.login);
-            break;
-          case ManageRoute.teams:
-            state.update(ManageRoute.teams);
-            break;
-          default:
-            break;
-        }
+        state.update(ManageRoute.login);
 
         return true;
       },
