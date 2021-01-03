@@ -4,9 +4,11 @@ enum ManageRoute {
   teams,
   team,
   team_create,
+  projects,
   project_create,
   team_invite,
-  user_profile,
-  member_profile,
+  profile,
+  member,
+  settings,
   unknown,
 }

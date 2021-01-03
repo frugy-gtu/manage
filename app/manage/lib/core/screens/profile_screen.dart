@@ -4,43 +4,51 @@ import 'package:manage/core/controller/profile_screen_controller.dart';
 import 'package:manage/core/model/general_user_model.dart';
 
 //TODO: Use LayoutBuilder
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final GeneralUserModel user;
 
   ProfileScreen(this.user);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      body: ProfileInfos(user: user),
-    );
-  }
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class ProfileInfos extends StatefulWidget {
-  final GeneralUserModel user;
-
-  ProfileInfos({this.user});
-
-  @override
-  _ProfileInfosState createState() => _ProfileInfosState();
-}
-
-class _ProfileInfosState extends State<ProfileInfos> {
+class _ProfileScreenState extends State<ProfileScreen> {
   final _controller = ProfileScreenController();
-  bool isUserProfile = false;
+  bool _isUserProfile = false;
 
   @override
   void initState() {
     super.initState();
-    isUserProfile = _controller.isUserProfile(context);
+    _isUserProfile = _controller.isUserProfile(context);
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: !_isUserProfile,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      body: ProfileInfos(
+          user: widget.user,
+          isUserProfile: _isUserProfile,
+          controller: _controller),
+    );
+  }
+}
+
+class ProfileInfos extends StatelessWidget {
+  final GeneralUserModel user;
+  final bool _isUserProfile;
+  final ProfileScreenController _controller;
+
+  ProfileInfos(
+      {this.user, bool isUserProfile, ProfileScreenController controller})
+      : _isUserProfile = isUserProfile,
+        _controller = controller;
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +75,17 @@ class _ProfileInfosState extends State<ProfileInfos> {
             SizedBox(
               height: 5.0,
             ),
-            Text(widget.user.username, style: TextStyle(fontSize: 20.0)),
+            Text(user.username, style: TextStyle(fontSize: 20.0)),
             SizedBox(
               height: 5.0,
             ),
-            Text(widget.user.email, style: TextStyle(fontSize: 15.0)),
+            Text(user.email, style: TextStyle(fontSize: 15.0)),
             SizedBox(
               height: 80.0,
             ),
-            if (isUserProfile)
+            if (_isUserProfile)
               ElevatedButton(
-                onPressed: () =>
-                  _controller.onLogout(context),
+                onPressed: () => _controller.onLogout(context),
                 child: Text('Logout'),
               ),
           ],

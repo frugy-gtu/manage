@@ -10,53 +10,57 @@ class ManageRouteInformationParser
     final uri = Uri.parse(routeInformation.location);
 
     if (!Auth.isLoggedIn()) {
-      return ManageLoginPath();
+      return LoginPath();
     }
 
     if (uri.pathSegments.length == 0) {
-      return ManageTeamsPath();
+      return TeamsPath();
     }
 
     if (uri.pathSegments.length == 1) {
       if (uri.pathSegments[0] == 'login') {
-        return ManageLoginPath();
+        return LoginPath();
       }
 
       if (uri.pathSegments[0] == 'sign-up') {
-        return ManageSignUpPath();
+        return SignUpPath();
       }
 
       if (uri.pathSegments[0] == 'teams') {
-        return ManageTeamsPath();
+        return TeamsPath();
+      }
+
+      if (uri.pathSegments[0] == 'profile') {
+        return ProfilePath();
+      }
+
+      if (uri.pathSegments[0] == 'projects') {
+        return ProjectsPath();
+      }
+
+      if (uri.pathSegments[0] == 'settings') {
+        return SettingsPath();
       }
     }
 
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments[0] == 'teams') {
         if (uri.pathSegments[1] == 'create') {
-          return ManageTeamCreatePath();
+          return TeamCreatePath();
         }
 
-        return ManageTeamPath(uri.pathSegments[1]);
-      }
-
-      if (uri.pathSegments[1] == 'profile') {
-        return ManageUserProfileFromTeamsPath();
+        return TeamPath(uri.pathSegments[1]);
       }
     }
 
     if (uri.pathSegments.length == 3) {
       if (uri.pathSegments[0] == 'teams') {
         if (uri.pathSegments[2] == 'create') {
-          return ManageProjectCreatePath(uri.pathSegments[1]);
+          return ProjectCreatePath(uri.pathSegments[1]);
         }
 
         if (uri.pathSegments[2] == 'invite') {
-          return ManageTeamInvitePath(uri.pathSegments[1]);
-        }
-
-        if (uri.pathSegments[2] == 'profile') {
-          return ManageUserProfileFromTeamPath(uri.pathSegments[1]);
+          return TeamInvitePath(uri.pathSegments[1]);
         }
       }
     }
@@ -64,54 +68,61 @@ class ManageRouteInformationParser
     if (uri.pathSegments.length == 4) {
       if (uri.pathSegments[0] == 'teams') {
         if (uri.pathSegments[2] == 'members') {
-          return ManageMemberProfilePath(uri.pathSegments[1], uri.pathSegments[3]);
+          return MemberProfileTeamPath(
+              uri.pathSegments[1], uri.pathSegments[3]);
         }
       }
     }
 
-    return ManageUnknownPath();
+    return UnknownPath();
   }
 
   @override
   RouteInformation restoreRouteInformation(ManageRoutePath configuration) {
-    if (configuration is ManageLoginPath) {
+    if (configuration is LoginPath) {
       return RouteInformation(location: '/login');
     }
 
-    if (configuration is ManageSignUpPath) {
+    if (configuration is SignUpPath) {
       return RouteInformation(location: '/sign-up');
     }
 
-    if (configuration is ManageTeamsPath) {
+    if (configuration is TeamsPath) {
       return RouteInformation(location: '/teams');
     }
 
-    if (configuration is ManageTeamPath) {
-      return RouteInformation(location: '/teams/${configuration.id}');
-    }
-
-    if (configuration is ManageTeamCreatePath) {
-      return RouteInformation(location: '/teams/create');
-    }
-
-    if (configuration is ManageProjectCreatePath) {
-      return RouteInformation(location: '/teams/${configuration.id}/create');
-    }
-
-    if (configuration is ManageTeamInvitePath) {
-      return RouteInformation(location: '/teams/${configuration.id}/invite');
-    }
-
-    if (configuration is ManageUserProfileFromTeamsPath) {
+    if (configuration is ProfilePath) {
       return RouteInformation(location: '/profile');
     }
 
-    if (configuration is ManageUserProfileFromTeamPath) {
-      return RouteInformation(location: '/teams/${configuration.id}/profile');
+    if (configuration is SettingsPath) {
+      return RouteInformation(location: '/settings');
     }
 
-    if (configuration is ManageMemberProfilePath) {
-      return RouteInformation(location: '/users/${configuration.teamId}');
+    if (configuration is ProjectsPath) {
+      return RouteInformation(location: '/projects');
+    }
+
+    if (configuration is TeamPath) {
+      return RouteInformation(location: '/teams/${configuration.id}');
+    }
+
+    if (configuration is TeamCreatePath) {
+      return RouteInformation(location: '/teams/create');
+    }
+
+    if (configuration is ProjectCreatePath) {
+      return RouteInformation(location: '/teams/${configuration.id}/create');
+    }
+
+    if (configuration is TeamInvitePath) {
+      return RouteInformation(location: '/teams/${configuration.id}/invite');
+    }
+
+    if (configuration is MemberProfileTeamPath) {
+      return RouteInformation(
+          location:
+              '/teams/${configuration.teamId}/member/${configuration.memberId}');
     }
 
     return null;
