@@ -53,10 +53,10 @@ class ProjectScreenController extends ChangeNotifier {
     return result.data;
   }
 
-  Future<List<TaskModel>> tasks() async {
+  Future<List<TaskModel>> tasksWith(ProjectStateModel state) async {
     _taskGroups = await _requestGroups();
-    RequestResult<List<TaskModel>> result =
-        await service.tasks(TaskQuery(projectId: _project.id));
+    RequestResult<List<TaskModel>> result = await service
+        .tasks(TaskQuery(stateId: state.id, projectId: project.id));
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }

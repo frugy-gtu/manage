@@ -80,13 +80,12 @@ class _ProjectScreenBody extends StatelessWidget {
                 top: false,
                 bottom: false,
                 child: HandledFutureBuilder(
-                  future: _controller.tasks(),
+                  future: _controller.tasksWith(state),
                   onSuccess: (data) {
                     return _TasksWithStateView(
                         state: state,
                         controller: _controller,
-                        tasks: (data as List<TaskModel>)
-                            .where((task) => task.taskStateId == state.id));
+                        tasks: data);
                   },
                 ),
               ),
