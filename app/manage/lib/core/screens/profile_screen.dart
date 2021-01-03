@@ -76,6 +76,12 @@ class ProfileInfos extends StatelessWidget {
               height: 5.0,
             ),
             Text(user.username, style: TextStyle(fontSize: 20.0)),
+            if (_isUserProfile)
+            SizedBox(
+              height: 5.0,
+            ),
+            if (_isUserProfile)
+            Text('${user.profile.name} ${user.profile.surname}', style: TextStyle(fontSize: 15.0)),
             SizedBox(
               height: 5.0,
             ),
