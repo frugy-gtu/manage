@@ -66,6 +66,7 @@ class _ProjectScreenBody extends StatelessWidget {
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
               tabs: _states.map((state) => Tab(text: state.name)).toList(),
+              isScrollable: true,
               controller: _controller.tabController,
             ),
           ),
