@@ -19,7 +19,8 @@ class _AppShellState extends State<AppShell> {
 
   void initState() {
     super.initState();
-    _routerDelegate = ManageInnerRouterDelegate(widget.state, HeroController(createRectTween: _createRectTween));
+    _routerDelegate = ManageInnerRouterDelegate(
+        widget.state, HeroController(createRectTween: _createRectTween));
   }
 
   @override
@@ -46,9 +47,10 @@ class _AppShellState extends State<AppShell> {
         backButtonDispatcher: _backButtonDispatcher,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Theme.of(context).colorScheme.secondary.withAlpha(160),
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onBackground.withAlpha(160),
+        selectedItemColor: Theme.of(context).colorScheme.onBackground,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Teams'),
           BottomNavigationBarItem(

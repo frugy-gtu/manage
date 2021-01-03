@@ -53,3 +53,12 @@ Future<RequestResult> inviteMemberTo(
         url: '/teams/${team.id}/users',
         jsonData: model.toJson()
       );
+
+Future<RequestResult<TeamModel>> teamWith(
+        String teamId) async =>
+    (await service.request<TeamModel>(
+      method: RequestMethod.get,
+      url: '/teams/' + teamId,
+      decode: (i) => TeamModel.fromJson(i),
+    ))
+        .castTo<TeamModel>();
