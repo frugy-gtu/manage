@@ -43,7 +43,13 @@ class Theme {
     );
   })();
 
-  static final _dark = ThemeData.dark();
+  static final _dark = ThemeData.dark().copyWith(
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        elevation: 0,
+        brightness: Brightness.dark,
+      ),
+  );
 
   /// This method called accordingly to system's
   /// [Brightness]. Returns [ThemeMode.dark] only
