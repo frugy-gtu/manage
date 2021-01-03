@@ -15,24 +15,7 @@ class TeamsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu_rounded),
-          enableFeedback: false,
-          onPressed: () {},
-          splashRadius: 20,
-        ),
         title: const Text('Teams'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            enableFeedback: false,
-            onPressed: () {
-              context.read<ManageRouteState>().update(ManageRoute.user_profile,
-                  prevUserProfileRoute: ManageRoute.teams);
-            },
-            splashRadius: 20,
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: controller.teams(),
