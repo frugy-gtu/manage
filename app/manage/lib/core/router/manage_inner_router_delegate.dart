@@ -12,7 +12,9 @@ import 'package:manage/core/screens/teams_screen.dart';
 
 class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ManageRoutePath> {
+
   final GlobalKey<NavigatorState> _navigatorKey;
+  final HeroController _heroController;
 
   ManageRouteState _state;
 
@@ -27,7 +29,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
     notifyListeners();
   }
 
-  ManageInnerRouterDelegate(this._state)
+  ManageInnerRouterDelegate(this._state, this._heroController)
       : _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -36,6 +38,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       key: navigatorKey,
       pages: _pages,
       onPopPage: _onPopPage,
+      observers: [],
     );
   }
 

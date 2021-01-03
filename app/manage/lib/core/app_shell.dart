@@ -1,4 +1,3 @@
-// Widget that contains the AdaptiveNavigationScaffold
 import 'package:flutter/material.dart';
 import 'package:manage/core/router/manage_inner_router_delegate.dart';
 import 'package:manage/core/router/manage_route_state.dart';
@@ -20,7 +19,7 @@ class _AppShellState extends State<AppShell> {
 
   void initState() {
     super.initState();
-    _routerDelegate = ManageInnerRouterDelegate(widget.state);
+    _routerDelegate = ManageInnerRouterDelegate(widget.state, HeroController(createRectTween: _createRectTween));
   }
 
   @override
@@ -52,9 +51,12 @@ class _AppShellState extends State<AppShell> {
         selectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Teams'),
-          BottomNavigationBarItem(icon: Icon(Icons.stacked_bar_chart), label: 'Projects'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.stacked_bar_chart), label: 'Projects'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
         ],
         currentIndex: widget.state.tab.index,
         onTap: (newIndex) {
@@ -62,5 +64,9 @@ class _AppShellState extends State<AppShell> {
         },
       ),
     );
+  }
+
+  RectTween _createRectTween(Rect begin, Rect end) {
+    return MaterialRectArcTween(begin: begin, end: end);
   }
 }
