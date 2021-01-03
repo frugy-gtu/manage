@@ -17,7 +17,7 @@ Future<RequestResult> login(LoginModel model) async => service.request(
       Auth.user = UserModel(
           email: 'demo@demo.com',
           username: 'demo',
-          createdAt: '02/02/2021');
+          );
     });
 
 Future<RequestResult> signUp(LoginModel model) async => service.request(

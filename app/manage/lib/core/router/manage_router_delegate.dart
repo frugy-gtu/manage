@@ -95,7 +95,6 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
             name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
         member: UserModel(
             email: 'Not implemented',
-            createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
     } else if (path is ProjectTeamPath) {

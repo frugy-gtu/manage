@@ -28,7 +28,6 @@ class Auth {
       _user = UserModel(
         email: _box.get('email'),
         username: _box.get('username'),
-        createdAt: _box.get('createdAt'),
       );
 
       return _user;
@@ -40,7 +39,6 @@ class Auth {
   static set user(UserModel user) {
     _box.put('email', user.email);
     _box.put('username', user.username);
-    _box.put('createdAt', user.createdAt);
   }
 
   static set status(AuthStatus status) {
