@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 
 class Auth {
   static Box _box;
-  static GeneralUserModel _user;
+  static UserModel _user;
 
   static Future<void> init() async {
     _box = await Hive.openBox('auth');
@@ -20,12 +20,12 @@ class Auth {
     }
   }
 
-  static GeneralUserModel get user {
+  static UserModel get user {
     if(isLoggedIn()) {
 
       if(_user != null) return _user;
 
-      _user = GeneralUserModel(
+      _user = UserModel(
         email: _box.get('email'),
         username: _box.get('username'),
         createdAt: _box.get('createdAt'),
@@ -37,7 +37,7 @@ class Auth {
     return null;
   }
 
-  static set user(GeneralUserModel user) {
+  static set user(UserModel user) {
     _box.put('email', user.email);
     _box.put('username', user.username);
     _box.put('createdAt', user.createdAt);

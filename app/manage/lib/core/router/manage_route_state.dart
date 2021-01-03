@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
 
@@ -9,7 +9,7 @@ class ManageRouteState extends ChangeNotifier {
   ManageRoute _route;
   TeamModel _team;
   TeamProjectModel _project;
-  GeneralUserModel _member;
+  UserModel _member;
 
   static BottomBarTab _selectedTab = BottomBarTab.teams;
 
@@ -31,7 +31,7 @@ class ManageRouteState extends ChangeNotifier {
 
   ManageRoute get route => _route;
   TeamModel get team => _team;
-  GeneralUserModel get member => _member;
+  UserModel get member => _member;
   TeamProjectModel get project => _project;
 
   BottomBarTab get tab => _selectedTab;
@@ -49,7 +49,7 @@ class ManageRouteState extends ChangeNotifier {
     ManageRoute route, {
       TeamModel team,
       TeamProjectModel project,
-    GeneralUserModel member,
+    UserModel member,
   }) {
     assert(route != null);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:manage/core/controller/team_screen_controller.dart';
 import 'package:manage/core/model/team_project_model.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
 import 'package:provider/provider.dart';
@@ -161,12 +161,12 @@ class _TeamMembersView extends StatelessWidget {
   final TeamScreenController controller;
   const _TeamMembersView({
     Key key,
-    @required List<GeneralUserModel> members,
+    @required List<UserModel> members,
     @required this.controller,
   })  : _members = members,
         super(key: key);
 
-  final List<GeneralUserModel> _members;
+  final List<UserModel> _members;
 
   @override
   Widget build(BuildContext context) {
