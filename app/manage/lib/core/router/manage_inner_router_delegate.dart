@@ -58,15 +58,6 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
         child: TeamsScreen(),
       ));
 
-      if (state.route == ManageRoute.user_profile) {
-        if (state.prevUserProfileRoute == ManageRoute.teams) {
-          pages.add(MaterialPage(
-            key: ValueKey('UserProfileFromTeamsPage'),
-            child: ProfileScreen(Auth.user),
-          ));
-        }
-      }
-
       if (state.route == ManageRoute.team_create) {
         pages.add(MaterialPage(
           key: ValueKey('TeamCreatePage'),
@@ -113,6 +104,12 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           ));
         }
       }
+    }
+    else if (state.tab == BottomBarTab.profile) {
+      pages.add(MaterialPage(
+        key: ValueKey('UserProfileFromTeamsPage'),
+        child: ProfileScreen(Auth.user),
+      ));
     }
 
     return pages;
