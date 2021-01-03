@@ -33,6 +33,14 @@ class ManageRouteInformationParser
       if (uri.pathSegments[0] == 'profile') {
         return ProfilePath();
       }
+
+      if (uri.pathSegments[0] == 'projects') {
+        return ProjectsPath();
+      }
+
+      if (uri.pathSegments[0] == 'settings') {
+        return SettingsPath();
+      }
     }
 
     if (uri.pathSegments.length == 2) {
@@ -85,6 +93,14 @@ class ManageRouteInformationParser
 
     if (configuration is ProfilePath) {
       return RouteInformation(location: '/profile');
+    }
+
+    if (configuration is SettingsPath) {
+      return RouteInformation(location: '/settings');
+    }
+
+    if (configuration is ProjectsPath) {
+      return RouteInformation(location: '/projects');
     }
 
     if (configuration is TeamPath) {

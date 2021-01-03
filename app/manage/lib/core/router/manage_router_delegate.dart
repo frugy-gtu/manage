@@ -65,6 +65,10 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
       state.update(ManageRoute.signup);
     } else if (path is TeamsPath) {
       state.update(ManageRoute.teams);
+    } else if (path is ProjectsPath) {
+      state.update(ManageRoute.projects);
+    } else if (path is SettingsPath) {
+      state.update(ManageRoute.settings);
     } else if (path is ProfilePath) {
       state.update(
         ManageRoute.profile,

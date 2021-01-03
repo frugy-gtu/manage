@@ -13,9 +13,9 @@ class ManageRouteState extends ChangeNotifier {
 
   static List<ManageRouteState> _tabRoutes = [
     ManageRouteState(ManageRoute.teams),
-    ManageRouteState(ManageRoute.teams),
+    ManageRouteState(ManageRoute.projects),
     ManageRouteState(ManageRoute.profile),
-    ManageRouteState(ManageRoute.teams),
+    ManageRouteState(ManageRoute.settings),
   ];
 
   ManageRouteState([ManageRoute route = ManageRoute.teams]) : _route = route;

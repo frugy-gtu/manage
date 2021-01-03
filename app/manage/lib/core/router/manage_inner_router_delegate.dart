@@ -5,6 +5,8 @@ import 'package:manage/core/router/manage_route_path.dart';
 import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/screens/profile_screen.dart';
 import 'package:manage/core/screens/project_create_screen.dart';
+import 'package:manage/core/screens/projects_screen.dart';
+import 'package:manage/core/screens/settings_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/team_invite_screen.dart';
 import 'package:manage/core/screens/team_screen.dart';
@@ -68,8 +70,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       if (state.route == ManageRoute.team ||
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
-          state.route == ManageRoute.member
-          ) {
+          state.route == ManageRoute.member) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
           child: TeamScreen(team: state.team),
@@ -77,7 +78,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
 
         if (state.route == ManageRoute.member) {
           pages.add(MaterialPage(
-            key: ValueKey('MemberProfilePage'),
+            key: ValueKey('MemberPage'),
             child: ProfileScreen(state.member),
           ));
         }
@@ -96,57 +97,20 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           ));
         }
       }
-    }
-    else if (state.tab == BottomBarTab.projects) {
+    } else if (state.tab == BottomBarTab.projects) {
       pages.add(MaterialPage(
-        key: ValueKey('xTeamsPage'),
-        child: TeamsScreen(),
+        key: ValueKey('ProjectsPage'),
+        child: ProjectsScreen(),
       ));
-
-      if (state.route == ManageRoute.team_create) {
-        pages.add(MaterialPage(
-          key: ValueKey('xTeamCreatePage'),
-          child: TeamCreateScreen(),
-        ));
-      }
-
-      if (state.route == ManageRoute.team ||
-          state.route == ManageRoute.project_create ||
-          state.route == ManageRoute.team_invite ||
-          state.route == ManageRoute.member
-          ) {
-        pages.add(MaterialPage(
-          key: ValueKey('xTeamPage'),
-          child: TeamScreen(team: state.team),
-        ));
-
-
-        if (state.route == ManageRoute.member) {
-          pages.add(MaterialPage(
-            key: ValueKey('xMemberProfilePage'),
-            child: ProfileScreen(state.member),
-          ));
-        }
-
-        if (state.route == ManageRoute.project_create) {
-          pages.add(MaterialPage(
-            key: ValueKey('xProjectCreatePage'),
-            child: ProjectCreateScreen(state.team),
-          ));
-        }
-
-        if (state.route == ManageRoute.team_invite) {
-          pages.add(MaterialPage(
-            key: ValueKey('xTeamInvitePage'),
-            child: TeamInviteScreen(state.team),
-          ));
-        }
-      }
-    }
-    else if (state.tab == BottomBarTab.profile) {
+    } else if (state.tab == BottomBarTab.profile) {
       pages.add(MaterialPage(
-        key: ValueKey('UserProfileFromTeamsPage'),
+        key: ValueKey('ProfilePage'),
         child: ProfileScreen(Auth.user),
+      ));
+    } else if (state.tab == BottomBarTab.settings) {
+      pages.add(MaterialPage(
+        key: ValueKey('SettingsPage'),
+        child: SettingsScreen(),
       ));
     }
 

@@ -18,6 +18,14 @@ class ProfilePath extends ManageRoutePath {
   const ProfilePath();
 }
 
+class SettingsPath extends ManageRoutePath {
+  const SettingsPath();
+}
+
+class ProjectsPath extends ManageRoutePath {
+  const ProjectsPath();
+}
+
 class TeamPath extends ManageRoutePath {
   final String id;
 
