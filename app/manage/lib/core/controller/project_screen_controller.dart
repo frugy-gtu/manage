@@ -137,6 +137,7 @@ class ProjectScreenController extends ChangeNotifier {
   @override
   void dispose() {
     tabController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 }
