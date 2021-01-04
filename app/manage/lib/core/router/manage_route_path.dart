@@ -58,6 +58,18 @@ class MemberProfileTeamPath extends ManageRoutePath{
   const MemberProfileTeamPath(this.teamId, this.memberId);
 }
 
+class TaskDetailsTeamPath extends ManageRoutePath{
+  final String teamId;
+  final String projectId;
+  final String taskId;
+  const TaskDetailsTeamPath(this.teamId, this.projectId, this.taskId);
+}
+
+class TaskDetailsProjectPath extends ManageRoutePath{
+  final String projectId;
+  final String taskId;
+  const TaskDetailsProjectPath(this.projectId, this.taskId);
+}
 class UnknownPath extends ManageRoutePath {
   const UnknownPath();
 }

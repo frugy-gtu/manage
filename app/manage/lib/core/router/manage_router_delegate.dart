@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/app_shell.dart';
 import 'package:manage/core/cache/auth.dart';
+import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
@@ -93,9 +94,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         ManageRoute.member,
         team: TeamModel(
             name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
-        member: UserModel(
-            email: 'Not implemented',
-            username: 'Not implemented'),
+        member:
+            UserModel(email: 'Not implemented', username: 'Not implemented'),
       );
     } else if (path is ProjectTeamPath) {
       state.update(
@@ -107,8 +107,47 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           id: path.projectId,
         ),
       );
-    }
-    if (path is UnknownPath) {
+    } else if (path is TaskDetailsTeamPath) {
+      state.update(
+        ManageRoute.task_details,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.projectId,
+        ),
+        task: TaskModel(
+            details: null,
+            projectId: null,
+            id: path.taskId,
+            taskStateId: null,
+            taskGroupId: null,
+            name: null,
+            createdAt: null,
+            deadline: null,
+            schedule: null,
+            taskTagId: null),
+      );
+    } else if (path is TaskDetailsProjectPath) {
+      state.update(
+        ManageRoute.project,
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.projectId,
+        ),
+        task: TaskModel(
+            details: null,
+            projectId: null,
+            id: path.taskId,
+            taskStateId: null,
+            taskGroupId: null,
+            name: null,
+            createdAt: null,
+            deadline: null,
+            schedule: null,
+            taskTagId: null),
+      );
+    } else if (path is UnknownPath) {
       state.update(ManageRoute.unknown);
     }
   }

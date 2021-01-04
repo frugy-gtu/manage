@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
@@ -10,6 +11,7 @@ class ManageRouteState extends ChangeNotifier {
   TeamModel _team;
   TeamProjectModel _project;
   UserModel _member;
+  TaskModel _task;
 
   static BottomBarTab _selectedTab = BottomBarTab.teams;
 
@@ -22,6 +24,7 @@ class ManageRouteState extends ChangeNotifier {
     _team = value._team;
     _member = value._member;
     _project = value._project;
+    _task = value._task;
   }
 
   void resetRoutes() {
@@ -40,6 +43,7 @@ class ManageRouteState extends ChangeNotifier {
   TeamModel get team => _team;
   UserModel get member => _member;
   TeamProjectModel get project => _project;
+  TaskModel get task => _task;
 
   BottomBarTab get tab => _selectedTab;
 
@@ -55,6 +59,7 @@ class ManageRouteState extends ChangeNotifier {
     TeamModel team,
     TeamProjectModel project,
     UserModel member,
+    TaskModel task,
   }) {
     assert(route != null);
 
@@ -71,6 +76,11 @@ class ManageRouteState extends ChangeNotifier {
     if (route == ManageRoute.project) {
       assert(project != null);
       _project = project;
+    }
+
+    if (route == ManageRoute.task_details) {
+      assert(task != null);
+      _task = task;
     }
 
     _route = route;
