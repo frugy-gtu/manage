@@ -43,8 +43,8 @@ class TaskDetailsBody extends StatelessWidget {
                 future: Future.wait([_controller.group(task.projectId, task.taskGroupId), _controller.state(task.projectId, task.taskStateId)]),
                 builder: (context, snapshot){
                   if(snapshot.hasData){
-                    final String _group = snapshot.data[0];
-                    final String _state = snapshot.data[1];
+                    final String _group = snapshot.data[0].name;
+                    final String _state = snapshot.data[1].name;
                     return Row(
                       children: [
                         Text(_group, style: TextStyle(fontSize: 20.0, color: Colors.black)),
