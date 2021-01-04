@@ -12,7 +12,7 @@ class LoginModel extends ManageModel {
   final String email;
 
   const LoginModel({
-    @required this.email,
+    this.email,
     @required this.password,
     this.username = '',
   });

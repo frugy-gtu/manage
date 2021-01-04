@@ -7,21 +7,27 @@ import 'package:provider/provider.dart';
 import 'package:manage/core/service/user_service.dart' as service;
 
 class LoginController extends ChangeNotifier {
-  final TextEditingController email = TextEditingController();
+  final TextEditingController emailOrUName = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  String _emailError = '';
+  String _emailOrUNameError = '';
   String _passwordError = '';
   String _credentialsError = '';
 
-  String get emailError => _emailError;
+  String get emailOrUNameError => _emailOrUNameError;
   String get passwordError => _passwordError;
   String get credentialsError => _credentialsError;
 
   Future<void> onLogin(BuildContext context) async {
     if (_checkStatus()) {
-      RequestResult status = await service
-          .login(LoginModel(email: email.text, password: password.text));
+      RequestResult status;
+      if (emailOrUName.text.contains('@')) {
+        status = await service
+            .login(LoginModel(email: emailOrUName.text, password: password.text));
+      } else {
+        status = await service
+            .login(LoginModel(username: emailOrUName.text, password: password.text));
+      }
       if (status.status == Status.success) {
         context.read<ManageRouteState>()
           ..resetRoutes()
@@ -33,7 +39,7 @@ class LoginController extends ChangeNotifier {
     } else
       _credentialsError = '';
 
-    _emailError = email.text.isEmpty ? 'Enter your email' : '';
+    _emailOrUNameError = emailOrUName.text.isEmpty ? 'Enter your email' : '';
     _passwordError = password.text.isEmpty ? 'Enter your password' : '';
 
     notifyListeners();
@@ -44,7 +50,7 @@ class LoginController extends ChangeNotifier {
   }
 
   bool _checkStatus() {
-    if (email.text.isNotEmpty && password.text.isNotEmpty) {
+    if (emailOrUName.text.isNotEmpty && password.text.isNotEmpty) {
       return true;
     }
 
@@ -53,7 +59,7 @@ class LoginController extends ChangeNotifier {
 
   @override
   void dispose() {
-    email.dispose();
+    emailOrUName.dispose();
     password.dispose();
     super.dispose();
   }

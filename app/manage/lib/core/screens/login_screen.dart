@@ -40,11 +40,11 @@ class LoginForm extends StatelessWidget {
               ),
               Expanded(
                 child: TextField(
-                  controller: controller.email,
+                  controller: controller.emailOrUName,
                   cursorColor: Theme.of(context).colorScheme.secondaryVariant,
                   decoration: InputDecoration(
-                    labelText: 'email',
-                    errorText: controller.emailError,
+                    labelText: 'username or email',
+                    errorText: controller.emailOrUNameError,
                   ),
                 ),
               ),
@@ -86,6 +86,29 @@ class LoginForm extends StatelessWidget {
                   onPressed: () {
                     controller.onLogin(context);
                   }),
+              SizedBox(height: 10),
+              Row(children: [
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                    endIndent: 10,
+                  ),
+                ),
+                Text(
+                  "Don't have an account?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                    indent: 10,
+                  ),
+                ),
+              ]),
+              SizedBox(height: 10),
               RaisedButton(
                 child: Text('Sign up'),
                 onPressed: () {
