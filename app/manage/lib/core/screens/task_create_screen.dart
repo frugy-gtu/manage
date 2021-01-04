@@ -1,35 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
-import 'package:manage/core/router/manage_route.dart';
-import 'package:manage/core/router/manage_route_state.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-
-Future<http.Response> createTask(
-    String name, String details, String deadline) async {
-  final res = await http.post(
-    'https://jsonplaceholder.typicode.com/tasks',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'name': name,
-      'details': details,
-      'deadline': deadline,
-    }),
-  );
-}
-Future<RequestResult<List<ProjectStateModel>>> statesOf(TeamProjectModel project) async =>
-  (await service.request<ProjectStateModel>(
-    method: RequestMethod.get,
-    url: '/projects/' + projectid + '/states/',
-    decode: (i)=> ProjectStateModel.fromJson(i),
-  )).castTo<List<ProjectStateModel>>();
-  ;
 
 class TaskCreateScreen extends StatefulWidget {
   TaskCreateScreen({Key key}) : super(key: key);
