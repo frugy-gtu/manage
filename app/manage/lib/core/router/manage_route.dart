@@ -12,5 +12,6 @@ enum ManageRoute {
   member,
   settings,
   task_details,
+  task_create,
   unknown,
 }

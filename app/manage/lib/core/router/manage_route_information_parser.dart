@@ -154,6 +154,9 @@ class ManageRouteInformationParser
               '/projects/${configuration.projectId}/${configuration.taskId}');
     }
 
+    if (configuration is ManageTaskCreatePath) {
+      return RouteInformation(location: '/task/create');
+    }
     return null;
   }
 }
