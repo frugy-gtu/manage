@@ -13,17 +13,16 @@ class ProjectScreenController extends ChangeNotifier {
   final TeamProjectModel _project;
   List<TaskGroupModel> _taskGroups;
   TabController tabController;
+  ScrollController scrollController;
+  bool isAtTop = true;
 
   ProjectScreenController({
     @required TeamProjectModel project,
-  }) : _project = project;
-
-  ProjectScreenController.withTab(
-      {@required TeamProjectModel project,
-      TickerProvider vsync,
-      int stateLength})
-      : tabController = TabController(length: stateLength, vsync: vsync),
-        _project = project;
+    @required this.scrollController,
+  })  : _project = project
+        {
+    scrollController.addListener(_checkIsTop);
+  }
 
   TeamProjectModel get project => _project;
 
@@ -41,6 +40,10 @@ class ProjectScreenController extends ChangeNotifier {
     }
 
     return result.data;
+  }
+
+  void initState(TickerProvider vsync, int length) {
+    tabController = TabController(length: length, vsync: vsync);
   }
 
   Future<List<TaskGroupModel>> _requestGroups() async {
@@ -79,9 +82,56 @@ class ProjectScreenController extends ChangeNotifier {
     return Colors.black;
   }
 
+  void _checkIsTop() {
+    if (scrollController.position.pixels ==
+        scrollController.position.minScrollExtent) {
+      if (isAtTop == false) {
+        isAtTop = true;
+        notifyListeners();
+      }
+    } else if (isAtTop == true) {
+      isAtTop = false;
+      notifyListeners();
+    }
+  }
+
+  FloatingActionButton floatingActionButton(BuildContext context) {
+    return FloatingActionButton.extended(
+      label: AnimatedSwitcher(
+        duration: Duration(milliseconds: 700),
+        transitionBuilder: (Widget child, Animation<double> animation) =>
+            FadeTransition(
+          opacity: animation,
+          child: SizeTransition(
+            child: child,
+            sizeFactor: animation,
+            axis: Axis.horizontal,
+          ),
+        ),
+        child: !isAtTop
+            ?
+            //TODO: find error when remove param
+            Icon(Icons.add)
+            : Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(Icons.add),
+                  ),
+                  Text('Add Task'),
+                ],
+              ),
+      ),
+      onPressed: () => onFloatingActionPress(context),
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      foregroundColor: Theme.of(context).colorScheme.onSecondary,
+    );
+  }
+
   @override
   void dispose() {
     tabController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 }

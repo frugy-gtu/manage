@@ -85,7 +85,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           ));
         }
 
-        if(state.route == ManageRoute.project) {
+        if (state.route == ManageRoute.project) {
           pages.add(MaterialPage(
             key: ValueKey('ProjectPage'),
             child: ProjectScreen(state.project),
@@ -111,6 +111,13 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
         key: ValueKey('ProjectsPage'),
         child: ProjectsScreen(),
       ));
+
+      if (state.route == ManageRoute.project) {
+        pages.add(MaterialPage(
+          key: ValueKey('ProjectPage'),
+          child: ProjectScreen(state.project),
+        ));
+      }
     } else if (state.tab == BottomBarTab.profile) {
       pages.add(MaterialPage(
         key: ValueKey('ProfilePage'),
@@ -135,8 +142,13 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       case ManageRoute.project_create:
       case ManageRoute.team_invite:
       case ManageRoute.member:
-      case ManageRoute.project:
         state.update(ManageRoute.team, team: state.team);
+        break;
+      case ManageRoute.project:
+        if (state.tab == BottomBarTab.projects) {
+          state.update(ManageRoute.projects);
+        } else
+          state.update(ManageRoute.team, team: state.team);
         break;
       default:
         state.update(ManageRoute.teams);

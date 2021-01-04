@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/controller/login_controller.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -34,17 +35,17 @@ class LoginForm extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.mail),
+              Icon(Icons.account_circle),
               SizedBox(
                 width: 10,
               ),
               Expanded(
                 child: TextField(
-                  controller: controller.email,
+                  controller: controller.emailOrUName,
                   cursorColor: Theme.of(context).colorScheme.secondaryVariant,
                   decoration: InputDecoration(
-                    labelText: 'email',
-                    errorText: controller.emailError,
+                    labelText: 'username or email',
+                    errorText: controller.emailOrUNameError,
                   ),
                 ),
               ),
@@ -71,6 +72,9 @@ class LoginForm extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 20,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -81,14 +85,49 @@ class LoginForm extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              RaisedButton(
-                  child: Text('Login'),
-                  onPressed: () {
+              WideCardButton(
+                  child: Text(
+                    'Login',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Theme.of(context).buttonColor),
+                  ),
+                  onTap: () {
                     controller.onLogin(context);
                   }),
-              RaisedButton(
-                child: Text('Sign up'),
-                onPressed: () {
+              SizedBox(height: 10),
+              Row(children: [
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                    endIndent: 10,
+                  ),
+                ),
+                Text(
+                  "Don't have an account?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                    indent: 10,
+                  ),
+                ),
+              ]),
+              SizedBox(height: 10),
+              WideCardButton(
+                child: Text(
+                  'Sign Up',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Theme.of(context).buttonColor),
+                ),
+                onTap: () {
                   controller.onSignUp(context);
                 },
               )

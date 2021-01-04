@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/controller/team_invite_screen_controller.dart';
 import 'package:manage/core/model/team_model.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class TeamInviteScreen extends StatelessWidget {
@@ -48,11 +49,19 @@ class _MemberForm extends StatelessWidget {
         Text(controller.requestError,
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        ElevatedButton(
-          onPressed: () {
-            controller.onCreate(context);
-          },
-          child: const Text('Invite'),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: 250,
+            minWidth: 200,
+            minHeight: 75,
+          ),
+          child: WideCardButton(
+            onTap: () => controller.onCreate(context),
+            child: Text(
+              'Invite',
+              style: Theme.of(context).textTheme.button,
+            ),
+          ),
         ),
       ]),
     );

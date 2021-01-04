@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manage/core/controller/profile_screen_controller.dart';
 import 'package:manage/core/model/user_model.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 
 //TODO: Use LayoutBuilder
 class ProfileScreen extends StatefulWidget {
@@ -77,11 +78,12 @@ class ProfileInfos extends StatelessWidget {
             ),
             Text(user.username, style: TextStyle(fontSize: 20.0)),
             if (_isUserProfile)
-            SizedBox(
-              height: 5.0,
-            ),
+              SizedBox(
+                height: 5.0,
+              ),
             if (_isUserProfile)
-            Text('${user.profile.name} ${user.profile.surname}', style: TextStyle(fontSize: 15.0)),
+              Text('${user.profile.name} ${user.profile.surname}',
+                  style: TextStyle(fontSize: 15.0)),
             SizedBox(
               height: 5.0,
             ),
@@ -90,10 +92,24 @@ class ProfileInfos extends StatelessWidget {
               height: 80.0,
             ),
             if (_isUserProfile)
-              ElevatedButton(
-                onPressed: () => _controller.onLogout(context),
-                child: Text('Logout'),
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: 280,
+                  minWidth: 200,
+                  minHeight: 75,
+                ),
+                child: WideCardButton(
+                  onTap: () => _controller.onLogout(context),
+                  child: Text(
+                    'Logout',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
               ),
+            // ElevatedButton(
+            //   onPressed: () => _controller.onLogout(context),
+            //   child: Text('Logout'),
+            // ),
           ],
         ),
       ),

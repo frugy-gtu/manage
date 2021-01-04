@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manage/core/controller/project_create_screen_controller.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class ProjectCreateScreen extends StatelessWidget {
@@ -50,11 +51,19 @@ class _ProjectForm extends StatelessWidget {
         Text(controller.requestError,
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        ElevatedButton(
-          onPressed: () {
-            controller.onCreate(context);
-          },
-          child: Text('Create'),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: 250,
+            minWidth: 200,
+            minHeight: 75,
+          ),
+          child: WideCardButton(
+            onTap: () => controller.onCreate(context),
+            child: Text(
+              'Create',
+              style: Theme.of(context).textTheme.button,
+            ),
+          ),
         ),
       ]),
     );

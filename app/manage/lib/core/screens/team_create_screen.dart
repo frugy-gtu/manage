@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:manage/core/controller/team_create_screen_controller.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
 import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class TeamCreateScreen extends StatelessWidget {
@@ -64,15 +65,26 @@ class TeamForm extends StatelessWidget {
           textCapitalization: TextCapitalization.characters,
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
         ),
-        SizedBox(height: 10,),
-        Text(controller.requestError,
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          controller.requestError,
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        ElevatedButton(
-          onPressed: () {
-            controller.onCreate(context);
-          },
-          child: Text('Create'),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: 250,
+            minWidth: 200,
+            minHeight: 75,
+          ),
+          child: WideCardButton(
+            onTap: () => controller.onCreate(context),
+            child: Text(
+              'Create',
+              style: Theme.of(context).textTheme.button,
+            ),
+          ),
         ),
       ]),
     );

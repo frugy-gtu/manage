@@ -45,12 +45,15 @@ class _ProjectsScreenBodyView extends StatelessWidget {
 }
 
 class _ProjectsView extends StatelessWidget {
-  const _ProjectsView({
+  final List<String> _teamNames;
+
+  _ProjectsView({
     Key key,
     @required List<ProjectModel> projects,
     @required ProjectsController controller,
   })  : _projects = projects,
         _controller = controller,
+        _teamNames = List<String>.filled(projects.length, ''),
         super(key: key);
 
   final List<ProjectModel> _projects;
@@ -84,37 +87,46 @@ class _ProjectsView extends StatelessWidget {
                       SizedBox(
                         height: 3,
                       ),
-                      FutureBuilder(
-                        future: _controller.teamNameOf(_projects[index].teamId),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return Center(
-                                child: Text(snapshot.error),
+                      if (_teamNames[index].isEmpty) ...[
+                        FutureBuilder(
+                          future:
+                              _controller.teamNameOf(_projects[index].teamId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(snapshot.error),
+                                );
+                              }
+
+                              _teamNames[index] = snapshot.data;
+
+                              return Text(snapshot.data,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary));
+                            } else {
+                              return Container(
+                                constraints: BoxConstraints(
+                                  maxHeight: 15,
+                                  maxWidth: 15,
+                                ),
+                                child: RefreshProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).colorScheme.primary)),
                               );
                             }
-                            return Text(snapshot.data,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary));
-                          } else {
-                            return Container(
-                              constraints: BoxConstraints(
-                                maxHeight: 15,
-                                maxWidth: 15,
-                              ),
-                              child: RefreshProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Theme.of(context).colorScheme.primary)),
-                            );
-                          }
-                        },
-                      ),
+                          },
+                        ),
+                      ] else
+                        Text(_teamNames[index],
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                color: Theme.of(context).colorScheme.primary)),
                     ],
                   )),
                 ),

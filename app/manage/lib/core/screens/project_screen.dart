@@ -4,22 +4,15 @@ import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
+import 'package:provider/provider.dart';
 
-class ProjectScreen extends StatefulWidget {
+class ProjectScreen extends StatelessWidget {
   final TeamProjectModel project;
-
-  const ProjectScreen(this.project);
-
-  @override
-  State<StatefulWidget> createState() => _ProjectScreenState(project);
-}
-
-class _ProjectScreenState extends State<ProjectScreen>
-    with SingleTickerProviderStateMixin {
   final ProjectScreenController _controller;
 
-  _ProjectScreenState(TeamProjectModel project)
-      : _controller = ProjectScreenController(project: project);
+  ProjectScreen(this.project)
+      : _controller = ProjectScreenController(
+            project: project, scrollController: ScrollController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,36 +20,73 @@ class _ProjectScreenState extends State<ProjectScreen>
       body: HandledFutureBuilder(
         future: _controller.states(),
         onSuccess: (data) => _ProjectScreenBody(
+          scrollController: _controller.scrollController,
           project: _controller.project,
           states: data,
-          vsync: this,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _controller.onFloatingActionPress(context),
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        foregroundColor: Theme.of(context).colorScheme.onSecondary,
-        child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
-      ),
+      floatingActionButton: ChangeNotifierProvider.value(
+          value: _controller, child: _ProjectScreenFloatingActionButton()),
     );
   }
 }
 
-class _ProjectScreenBody extends StatelessWidget {
-  final ProjectScreenController _controller;
-  final List<ProjectStateModel> _states;
+class _ProjectScreenFloatingActionButton extends StatelessWidget {
+  const _ProjectScreenFloatingActionButton({
+    Key key,
+  }) : super(key: key);
 
-  _ProjectScreenBody(
-      {TeamProjectModel project,
-      List<ProjectStateModel> states,
-      TickerProvider vsync})
-      : _controller = ProjectScreenController.withTab(
-            project: project, stateLength: states.length, vsync: vsync),
-        _states = states;
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ProjectScreenController>(
+      builder: (context, controller, child) =>
+          controller.floatingActionButton(context),
+    );
+  }
+}
+
+class _ProjectScreenBody extends StatefulWidget {
+  final List<ProjectStateModel> _states;
+  final TeamProjectModel _project;
+  final ScrollController _scrollController;
+
+  _ProjectScreenBody({
+    TeamProjectModel project,
+    List<ProjectStateModel> states,
+    ScrollController scrollController,
+  })  : _project = project,
+        _states = states,
+        _scrollController = scrollController;
+
+  @override
+  _ProjectScreenBodyState createState() => _ProjectScreenBodyState(
+        project: _project,
+        scrollController: _scrollController,
+      );
+}
+
+class _ProjectScreenBodyState extends State<_ProjectScreenBody>
+    with SingleTickerProviderStateMixin {
+  final ProjectScreenController _controller;
+
+  _ProjectScreenBodyState({
+    TeamProjectModel project,
+    ScrollController scrollController,
+  }) : _controller = ProjectScreenController(
+          project: project,
+          scrollController: scrollController,
+        );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.initState(this, widget._states.length);
+  }
 
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+      controller: _controller.scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
@@ -65,7 +95,8 @@ class _ProjectScreenBody extends StatelessWidget {
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
-              tabs: _states.map((state) => Tab(text: state.name)).toList(),
+              tabs:
+                  widget._states.map((state) => Tab(text: state.name)).toList(),
               isScrollable: true,
               controller: _controller.tabController,
             ),
@@ -74,7 +105,7 @@ class _ProjectScreenBody extends StatelessWidget {
       ],
       body: TabBarView(
         controller: _controller.tabController,
-        children: _states
+        children: widget._states
             .map(
               (state) => SafeArea(
                 top: false,
@@ -83,9 +114,7 @@ class _ProjectScreenBody extends StatelessWidget {
                   future: _controller.tasksWith(state),
                   onSuccess: (data) {
                     return _TasksWithStateView(
-                        state: state,
-                        controller: _controller,
-                        tasks: data);
+                        state: state, controller: _controller, tasks: data);
                   },
                 ),
               ),
