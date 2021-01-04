@@ -2,7 +2,7 @@ import 'package:manage/core/model/team_create_model.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/model/team_projects_post_model.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/team_users_post_model.dart';
 import 'package:manage/core/service/request_method.dart';
 import 'package:manage/core/service/request_result.dart';
@@ -30,13 +30,13 @@ Future<RequestResult<List<TeamProjectModel>>> projectsOf(
     ))
         .castTo<List<TeamProjectModel>>();
 
-Future<RequestResult<List<GeneralUserModel>>> membersOf(TeamModel team) async =>
-    (await service.request<GeneralUserModel>(
+Future<RequestResult<List<UserModel>>> membersOf(TeamModel team) async =>
+    (await service.request<UserModel>(
       method: RequestMethod.get,
       url: '/teams/' + team.id + '/users',
-      decode: (i) => GeneralUserModel.fromJson(i),
+      decode: (i) => UserModel.fromJson(i),
     ))
-        .castTo<List<GeneralUserModel>>();
+        .castTo<List<UserModel>>();
 
 Future<RequestResult> createProjectTo(
         TeamModel team, TeamProjectsPostModel model) async =>

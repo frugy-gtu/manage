@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/app_shell.dart';
 import 'package:manage/core/cache/auth.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 import 'package:manage/core/model/team_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/router/manage_route.dart';
@@ -93,9 +93,8 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
         ManageRoute.member,
         team: TeamModel(
             name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
-        member: GeneralUserModel(
+        member: UserModel(
             email: 'Not implemented',
-            createdAt: 'Not implemented',
             username: 'Not implemented'),
       );
     } else if (path is ProjectTeamPath) {

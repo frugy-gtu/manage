@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manage/core/controller/profile_screen_controller.dart';
-import 'package:manage/core/model/general_user_model.dart';
+import 'package:manage/core/model/user_model.dart';
 
 //TODO: Use LayoutBuilder
 class ProfileScreen extends StatefulWidget {
-  final GeneralUserModel user;
+  final UserModel user;
 
   ProfileScreen(this.user);
 
@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class ProfileInfos extends StatelessWidget {
-  final GeneralUserModel user;
+  final UserModel user;
   final bool _isUserProfile;
   final ProfileScreenController _controller;
 
@@ -76,6 +76,12 @@ class ProfileInfos extends StatelessWidget {
               height: 5.0,
             ),
             Text(user.username, style: TextStyle(fontSize: 20.0)),
+            if (_isUserProfile)
+            SizedBox(
+              height: 5.0,
+            ),
+            if (_isUserProfile)
+            Text('${user.profile.name} ${user.profile.surname}', style: TextStyle(fontSize: 15.0)),
             SizedBox(
               height: 5.0,
             ),
