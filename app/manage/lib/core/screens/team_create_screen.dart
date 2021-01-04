@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manage/core/controller/team_create_screen_controller.dart';
 import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
 import 'package:manage/extra/upper_case_length_limiting_formatter.dart';
@@ -38,7 +39,10 @@ class TeamForm extends StatelessWidget {
             errorText: controller.nameError,
           ),
           controller: controller.name,
-          inputFormatters: [LengthLimitingTextFieldFormatterFixed(12)],
+          inputFormatters: [
+            LengthLimitingTextFieldFormatterFixed(12),
+            FilteringTextInputFormatter.allow(RegExp('[a-z0-9A-Z\-]')),
+          ],
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
           autofocus: true,
         ),
@@ -53,7 +57,10 @@ class TeamForm extends StatelessWidget {
             controller.isAbbrvEdited = true;
           },
           maxLength: 3,
-          inputFormatters: [UpperCaseLengthLimitingFormatter(3)],
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp('[0-9A-Za-z]')),
+            UpperCaseLengthLimitingFormatter(3),
+          ],
           textCapitalization: TextCapitalization.characters,
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
         ),
