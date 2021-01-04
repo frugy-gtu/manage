@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/controller/sign_up_controller.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -134,9 +135,15 @@ class SignUpForm extends StatelessWidget {
                   controller.credentialsError,
                   style: TextStyle(color: Colors.red),
                 ),
-                RaisedButton(
-                  child: Text('Sign up'),
-                  onPressed: () {
+                WideCardButton(
+                  child: Text(
+                    'Sign Up',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Theme.of(context).buttonColor),
+                  ),
+                  onTap: () {
                     controller.onSignUp(context);
                   },
                 ),

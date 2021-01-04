@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage/core/controller/login_controller.dart';
+import 'package:manage/extra/widgets/wide_card_button.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -34,7 +35,7 @@ class LoginForm extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.mail),
+              Icon(Icons.account_circle),
               SizedBox(
                 width: 10,
               ),
@@ -71,6 +72,9 @@ class LoginForm extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 20,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -81,9 +85,15 @@ class LoginForm extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              RaisedButton(
-                  child: Text('Login'),
-                  onPressed: () {
+              WideCardButton(
+                  child: Text(
+                    'Login',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Theme.of(context).buttonColor),
+                  ),
+                  onTap: () {
                     controller.onLogin(context);
                   }),
               SizedBox(height: 10),
@@ -109,9 +119,15 @@ class LoginForm extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 10),
-              RaisedButton(
-                child: Text('Sign up'),
-                onPressed: () {
+              WideCardButton(
+                child: Text(
+                  'Sign Up',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Theme.of(context).buttonColor),
+                ),
+                onTap: () {
                   controller.onSignUp(context);
                 },
               )
