@@ -1,74 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:manage/core/controller/task_details_screen_controller.dart';
 import 'package:manage/core/model/comment_model.dart';
 import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/user_profile_model.dart';
 import 'package:provider/provider.dart';
+
+import 'controller/task_details_screen_controller.dart';
+
 
 class TaskDetailsScreen extends StatelessWidget {
   final TaskModel task;
   TaskDetailsScreen({this.task});
   
   @override
-  Widget build(BuildContext context) {
-     return DefaultTabController(
-       length: 2,
-       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            iconTheme: IconThemeData(color: Colors.black),
-          ),
-          bottomNavigationBar: TabBar(
-            tabs: [
-              Tab(child: Text('Comments', style: TextStyle(color: Colors.black)), icon: Icon(Icons.comment, color: Colors.black,),),
-              Tab(child: Text('Logged Time', style: TextStyle(color: Colors.black)), icon: Icon(Icons.timelapse, color: Colors.black,),),
-            ],
-          ),
-          body: ChangeNotifierProvider<TaskDetailsScreenController>(
-            create: (context) => TaskDetailsScreenController(),   
-            child: TabBarView(
-              children: [
-                TaskDetailsBody(task: task),
-                TaskDetailsBody2(task: task),
-              ],
-            ),
-          ), 
-          drawer: Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: Colors.black,
-            ),
-            child: SizedBox(
-              width: 150.0,
-              child: Drawer(
-                child: ListView(
-                  children: [
-                    ListTile(
-                      title: Text('Back', style: TextStyle(color: Colors.white)),
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-     );
+  Widget build(context) {
+     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text(task.name, style: TextStyle(fontSize: 20.0, color: Colors.black),),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      body: ChangeNotifierProvider<TaskDetailsScreenController>(
+        create: (context) => TaskDetailsScreenController(),   
+        child: TaskDetailsBody(task: task),      
+      ),
+    );
   }
 }
 
 class TaskDetailsBody extends StatelessWidget {
-  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final TaskDetailsScreenController _controller = TaskDetailsScreenController();
   final TaskModel task;
 
   TaskDetailsBody({this.task});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -77,37 +47,58 @@ class TaskDetailsBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(task.name, style: TextStyle(fontSize: 20.0)),
-                  Expanded(child: SizedBox()),
-                  Text(task.status.toString().substring(task.status.toString().indexOf('.')+1), style: TextStyle(fontSize: 20.0))
-                ],
+              FutureBuilder(
+                future: Future.wait([_controller.group(task.projectId, task.taskGroupId), _controller.state(task.projectId, task.taskStateId)]),
+                builder: (context, snapshot){
+                  if(snapshot.hasData){
+                    final String _group = snapshot.data[0];
+                    final String _state = snapshot.data[1];
+                    return Row(
+                      children: [
+                        Text(_group, style: TextStyle(fontSize: 20.0, color: Colors.black)),
+                        Expanded(child: SizedBox()),
+                        Text(_state, style: TextStyle(fontSize: 20.0, color: Colors.black)),
+                      ],
+                    );
+                  }else{
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
               ),
               Divider(color: Colors.black,),
-              Text(task.description),
+              Card(
+                color: Theme.of(context).colorScheme.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Flexible(child: Text(task.details)),
+                    ],
+                  ),
+                )
+              ),
               SizedBox(height: 10.0,),
-              Row(
-                children: [
-                  Text('Task sheculed time:', style: TextStyle(fontSize: 20.0)),
-                  Expanded(child: SizedBox()),
-                  Text(formatter.format(DateTime.parse(task.scheduledTime)), style: TextStyle(fontSize: 20.0)),
-                ],
-              ), 
-              Divider(color: Colors.black,),
+              DatePart(task: task,),
               SizedBox(height: 10.0,),
-              Row(
-                children: [
-                  Text('Task deadline:', style: TextStyle(fontSize: 20.0)),
-                  Expanded(child: SizedBox()),
-                  Text(formatter.format(DateTime.parse(task.deadLine)), style: TextStyle(fontSize: 20.0)),
-                ],
-              ), 
-              Divider(color: Colors.black,),
-              SizedBox(height: 10.0,),
-              AssignedsAndCommentsPart()
+              Consumer<TaskDetailsScreenController>(
+                builder: (context, controller, child) {
+                  return Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(child: Text('Comments', style: TextStyle(fontSize: 20.0))),
+                        Divider(color: Colors.black,),
+                        CommentList(controller: controller,),
+                        CommentGetter(controller: controller,),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -116,34 +107,80 @@ class TaskDetailsBody extends StatelessWidget {
   }
 }
 
-class AssignedsAndCommentsPart extends StatelessWidget {
+class DatePart extends StatelessWidget {
+  final DateFormat dayFormatter = DateFormat('yyyy/MM/dd');
+  final DateFormat hourFormatter = DateFormat('HH:mm a');
+  final TaskModel task;
+
+  DatePart({this.task});
+
   @override
-  Widget build(BuildContext context) {
-    return Consumer<TaskDetailsScreenController>(
-      builder: (context, controller, child) {
-        return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Assigned Members', style: TextStyle(fontSize: 20.0)),
-              Divider(color: Colors.black,),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: AssignedMembers(controller: controller,)
+  Widget build(context) {
+    return Row(
+      children:[
+        Expanded(
+          child: Card(
+            color: Theme.of(context).colorScheme.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text('Sheculed time', style: TextStyle(fontSize: 20.0)),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today),
+                      Expanded(child: SizedBox()),
+                      Text(dayFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.timer),
+                      Expanded(child: SizedBox(),),
+                      Text(hourFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0)),
+                    ],
+                  ),  
+                ],
               ),
-              SizedBox(height: 10.0,),
-              Text('Comments', style: TextStyle(fontSize: 20.0)),
-              Divider(color: Colors.black,),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
-                child: CommentList(controller: controller,)
-              ),
-              CommentGetter(controller: controller,),
-            ],
+            ),
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: Card(
+            color: Theme.of(context).colorScheme.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text('Deadine', style: TextStyle(fontSize: 20.0)),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today),
+                      Expanded(child: SizedBox()),
+                      Text(dayFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.timer),
+                      Expanded(child: SizedBox(),),
+                      Text(hourFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0)),
+                    ],
+                  ),  
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],   
     );
   }
 }
@@ -154,7 +191,7 @@ class CommentGetter extends StatelessWidget {
   CommentGetter({this.controller});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Row(
       children: [
         Expanded(
@@ -172,7 +209,7 @@ class CommentGetter extends StatelessWidget {
           onPressed: (){
             controller.isValid();
             if(controller.validComment == true){
-              UserProfileModel currentUser = UserProfileModel(username: 'CurrentUs3r',name: 'Current', surname: 'User', profilePhoto: Image.asset('assets/profilePhoto.jpg'));
+              UserProfileModel currentUser = UserProfileModel(userName: 'CurrentUs3r',name: 'Current', surname: 'User', profilePhoto: Image.asset('assets/profilePhoto.jpg'));
               CommentModel comment = CommentModel(comment: controller.commentTextCont.text, writer: currentUser);
               controller.addComment(comment);
               controller.commentTextCont.clear();
@@ -189,7 +226,7 @@ class AssignedMembers extends StatelessWidget {
   AssignedMembers({this.controller});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Container(
       child: FutureBuilder<List<UserProfileModel>>(
         future: controller.assigneds(),
@@ -201,6 +238,7 @@ class AssignedMembers extends StatelessWidget {
               itemBuilder: (context, int position){
                 final currentUser = assignedMems.data[position];
                 return Card(
+                  color: Theme.of(context).colorScheme.primary,
                   margin: EdgeInsets.all(5),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -242,14 +280,16 @@ class CommentList extends StatelessWidget {
 
   CommentList({this.controller});
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Container(
       child: ListView.builder(
         shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         itemCount: controller.commentList != null ? controller.commentList.length : 0,
         itemBuilder: (context, int position){
           final currentComment = controller.commentList[position];
           return Card(
+            color: Theme.of(context).colorScheme.primary,
             margin: EdgeInsets.all(5.0),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -285,64 +325,6 @@ class CommentList extends StatelessWidget {
           );
         }
       ),
-    );
-  }
-}
-
-class TaskDetailsBody2 extends StatelessWidget {
-  final DateFormat formatter = DateFormat('yyyy-MM-dd');
-  final TaskModel task;
-
-  TaskDetailsBody2({this.task});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(task.name, style: TextStyle(fontSize: 20.0)),
-                  Expanded(child: SizedBox()),
-                  Text(task.status.toString().substring(task.status.toString().indexOf('.')+1), style: TextStyle(fontSize: 20.0))
-                ],
-              ),
-              Divider(color: Colors.black,),
-              Text(task.description),
-              SizedBox(height: 40.0,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Task deadline:', style: TextStyle(fontSize: 20.0)),
-                  Expanded(child: SizedBox()),
-                  Text(formatter.format(DateTime.parse(task.deadLine)), style: TextStyle(fontSize: 20.0)),
-                ],
-              ), 
-              Divider(color: Colors.black,),
-              SizedBox(height: 50.0,),
-              LoggedTime(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-class LoggedTime extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Logged Time: ', style: TextStyle(fontSize: 20.0),),
     );
   }
 }
