@@ -3,8 +3,11 @@ import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_group_model.dart';
 import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
+import 'package:manage/core/router/manage_route.dart';
+import 'package:manage/core/router/manage_route_state.dart';
 import 'package:manage/core/service/queries/task_query.dart';
 import 'package:manage/core/service/request_result.dart';
+import 'package:provider/provider.dart';
 
 import 'package:manage/core/service/project_service.dart' as service;
 import 'package:manage/core/service/tasks_service.dart' as service;
@@ -19,8 +22,7 @@ class ProjectScreenController extends ChangeNotifier {
   ProjectScreenController({
     @required TeamProjectModel project,
     @required this.scrollController,
-  })  : _project = project
-        {
+  }) : _project = project {
     scrollController.addListener(_checkIsTop);
   }
 
@@ -30,7 +32,11 @@ class ProjectScreenController extends ChangeNotifier {
 
   void onFloatingActionPress(BuildContext context) {}
 
-  void onTaskTap(BuildContext context, TaskModel task) {}
+  void onTaskTap(BuildContext context, TaskModel task) {
+    context
+        .read<ManageRouteState>()
+        .update(ManageRoute.task_details, task: task);
+  }
 
   Future<List<ProjectStateModel>> states() async {
     RequestResult<List<ProjectStateModel>> result =

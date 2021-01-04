@@ -11,5 +11,6 @@ enum ManageRoute {
   profile,
   member,
   settings,
+  task_details,
   unknown,
 }

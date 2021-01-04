@@ -7,6 +7,7 @@ class ManageRouteInformationParser
   @override
   Future<ManageRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
+    //TODO: projects bar routes for commons
     final uri = Uri.parse(routeInformation.location);
 
     if (!Auth.isLoggedIn()) {
@@ -64,6 +65,8 @@ class ManageRouteInformationParser
         }
 
         return ProjectTeamPath(uri.pathSegments[1], uri.pathSegments[2]);
+      } else if (uri.pathSegments[0] == 'projects') {
+        return TaskDetailsProjectPath(uri.pathSegments[1], uri.pathSegments[2]);
       }
     }
 
@@ -73,6 +76,12 @@ class ManageRouteInformationParser
           return MemberProfileTeamPath(
               uri.pathSegments[1], uri.pathSegments[3]);
         }
+      } else if (uri.pathSegments[0] == 'projects') {
+        return TaskDetailsTeamPath(
+          uri.pathSegments[1],
+          uri.pathSegments[2],
+          uri.pathSegments[3],
+        );
       }
     }
 
@@ -131,6 +140,18 @@ class ManageRouteInformationParser
       return RouteInformation(
           location:
               '/teams/${configuration.teamId}/${configuration.projectId}');
+    }
+
+    if (configuration is TaskDetailsTeamPath) {
+      return RouteInformation(
+          location:
+              '/teams/${configuration.teamId}/${configuration.projectId}/${configuration.taskId}');
+    }
+
+    if (configuration is TaskDetailsProjectPath) {
+      return RouteInformation(
+          location:
+              '/projects/${configuration.projectId}/${configuration.taskId}');
     }
 
     return null;
