@@ -18,19 +18,9 @@ class ProjectScreenController extends ChangeNotifier {
 
   ProjectScreenController({
     @required TeamProjectModel project,
-  })  : _project = project,
-        scrollController = ScrollController() {
-    scrollController.addListener(_checkIsTop);
-  }
-
-  ProjectScreenController.withTab(
-      {@required TeamProjectModel project,
-      TickerProvider vsync,
-      @required ScrollController scrollController,
-      int stateLength})
-      : scrollController = scrollController,
-        tabController = TabController(length: stateLength, vsync: vsync),
-        _project = project {
+    @required this.scrollController,
+  })  : _project = project
+        {
     scrollController.addListener(_checkIsTop);
   }
 
@@ -50,6 +40,10 @@ class ProjectScreenController extends ChangeNotifier {
     }
 
     return result.data;
+  }
+
+  void initState(TickerProvider vsync, int length) {
+    tabController = TabController(length: length, vsync: vsync);
   }
 
   Future<List<TaskGroupModel>> _requestGroups() async {
