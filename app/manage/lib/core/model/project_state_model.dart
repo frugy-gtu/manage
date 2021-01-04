@@ -15,6 +15,20 @@ class ProjectStateModel extends ManageModel {
   const ProjectStateModel(
       {@required this.name, this.id, this.createdAt, this.rank});
 
+  @override
+  String toString() => name;
+
+  bool operator ==(dynamic other) =>
+      other != null &&
+      other is ProjectStateModel &&
+      this.id == other.id &&
+      this.name == other.name &&
+      this.createdAt == other.createdAt &&
+      this.rank == other.rank;
+
+  @override
+  int get hashCode => super.hashCode;
+
   factory ProjectStateModel.fromJson(Map<String, dynamic> json) =>
       _$ProjectStateModelFromJson(json);
 

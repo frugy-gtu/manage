@@ -8,6 +8,7 @@ import 'package:manage/core/screens/project_create_screen.dart';
 import 'package:manage/core/screens/project_screen.dart';
 import 'package:manage/core/screens/projects_screen.dart';
 import 'package:manage/core/screens/settings_screen.dart';
+import 'package:manage/core/screens/task_create_screen.dart';
 import 'package:manage/core/screens/task_details_screen.dart';
 import 'package:manage/core/screens/team_create_screen.dart';
 import 'package:manage/core/screens/team_invite_screen.dart';
@@ -74,6 +75,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           state.route == ManageRoute.project_create ||
           state.route == ManageRoute.team_invite ||
           state.route == ManageRoute.task_details ||
+          state.route == ManageRoute.task_create ||
           state.route == ManageRoute.member) {
         pages.add(MaterialPage(
           key: ValueKey('TeamPage'),
@@ -88,6 +90,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
         }
 
         if (state.route == ManageRoute.project ||
+            state.route == ManageRoute.task_create ||
             state.route == ManageRoute.task_details) {
           pages.add(MaterialPage(
             key: ValueKey('ProjectPage'),
@@ -98,6 +101,16 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
             pages.add(MaterialPage(
               key: ValueKey('TaskDetailsPage'),
               child: TaskDetailsScreen(task: state.task),
+            ));
+          }
+
+          if (state.route == ManageRoute.task_create) {
+            pages.add(MaterialPage(
+              key: ValueKey('TaskCreatePage'),
+              child: TaskCreateScreen(
+                initialState: state.initialState,
+                project: state.project,
+              ),
             ));
           }
         }
@@ -123,6 +136,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
       ));
 
       if (state.route == ManageRoute.task_details ||
+          state.route == ManageRoute.task_create ||
           state.route == ManageRoute.project) {
         pages.add(MaterialPage(
           key: ValueKey('ProjectPage'),
@@ -133,6 +147,16 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
           pages.add(MaterialPage(
             key: ValueKey('TaskDetailsPage'),
             child: TaskDetailsScreen(task: state.task),
+          ));
+        }
+
+        if (state.route == ManageRoute.task_create) {
+          pages.add(MaterialPage(
+            key: ValueKey('TaskCreatePage'),
+            child: TaskCreateScreen(
+                initialState: state.initialState,
+                project: state.project,
+            ),
           ));
         }
       }
@@ -158,6 +182,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
 
     switch (state.route) {
       case ManageRoute.task_details:
+      case ManageRoute.task_create:
         state.update(ManageRoute.project, project: state.project);
         break;
       case ManageRoute.project_create:

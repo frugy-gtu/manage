@@ -1,28 +1,35 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:intl/intl.dart';
+import 'package:manage/core/controller/task_create_controller.dart';
+import 'package:manage/core/model/project_state_model.dart';
+import 'package:manage/core/model/task_group_model.dart';
+import 'package:manage/core/model/team_project_model.dart';
+import 'package:manage/extra/length_limiting_text_field_formatter_fixed.dart';
+import 'package:manage/extra/widgets/handled_future_builder.dart';
+import 'package:manage/core/theme.dart' as manage_theme;
+import 'package:manage/extra/widgets/wide_card_button.dart';
+import 'package:provider/provider.dart';
 
-class TaskCreateScreen extends StatefulWidget {
-  TaskCreateScreen({Key key}) : super(key: key);
+class TaskCreateScreen extends StatelessWidget {
+  final TaskCreateController _controller;
 
-  final String title = "Manage";
+  TaskCreateScreen(
+      {Key key, TeamProjectModel project, ProjectStateModel initialState})
+      : _controller =
+            TaskCreateController(currentState: initialState, project: project),
+        super(key: key);
 
-  @override
-  _TaskCreateScreenState createState() => _TaskCreateScreenState();
-}
-
-class _TaskCreateScreenState extends State<TaskCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: Card(
-            child: TaskCreate(),
-          ),
+        child: HandledFutureBuilder(
+          future: _controller.requestFormFields(),
+          onSuccess: (_) => ChangeNotifierProvider.value(
+              value: _controller, child: TaskCreate()),
         ),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -30,192 +37,131 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
   }
 }
 
-class TaskCreate extends StatefulWidget {
-  @override
-  _TaskCreateState createState() => _TaskCreateState();
-}
-
-class _TaskCreateState extends State<TaskCreate> {
-  final number = TextEditingController();
-  DateTime schedule = DateTime.now();
-  DateTime duedate;
-  String selectedState;   // TODO : Initialize state here and group below
-  String selectedGroup;
-  final TextEditingController _tasknameController = TextEditingController();
-  final TextEditingController _definitionController = TextEditingController();
-  final FocusNode _tasknameFocusNode = FocusNode();
-  final FocusNode _defFocusNode = FocusNode();
-  final FocusNode _submitFocusNode = FocusNode();
-  final FocusNode _scheduleFocusNode = FocusNode();
-  final FocusNode _duedateFocusNode = FocusNode();
-
-  final format = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
-  String get _taskname => _tasknameController.text;
-  void _nameComplete() {
-    FocusScope.of(context).requestFocus(_defFocusNode);
-  }
-
-  void _defComplete() {
-    FocusScope.of(context).requestFocus(_duedateFocusNode);
-  }
-
-  void _duedateComplete() {
-    FocusScope.of(context).requestFocus(_submitFocusNode);
-  }
-
-  void _scheduleComplete() {
-    FocusScope.of(context).requestFocus(_duedateFocusNode);
-  }
-
-  void _submit() {
-    print(schedule);
-    print(duedate);
-    print(selectedState);
-    print(selectedGroup);
-    {
-      createTask(_tasknameController.text, _definitionController.text,
-          duedate.toString());
-      // TODO : add next page to move
-    }
-  }
-
-  List<Widget> _buildChildren() {
-    bool submitEnabled = _taskname.isNotEmpty && duedate != null;
-
-    return [
-      TextField(
-        controller: _tasknameController,
-        focusNode: _tasknameFocusNode,
-        maxLength: 25,
-        maxLengthEnforced: true,
-        decoration: InputDecoration(
-            labelText: 'Task Name', hintText: 'Enter Task Name Here'),
-        autocorrect: false,
-        textInputAction: TextInputAction.next,
-        onEditingComplete: _nameComplete,
-      ),
-      TextField(
-        controller: _definitionController,
-        focusNode: _defFocusNode,
-        keyboardType: TextInputType.multiline,
-        maxLines: 5,
-        decoration: InputDecoration(
-          labelText: 'Details',
-          hintText: 'Enter Details Here',
-        ),
-        autocorrect: false,
-        textInputAction: TextInputAction.next,
-        onEditingComplete: _defComplete,
-      ),
-      SizedBox(height: 30),
-      Column(children: <Widget>[
-        Text('Deadline'),
-        DateTimeField(
-          focusNode: _duedateFocusNode,
-          format: format,
-          onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
-                context: context,
-                firstDate: DateTime.now(),
-                initialDate: new DateTime.now(),
-                lastDate: DateTime(2050));
-            if (date != null) {
-              final time = await showTimePicker(
-                  context: context,
-                  initialTime: new TimeOfDay(hour: 0, minute: 0));
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
-            }
-          },
-          onEditingComplete: _duedateComplete,
-          onChanged: (dt) {
-            setState(() => duedate = dt);
-            print('Selected date: $duedate');
-          },
-        ),
-      ]),
-      SizedBox(height: 30),
-      Column(children: <Widget>[
-        Text('Schedule Date'),
-        DateTimeField(
-          focusNode: _scheduleFocusNode,
-          format: format,
-          onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
-                context: context,
-                firstDate: DateTime(2010),
-                initialDate: DateTime.now(),
-                lastDate: duedate != null ? duedate : DateTime(2050));
-            if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime:
-                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
-            }
-          },
-          onEditingComplete: _scheduleComplete,
-          onChanged: (dt) {
-            setState(() => schedule = dt);
-            print('Selected date: $schedule');
-          },
-        ),
-      ]),
-      SizedBox(height: 30),
-      DropdownButton<String>(
-        value: selectedState,
-        onChanged: (String newValue) {
-          setState(() {
-            selectedState = newValue;
-          });
-        },
-        items: .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-      SizedBox(height: 30),
-      DropdownButton<String>(
-        value: selectedGroup,
-        onChanged: (String newValue) {
-          setState(() {
-            selectedGroup = newValue;
-          });
-        },
-        items: .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-      SizedBox(height: 30),
-      RaisedButton(
-        focusNode: _submitFocusNode,
-        child: Text(
-          'Submit',
-          style: TextStyle(color: Theme.of(context).textSelectionColor),
-        ),
-        onPressed: submitEnabled ? _submit : null,
-        color: Theme.of(context).buttonColor,
-      )
-    ];
-  }
-
+class TaskCreate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: _buildChildren(),
+    return Consumer<TaskCreateController>(
+      builder: (context, controller, child) {
+        return SingleChildScrollView(
+          child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller.name,
+                maxLength: 25,
+                inputFormatters: [LengthLimitingTextFieldFormatterFixed(25)],
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'name',
+                  errorText: controller.nameError,
+                ),
+                textInputAction: TextInputAction.next,
+              ),
+              SizedBox(height: 30),
+              TextField(
+                controller: controller.details,
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'details',
+                  errorText: '',
+                ),
+                textInputAction: TextInputAction.next,
+              ),
+              SizedBox(height: 30),
+              Column(children: <Widget>[
+                Text('Schedule'),
+                Theme(
+                  data: manage_theme.Theme.currentTheme,
+                  child: DateTimeField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      errorText: '',
+                    ),
+                    format: controller.format,
+                    onShowPicker: (context, currentValue) =>
+                        controller.onShowPicker(context, currentValue),
+                    onChanged: (dt) => controller.onScheduleDate(dt),
+                  ),
+                ),
+              ]),
+              SizedBox(height: 30),
+              Column(children: <Widget>[
+                Text('Deadline'),
+                Theme(
+                  data: manage_theme.Theme.currentTheme,
+                  child: DateTimeField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      errorText: '',
+                    ),
+                    format: controller.format,
+                    onShowPicker: (context, currentValue) =>
+                        controller.onShowPicker(context, currentValue),
+                    onChanged: (dt) => controller.onDeadlineChange(dt),
+                  ),
+                ),
+              ]),
+              SizedBox(height: 30),
+              DropdownButton<ProjectStateModel>(
+                value: controller.currentState,
+                onChanged: (newState) => controller.onStateChange(newState),
+                hint: Text('Select State',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).colorScheme.secondary)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).colorScheme.secondary),
+                items: controller.states.map((state) {
+                  return DropdownMenuItem<ProjectStateModel>(
+                    value: state,
+                    child: Text(state.name,
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            color: Theme.of(context).colorScheme.secondary)),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 30),
+              DropdownButton<TaskGroupModel>(
+                hint: Text('Select Group',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).colorScheme.secondary)),
+                value: controller.currentGroup,
+                onChanged: (newGroup) => controller.onGroupChange(newGroup),
+                items: controller.groups
+                    .map<DropdownMenuItem<TaskGroupModel>>((group) {
+                  return DropdownMenuItem<TaskGroupModel>(
+                    value: group,
+                    child: Text(group.name),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 30),
+                WideCardButton(
+                  child: Text(
+                    'Add Task',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Theme.of(context).buttonColor),
+                  ),
+                  onTap: () {
+                    controller.onAddTask(context);
+                  },
+                )
+            ],
+          ),
       ),
+        );
+      },
     );
   }
 }

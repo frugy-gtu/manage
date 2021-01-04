@@ -4,10 +4,12 @@ class InkedContainer extends StatelessWidget {
   final Widget child;
   final Function onTap;
   final double circularity;
+  final Color color;
 
   const InkedContainer(
       {Key key,
       this.circularity = 5,
+      this.color,
       @required this.child,
       @required this.onTap})
       : assert(child != null),
@@ -24,7 +26,7 @@ class InkedContainer extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: color ?? Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(circularity),
         ),
         margin: EdgeInsets.all(circularity),

@@ -66,6 +66,9 @@ class ManageRouteInformationParser
 
         return ProjectTeamPath(uri.pathSegments[1], uri.pathSegments[2]);
       } else if (uri.pathSegments[0] == 'projects') {
+        if (uri.pathSegments[2] == 'create') {
+          return TaskCreateProjectPath(uri.pathSegments[1]);
+        }
         return TaskDetailsProjectPath(uri.pathSegments[1], uri.pathSegments[2]);
       }
     }
@@ -77,6 +80,12 @@ class ManageRouteInformationParser
               uri.pathSegments[1], uri.pathSegments[3]);
         }
       } else if (uri.pathSegments[0] == 'projects') {
+        if (uri.pathSegments[3] == 'create') {
+          return TaskCreateTeamPath(
+            uri.pathSegments[1],
+            uri.pathSegments[2],
+          );
+        }
         return TaskDetailsTeamPath(
           uri.pathSegments[1],
           uri.pathSegments[2],
@@ -154,9 +163,17 @@ class ManageRouteInformationParser
               '/projects/${configuration.projectId}/${configuration.taskId}');
     }
 
-    if (configuration is ManageTaskCreatePath) {
-      return RouteInformation(location: '/task/create');
+    if (configuration is TaskCreateTeamPath) {
+      return RouteInformation(
+          location:
+              '/teams/${configuration.teamId}/${configuration.projectId}/create');
     }
+
+    if (configuration is TaskDetailsProjectPath) {
+      return RouteInformation(
+          location: '/projects/${configuration.projectId}/create');
+    }
+
     return null;
   }
 }

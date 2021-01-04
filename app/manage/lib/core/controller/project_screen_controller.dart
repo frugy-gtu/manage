@@ -18,6 +18,8 @@ class ProjectScreenController extends ChangeNotifier {
   TabController tabController;
   ScrollController scrollController;
   bool isAtTop = true;
+  List<ProjectStateModel> states;
+  ProjectStateModel _currenState;
 
   ProjectScreenController({
     @required TeamProjectModel project,
@@ -30,7 +32,10 @@ class ProjectScreenController extends ChangeNotifier {
 
   List<TaskGroupModel> get taskGroups => _taskGroups;
 
-  void onFloatingActionPress(BuildContext context) {}
+  void onFloatingActionPress(BuildContext context) {
+    context.read<ManageRouteState>().update(ManageRoute.task_create,
+        project: _project, initialState: _currenState);
+  }
 
   void onTaskTap(BuildContext context, TaskModel task) {
     context
@@ -38,18 +43,29 @@ class ProjectScreenController extends ChangeNotifier {
         .update(ManageRoute.task_details, task: task);
   }
 
-  Future<List<ProjectStateModel>> states() async {
+  Future<List<ProjectStateModel>> requestStates() async {
     RequestResult<List<ProjectStateModel>> result =
         await service.statesOf(_project);
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }
 
+    states = result.data;
+    _currenState = states[0];
+
     return result.data;
   }
 
   void initState(TickerProvider vsync, int length) {
     tabController = TabController(length: length, vsync: vsync);
+    tabController.addListener(onTabIndexChange);
+  }
+
+  void onTabIndexChange() {
+    if (!tabController.indexIsChanging) {
+      _currenState = states[tabController.index];
+      notifyListeners();
+    }
   }
 
   Future<List<TaskGroupModel>> _requestGroups() async {
@@ -75,13 +91,13 @@ class ProjectScreenController extends ChangeNotifier {
 
   Color getStateColor(ProjectStateModel state) {
     switch (state.name) {
-      case 'TODO':
+      case 'todo':
         return Color.fromRGBO(244, 146, 59, 1);
-      case 'IN-PROGRESS':
+      case 'in-progress':
         return Color.fromRGBO(0, 0, 174, 1);
-      case 'DONE':
+      case 'done':
         return Color.fromRGBO(68, 188, 68, 1);
-      case 'CANCEL':
+      case 'cancel':
         return Colors.red;
     }
 

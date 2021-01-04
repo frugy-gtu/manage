@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:manage/core/cache/settings.dart';
 
 class Theme {
@@ -78,5 +79,29 @@ class Theme {
       case ThemeMode.light:
         return _light;
     }
+  }
+
+  /// This method called accordingly to system's
+  /// [Brightness]. Returns [ThemeMode.dark] only
+  /// if user's preference is dark theme, otherwise
+  /// [ThemeMode.light].
+  static ThemeData get currentTheme {
+    switch (Settings.themeMode) {
+      case ThemeMode.system:
+        if (SchedulerBinding.instance.window.platformBrightness ==
+            Brightness.light) {
+            return ThemeData.light();
+        }
+        else {
+          return ThemeData.dark();
+        }
+        break;
+      case ThemeMode.light:
+        return ThemeData.light();
+      case ThemeMode.dark:
+        return ThemeData.dark();
+    }
+
+    return ThemeData.light();
   }
 }

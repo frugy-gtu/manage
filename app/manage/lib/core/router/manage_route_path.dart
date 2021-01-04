@@ -70,6 +70,18 @@ class TaskDetailsProjectPath extends ManageRoutePath{
   final String taskId;
   const TaskDetailsProjectPath(this.projectId, this.taskId);
 }
+
+class TaskCreateTeamPath extends ManageRoutePath{
+  final String teamId;
+  final String projectId;
+  const TaskCreateTeamPath(this.teamId, this.projectId);
+}
+
+class TaskCreateProjectPath extends ManageRoutePath{
+  final String projectId;
+  const TaskCreateProjectPath(this.projectId);
+}
+
 class UnknownPath extends ManageRoutePath {
   const UnknownPath();
 }

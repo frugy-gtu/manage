@@ -107,6 +107,24 @@ class ManageRouterDelegate extends RouterDelegate<ManageRoutePath>
           id: path.projectId,
         ),
       );
+    } else if (path is TaskCreateTeamPath) {
+      state.update(
+        ManageRoute.task_create,
+        team: TeamModel(
+            name: 'Not implemented', abbreviation: 'NI', id: path.teamId),
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.projectId,
+        ),
+      );
+    } else if (path is TaskCreateProjectPath) {
+      state.update(
+        ManageRoute.task_create,
+        project: TeamProjectModel(
+          name: 'Not implemented',
+          id: path.projectId,
+        ),
+      );
     } else if (path is TaskDetailsTeamPath) {
       state.update(
         ManageRoute.task_details,

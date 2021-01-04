@@ -3,6 +3,7 @@ import 'package:manage/core/controller/project_screen_controller.dart';
 import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
+import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +19,9 @@ class ProjectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: HandledFutureBuilder(
-        future: _controller.states(),
+        future: _controller.requestStates(),
         onSuccess: (data) => _ProjectScreenBody(
-          scrollController: _controller.scrollController,
-          project: _controller.project,
+          controller: _controller,
           states: data,
         ),
       ),
@@ -47,35 +47,25 @@ class _ProjectScreenFloatingActionButton extends StatelessWidget {
 
 class _ProjectScreenBody extends StatefulWidget {
   final List<ProjectStateModel> _states;
-  final TeamProjectModel _project;
-  final ScrollController _scrollController;
+  final ProjectScreenController _controller;
 
   _ProjectScreenBody({
-    TeamProjectModel project,
     List<ProjectStateModel> states,
-    ScrollController scrollController,
-  })  : _project = project,
-        _states = states,
-        _scrollController = scrollController;
+    ProjectScreenController controller,
+  })  : _states = states,
+        _controller = controller;
 
   @override
-  _ProjectScreenBodyState createState() => _ProjectScreenBodyState(
-        project: _project,
-        scrollController: _scrollController,
-      );
+  _ProjectScreenBodyState createState() =>
+      _ProjectScreenBodyState(controller: _controller);
 }
 
 class _ProjectScreenBodyState extends State<_ProjectScreenBody>
     with SingleTickerProviderStateMixin {
   final ProjectScreenController _controller;
 
-  _ProjectScreenBodyState({
-    TeamProjectModel project,
-    ScrollController scrollController,
-  }) : _controller = ProjectScreenController(
-          project: project,
-          scrollController: scrollController,
-        );
+  _ProjectScreenBodyState({ProjectScreenController controller})
+      : _controller = controller;
 
   @override
   void initState() {
@@ -155,42 +145,19 @@ class _TasksWithStateView extends StatelessWidget {
             sliver: SliverFixedExtentList(
               itemExtent: 50.0,
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Card(
-                  color: _controller.getStateColor(_state),
-                  margin: EdgeInsets.all(5.0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          _tasks[index].name,
-                          style: TextStyle(fontSize: 15.0),
-                        ),
-                        Expanded(child: SizedBox()),
-                        Text(
-                          _tasks[index].deadline,
-                          style: TextStyle(fontSize: 15.0),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.navigate_next,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                    appBar: AppBar(
-                                  title: Text(_tasks[index].name),
-                                )),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                (context, index) => Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: InkedContainer(
+                    color: _controller.getStateColor(_state),
+                    onTap: () => _controller.onTaskTap(context, _tasks[index]),
+                    child: Center(
+                      child: Text(
+                        _tasks[index].name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(color: Theme.of(context).buttonColor),
+                      ),
                     ),
                   ),
                 ),
