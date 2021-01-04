@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class Settings {
   static Box _box;
@@ -24,12 +26,21 @@ class Settings {
   static set themeMode(ThemeMode newMode) {
     switch (newMode) {
       case ThemeMode.system:
+        if (SchedulerBinding.instance.window.platformBrightness ==
+            Brightness.light) {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+        }
+        else {
+        FlutterStatusbarcolor.setStatusBarColor(Colors.grey[900]);
+        }
         _box.put('themeMode', 0);
         break;
       case ThemeMode.light:
+        FlutterStatusbarcolor.setStatusBarColor(Colors.white);
         _box.put('themeMode', 1);
         break;
       case ThemeMode.dark:
+        FlutterStatusbarcolor.setStatusBarColor(Colors.grey[900]);
         _box.put('themeMode', 2);
         break;
     }
