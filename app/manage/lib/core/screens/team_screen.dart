@@ -49,12 +49,8 @@ class _TeamScreenFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TeamScreenController>(
-      builder: (context, controller, child) => FloatingActionButton(
-        onPressed: () => controller.onFloatingActionPress(context),
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        foregroundColor: Theme.of(context).colorScheme.onSecondary,
-        child: controller.floatingActionButtonIcon(context),
-      ),
+      builder: (context, controller, child) =>
+          controller.floatingActionButton(context),
     );
   }
 }
@@ -66,6 +62,7 @@ class _TeamScreenBodyView extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return NestedScrollView(
+      controller: _controller.scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
@@ -117,7 +114,7 @@ class _TeamProjectsView extends StatelessWidget {
     @required List<TeamProjectModel> projects,
     @required TeamScreenController controller,
   })  : _projects = projects,
-  _controller = controller,
+        _controller = controller,
         super(key: key);
 
   final List<TeamProjectModel> _projects;
@@ -139,13 +136,12 @@ class _TeamProjectsView extends StatelessWidget {
               itemExtent: 50.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
-                  onTap: () => _controller.onProjectTap(context, _projects[index]),
+                  onTap: () =>
+                      _controller.onProjectTap(context, _projects[index]),
                   child: Center(
                       child: Text('${_projects[index].name}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(color: Theme.of(context).colorScheme.primary))),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              color: Theme.of(context).colorScheme.primary))),
                 ),
                 childCount: _projects.length,
               ),
@@ -199,7 +195,9 @@ class _TeamMembersView extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
-                                .copyWith(color: Theme.of(context).colorScheme.primary)),
+                                .copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                       ),
                     ],
                   ),
