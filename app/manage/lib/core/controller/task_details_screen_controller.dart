@@ -10,7 +10,12 @@ class TaskDetailsScreenController{
     if(result.status == Status.fail) {
       throw('Something went wrong ${result.msg}');
     }
-    return result.data[int.parse(groupID)];
+    for(TaskGroupModel wantedGroup in result.data){
+      if(wantedGroup.id == groupID){
+        return wantedGroup;
+      }
+    }
+    return result.data[0]; 
   }
   
   Future<ProjectStateModel> state(String projectID, String stateID) async {
@@ -18,7 +23,12 @@ class TaskDetailsScreenController{
     if(result.status == Status.fail) {
       throw('Something went wrong ${result.msg}');
     }
-    return result.data[int.parse(stateID)];
+    for(ProjectStateModel wantedState in result.data){
+      if(wantedState.id == stateID){
+        return wantedState;
+      }
+    }
+    return result.data[0];
   }
   
 
