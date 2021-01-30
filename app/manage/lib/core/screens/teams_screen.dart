@@ -16,7 +16,7 @@ class TeamsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Teams'),
+        title: Text('Teams', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
       ),
       body: FutureBuilder(
         future: controller.teams(),

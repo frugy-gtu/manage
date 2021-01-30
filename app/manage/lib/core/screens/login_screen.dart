@@ -8,8 +8,9 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage'),
+        title: Text('Manage', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
         automaticallyImplyLeading: false,
+        iconTheme:  IconThemeData(color: Theme.of(context).colorScheme.secondary),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
@@ -90,8 +91,7 @@ class LoginForm extends StatelessWidget {
                     'Login',
                     style: Theme.of(context)
                         .textTheme
-                        .button
-                        .copyWith(color: Theme.of(context).buttonColor),
+                        .button,
                   ),
                   onTap: () {
                     controller.onLogin(context);
@@ -124,8 +124,7 @@ class LoginForm extends StatelessWidget {
                   'Sign Up',
                   style: Theme.of(context)
                       .textTheme
-                      .button
-                      .copyWith(color: Theme.of(context).buttonColor),
+                      .button,
                 ),
                 onTap: () {
                   controller.onSignUp(context);

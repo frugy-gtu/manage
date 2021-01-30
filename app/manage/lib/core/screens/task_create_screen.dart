@@ -23,7 +23,9 @@ class TaskCreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.secondary)
+      ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: HandledFutureBuilder(
@@ -150,8 +152,7 @@ class TaskCreate extends StatelessWidget {
                     'Add Task',
                     style: Theme.of(context)
                         .textTheme
-                        .button
-                        .copyWith(color: Theme.of(context).buttonColor),
+                        .button,
                   ),
                   onTap: () {
                     controller.onAddTask(context);

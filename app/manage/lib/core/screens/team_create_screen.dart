@@ -10,7 +10,9 @@ class TeamCreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.secondary),
+      ),
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) => Padding(

@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         automaticallyImplyLeading: !_isUserProfile,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       ),
       body: ProfileInfos(
           user: widget.user,
@@ -66,7 +66,7 @@ class ProfileInfos extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.secondary,
                   width: 3.0,
                 ),
                 image: DecorationImage(

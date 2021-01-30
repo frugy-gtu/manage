@@ -67,10 +67,11 @@ class _TeamScreenBodyView extends StatelessWidget {
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
-            title: Text(_controller.team.name),
+            title: Text(_controller.team.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
               tabs: _controller.tabs.map((name) => Tab(text: name)).toList(),
               controller: _controller.tabController,
             ),
