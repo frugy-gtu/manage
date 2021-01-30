@@ -68,6 +68,7 @@ jobs:
         run: flutter build appbundle
 
       - name: Sign AppBundle
+        id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ${{ env.bundle_release_directory }}
@@ -84,4 +85,4 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: com.frugy.manage
-          releaseFiles: ${{ env.bundle_release_directory }}
+          releaseFiles: ${{steps.sign_app.outputs.signedReleaseFile}}

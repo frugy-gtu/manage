@@ -11,7 +11,7 @@ env:
   apk_release_directory: 'app/manage/build/app/outputs/flutter-apk'
 
 jobs:
-  send_to_play_store:
+  upload_artifact:
 
     name: Build Flutter on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -69,6 +69,7 @@ jobs:
         run: flutter build apk
 
       - name: Sign APK
+        id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ${{ env.apk_release_directory }}
@@ -81,4 +82,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app
-          path: ${{ env.apk_release_directory }}
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
