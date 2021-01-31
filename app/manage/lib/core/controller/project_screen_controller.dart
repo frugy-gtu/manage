@@ -179,7 +179,7 @@ class ProjectScreenController extends ChangeNotifier {
     AlertDialog alert = AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       title: Text('Are you sure?', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-      content: Text('The project will be lost forever.', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      content: Text('The task will be lost forever.', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       actions: [
         applyButton,
         cancelButton,
