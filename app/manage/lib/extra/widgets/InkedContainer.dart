@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class InkedContainer extends StatelessWidget {
   final Widget child;
   final Function onTap;
+  final Function onLongPress;
   final double circularity;
   final Color color;
 
@@ -10,6 +11,7 @@ class InkedContainer extends StatelessWidget {
       {Key key,
       this.circularity = 5,
       this.color,
+      this.onLongPress,
       @required this.child,
       @required this.onTap})
       : assert(child != null),
@@ -20,6 +22,7 @@ class InkedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       enableFeedback: false,
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(circularity),

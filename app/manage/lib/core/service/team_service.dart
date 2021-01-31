@@ -62,3 +62,24 @@ Future<RequestResult<TeamModel>> teamWith(
       decode: (i) => TeamModel.fromJson(i),
     ))
         .castTo<TeamModel>();
+
+Future<RequestResult> deleteProjectStates(String projectId) async =>
+    (await service.request(
+      method: RequestMethod.del,
+      url: '/projects/' + projectId + '/states',
+    ));
+
+Future<RequestResult> deleteProjectTags(String projectId) async =>
+    (await service.request(
+      method: RequestMethod.del,
+      url: '/projects/' + projectId + '/tags',
+    ));
+
+Future<RequestResult> deleteProject(String projectId) async{
+//  await deleteProjectStates(projectId);
+//  await deleteProjectTags(projectId);
+  return (await service.request(
+      method: RequestMethod.del,
+      url: '/projects/' + projectId,
+    ));
+}

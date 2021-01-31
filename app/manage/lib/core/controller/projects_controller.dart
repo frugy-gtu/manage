@@ -41,4 +41,48 @@ class ProjectsController extends ChangeNotifier {
       return result.data.name;
     }
   }
+
+  Future<void> deleteProject(ProjectModel project) async{
+    RequestResult result = await service.deleteProject(project.id);
+    if(result.status == Status.fail) {
+      throw('Something went wrong ${result.msg}');
+    }
+  }
+
+  showAlertDialog(BuildContext context, ProjectModel project){
+    Widget cancelButton = FlatButton(
+      color: Theme.of(context).colorScheme.primary,
+      child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+      onPressed: (){
+        Navigator.of(context, rootNavigator: true).pop();
+      }, 
+    );
+    
+    Widget applyButton = FlatButton (
+      color: Theme.of(context).colorScheme.primary,
+      child: Text('Apply', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+      onPressed: (){
+        deleteProject(project);
+        notifyListeners();
+        Navigator.of(context, rootNavigator: true).pop();
+      }, 
+    );
+
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      title: Text('Are you sure?', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      content: Text('The project will be lost forever.', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      actions: [
+        applyButton,
+        cancelButton,
+      ],
+    );
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return alert;
+      }
+    );
+  }
 }

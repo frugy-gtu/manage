@@ -3,18 +3,21 @@ import 'package:manage/core/controller/projects_controller.dart';
 import 'package:manage/core/model/project_model.dart';
 import 'package:manage/extra/widgets/InkedContainer.dart';
 import 'package:manage/extra/widgets/handled_future_builder.dart';
+import 'package:provider/provider.dart';
 
 class ProjectsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _ProjectsScreenBodyView(),
+    return ChangeNotifierProvider(
+      create: (context) => ProjectsController(),
+      child: Scaffold(
+        body: _ProjectsScreenBodyView(),
+      ),
     );
   }
 }
 
 class _ProjectsScreenBodyView extends StatelessWidget {
-  final _controller = ProjectsController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class _ProjectsScreenBodyView extends StatelessWidget {
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
             automaticallyImplyLeading: false,
-            title: Text('Projects'),
+            title: Text('Projects', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
             forceElevated: innerBoxIsScrolled,
           ),
         ),
@@ -32,12 +35,16 @@ class _ProjectsScreenBodyView extends StatelessWidget {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: HandledFutureBuilder(
-          future: _controller.projects(),
-          onSuccess: (data) => _ProjectsView(
-            projects: data,
-            controller: _controller,
-          ),
+        child: Consumer<ProjectsController>(
+          builder: (context, controller, snapshot) {
+            return HandledFutureBuilder(
+              future: controller.projects(),
+              onSuccess: (data) => _ProjectsView(
+                projects: data,
+                controller: controller,
+              ),
+            );
+          }
         ),
       ),
     );
@@ -75,6 +82,7 @@ class _ProjectsView extends StatelessWidget {
               itemExtent: 70.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
+                  onLongPress: () => _controller.showAlertDialog(context, _projects[index]),
                   onTap: () =>
                       _controller.onProjectTap(context, _projects[index]),
                   child: Center(

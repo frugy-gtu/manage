@@ -34,7 +34,7 @@ class _TeamScreenState extends State<TeamScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _TeamScreenBodyView(_controller),
+      body: ChangeNotifierProvider.value(value: _controller, child:_TeamScreenBodyView(_controller),),
       floatingActionButton: ChangeNotifierProvider.value(
           value: _controller, child: _TeamScreenFloatingActionButton()),
     );
@@ -67,10 +67,11 @@ class _TeamScreenBodyView extends StatelessWidget {
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
-            title: Text(_controller.team.name),
+            title: Text(_controller.team.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
               tabs: _controller.tabs.map((name) => Tab(text: name)).toList(),
               controller: _controller.tabController,
             ),
@@ -83,12 +84,16 @@ class _TeamScreenBodyView extends StatelessWidget {
           SafeArea(
             top: false,
             bottom: false,
-            child: HandledFutureBuilder(
-              future: _controller.projects(),
-              onSuccess: (data) => _TeamProjectsView(
-                projects: data,
-                controller: _controller,
-              ),
+            child: Consumer<TeamScreenController>(
+              builder: (context, controller, snapshot) {
+                return HandledFutureBuilder(
+                  future: controller.projects(),
+                  onSuccess: (data) => _TeamProjectsView(
+                    projects: data,
+                    controller: controller,
+                  ),
+                );
+              }
             ),
           ),
           SafeArea(
@@ -136,6 +141,7 @@ class _TeamProjectsView extends StatelessWidget {
               itemExtent: 50.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
+                  onLongPress: () => _controller.showAlertDialog(context, _projects[index]),
                   onTap: () =>
                       _controller.onProjectTap(context, _projects[index]),
                   child: Center(
