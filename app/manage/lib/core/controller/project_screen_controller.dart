@@ -85,8 +85,15 @@ class ProjectScreenController extends ChangeNotifier {
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }
-
     return result.data;
+  }
+
+  Future<void> deleteTask(String taskId) async{
+    RequestResult result = await service.deleteTask(taskId);
+    if(result.status == Status.fail) {
+      throw('Something went wrong ${result.msg}');
+    }
+    
   }
 
   Color getStateColor(ProjectStateModel state) {
@@ -147,6 +154,43 @@ class ProjectScreenController extends ChangeNotifier {
       onPressed: () => onFloatingActionPress(context),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       foregroundColor: Theme.of(context).colorScheme.onSecondary,
+    );
+  }
+
+  showAlertDialog(BuildContext context, String taskId){
+    Widget cancelButton = FlatButton(
+      color: Theme.of(context).colorScheme.primary,
+      child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+      onPressed: (){
+        Navigator.of(context, rootNavigator: true).pop();
+      }, 
+    );
+    
+    Widget applyButton = FlatButton(
+      color: Theme.of(context).colorScheme.primary,
+      child: Text('Apply', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+      onPressed: (){
+        deleteTask(taskId);
+        notifyListeners();
+        Navigator.of(context, rootNavigator: true).pop();
+      }, 
+    );
+
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      title: Text('Are you sure?', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      content: Text('The project will be lost forever.', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      actions: [
+        applyButton,
+        cancelButton,
+      ],
+    );
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return alert;
+      }
     );
   }
 
