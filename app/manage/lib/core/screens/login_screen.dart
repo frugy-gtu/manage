@@ -8,9 +8,13 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+        title: Text(
+          'Manage',
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+        ),
         automaticallyImplyLeading: false,
-        iconTheme:  IconThemeData(color: Theme.of(context).colorScheme.secondary),
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.secondary),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
@@ -19,7 +23,11 @@ class LoginScreen extends StatelessWidget {
           ),
           child: ChangeNotifierProvider(
             create: (_) => LoginController(),
-            child: LoginForm(),
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                child: LoginForm(constraints),
+              ),
+            ),
           ),
         ),
       ),
@@ -28,12 +36,17 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginForm extends StatelessWidget {
+  BoxConstraints constraints;
+  LoginForm(this.constraints);
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginController>(
       builder: (context, controller, child) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(
+            height: constraints.maxHeight / 6,
+          ),
           Row(
             children: [
               Icon(Icons.account_circle),
@@ -89,9 +102,7 @@ class LoginForm extends StatelessWidget {
               WideCardButton(
                   child: Text(
                     'Login',
-                    style: Theme.of(context)
-                        .textTheme
-                        .button,
+                    style: Theme.of(context).textTheme.button,
                   ),
                   onTap: () {
                     controller.onLogin(context);
@@ -122,9 +133,7 @@ class LoginForm extends StatelessWidget {
               WideCardButton(
                 child: Text(
                   'Sign Up',
-                  style: Theme.of(context)
-                      .textTheme
-                      .button,
+                  style: Theme.of(context).textTheme.button,
                 ),
                 onTap: () {
                   controller.onSignUp(context);
