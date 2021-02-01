@@ -11,19 +11,21 @@ class ProjectScreen extends StatelessWidget {
   final TeamProjectModel project;
   final ProjectScreenController _controller;
 
-  ProjectScreen(this.project)
+  ProjectScreen(this.project, {ProjectStateModel state})
       : _controller = ProjectScreenController(
-            project: project, scrollController: ScrollController());
+        project: project, scrollController: ScrollController(),
+        currentState: state,
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: HandledFutureBuilder(
         future: _controller.requestStates(),
-        onSuccess: (data) => ChangeNotifierProvider.value(value: _controller, child:_ProjectScreenBody(
+        onSuccess: (data) => _ProjectScreenBody(
           controller: _controller,
           states: data,
-        ),)
+        ),
       ),
       floatingActionButton: ChangeNotifierProvider.value(
           value: _controller, child: _ProjectScreenFloatingActionButton()),
@@ -81,13 +83,16 @@ class _ProjectScreenBodyState extends State<_ProjectScreenBody>
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
-            title: Text(_controller.project.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+            title: Text(
+              _controller.project.name,
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
               labelColor: Theme.of(context).colorScheme.secondary,
               tabs:
-                widget._states.map((state) => Tab(text: state.name)).toList(),
+                  widget._states.map((state) => Tab(text: state.name)).toList(),
               isScrollable: true,
               controller: _controller.tabController,
             ),
@@ -97,24 +102,20 @@ class _ProjectScreenBodyState extends State<_ProjectScreenBody>
       body: TabBarView(
         controller: _controller.tabController,
         children: widget._states
-          .map(
-            (state) => SafeArea(
-              top: false,
-              bottom: false,
-              child: Consumer<ProjectScreenController>(
-                builder: (context, controller, child) {
-                  return HandledFutureBuilder(
-                    future: _controller.tasksWith(state),
-                    onSuccess: (data) {
-                      return _TasksWithStateView(
-                        state: state, controller: controller, tasks: data);
-                    },
-                  );
-                }
+            .map(
+              (state) => SafeArea(
+                top: false,
+                bottom: false,
+                child: HandledFutureBuilder(
+                  future: _controller.tasksWith(state),
+                  onSuccess: (data) {
+                    return _TasksWithStateView(
+                        state: state, controller: _controller, tasks: data);
+                  },
+                ),
               ),
-            ),
-          )
-          .toList(),
+            )
+            .toList(),
       ),
     );
   }
@@ -158,7 +159,9 @@ class _TasksWithStateView extends StatelessWidget {
                     child: Center(
                       child: Row(
                         children: [
-                          Expanded(child: SizedBox(),),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
                           Text(
                             _tasks[index].name,
                             style: Theme.of(context)
@@ -166,11 +169,13 @@ class _TasksWithStateView extends StatelessWidget {
                                 .button
                                 .copyWith(color: Theme.of(context).buttonColor),
                           ),
-                          Expanded(child: SizedBox(),),
-                          IconButton(
-                            icon: Icon(Icons.delete), 
-                            onPressed: () => _controller.showAlertDialog(context, _tasks[index].id)
+                          Expanded(
+                            child: SizedBox(),
                           ),
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () => _controller.showAlertDialog(
+                                  context, _tasks[index].id)),
                         ],
                       ),
                     ),

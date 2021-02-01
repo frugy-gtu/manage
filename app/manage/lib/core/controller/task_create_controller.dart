@@ -51,7 +51,7 @@ class TaskCreateController extends ChangeNotifier {
       if (status.status == Status.success) {
         context
             .read<ManageRouteState>()
-            .update(ManageRoute.project, project: project);
+            .update(ManageRoute.project, project: project, initialState: currentState);
         return;
       } else {
         _credentialsError = status.msg;
