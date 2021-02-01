@@ -30,3 +30,9 @@ Future<RequestResult<List<ProjectModel>>> projects() async =>
       decode: (i) => ProjectModel.fromJson(i),
     ))
         .castTo<List<ProjectModel>>();
+
+Future<RequestResult> deleteTask(String taskId) async =>
+    (await service.request(
+      method: RequestMethod.del,
+      url: '/tasks/' + taskId,
+    ));

@@ -9,7 +9,8 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Manage'),
+        title: Text('Manage', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
@@ -140,8 +141,7 @@ class SignUpForm extends StatelessWidget {
                     'Sign Up',
                     style: Theme.of(context)
                         .textTheme
-                        .button
-                        .copyWith(color: Theme.of(context).buttonColor),
+                        .button,
                   ),
                   onTap: () {
                     controller.onSignUp(context);

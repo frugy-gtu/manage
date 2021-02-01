@@ -21,7 +21,7 @@ class WideCardButton extends StatelessWidget {
         child: ElevatedButton(
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
-              primary: Colors.black,
+              primary: Theme.of(context).colorScheme.secondary,
               enableFeedback: true,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32.0),
