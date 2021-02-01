@@ -25,7 +25,7 @@ class ProjectCreateScreen extends StatelessWidget {
             ),
             child: ChangeNotifierProvider(
               create: (_) => ProjectCreateScreenController(team),
-              child: _ProjectForm(),
+              child: SingleChildScrollView(child: _ProjectForm(),),
             ),
           ),
         ),

@@ -24,7 +24,7 @@ class TeamInviteScreen extends StatelessWidget {
             ),
             child: ChangeNotifierProvider(
               create: (_) => TeamInviteScreenController(team),
-              child: _MemberForm(),
+              child: SingleChildScrollView(child: _MemberForm(),),
             ),
           ),
         ),

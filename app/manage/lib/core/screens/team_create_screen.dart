@@ -22,7 +22,7 @@ class TeamCreateScreen extends StatelessWidget {
             ),
             child: ChangeNotifierProvider(
               create: (_) => TeamCreateScreenController(),
-              child: TeamForm(),
+              child: SingleChildScrollView(child: TeamForm(),),
             ),
           ),
         ),
