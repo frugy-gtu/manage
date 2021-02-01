@@ -11,9 +11,11 @@ class ProjectScreen extends StatelessWidget {
   final TeamProjectModel project;
   final ProjectScreenController _controller;
 
-  ProjectScreen(this.project)
+  ProjectScreen(this.project, {ProjectStateModel state})
       : _controller = ProjectScreenController(
-            project: project, scrollController: ScrollController());
+        project: project, scrollController: ScrollController(),
+        currentState: state,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,10 @@ class _ProjectScreenBodyState extends State<_ProjectScreenBody>
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
-            title: Text(_controller.project.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+            title: Text(
+              _controller.project.name,
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
@@ -152,12 +157,26 @@ class _TasksWithStateView extends StatelessWidget {
                     color: _controller.getStateColor(_state),
                     onTap: () => _controller.onTaskTap(context, _tasks[index]),
                     child: Center(
-                      child: Text(
-                        _tasks[index].name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            .copyWith(color: Theme.of(context).buttonColor),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                          Text(
+                            _tasks[index].name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Theme.of(context).buttonColor),
+                          ),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () => _controller.showAlertDialog(
+                                  context, _tasks[index].id)),
+                        ],
                       ),
                     ),
                   ),

@@ -39,6 +39,11 @@ Future<ManageResponse> _makeRequest(
           (await Dio().put(_baseUrl + url,
               data: data, queryParameters: queryParameters, options: options)),
           null);
+    case RequestMethod.del:
+      return ManageResponse(
+        (await Dio().delete(_baseUrl + url,
+          queryParameters: queryParameters, options: options)),
+        null);  
     default:
       throw _NotImplementedRequestMethodException();
   }

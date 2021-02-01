@@ -13,7 +13,7 @@ import 'package:manage/core/service/project_service.dart' as service;
 import 'package:manage/core/service/tasks_service.dart' as service;
 
 class ProjectScreenController extends ChangeNotifier {
-  final TeamProjectModel _project;
+  TeamProjectModel _project;
   List<TaskGroupModel> _taskGroups;
   TabController tabController;
   ScrollController scrollController;
@@ -24,9 +24,12 @@ class ProjectScreenController extends ChangeNotifier {
   ProjectScreenController({
     @required TeamProjectModel project,
     @required this.scrollController,
-  }) : _project = project {
+    ProjectStateModel currentState,
+  }) : _project = project, _currenState = currentState {
     scrollController.addListener(_checkIsTop);
   }
+
+  ProjectScreenController.empty();
 
   TeamProjectModel get project => _project;
 
@@ -51,13 +54,24 @@ class ProjectScreenController extends ChangeNotifier {
     }
 
     states = result.data;
-    _currenState = states[0];
+    if (_currenState == null) {
+      _currenState = states[0];
+    }
 
     return result.data;
   }
 
   void initState(TickerProvider vsync, int length) {
-    tabController = TabController(length: length, vsync: vsync);
+
+    int initial = 0;
+    if(_currenState != null) {
+      for (int i = 0; i < states.length; ++i) {
+        if(_currenState.name == states[i].name) {
+          initial = i;
+        }
+      }
+    }
+    tabController = TabController(initialIndex: initial, length: length, vsync: vsync);
     tabController.addListener(onTabIndexChange);
   }
 
@@ -85,8 +99,14 @@ class ProjectScreenController extends ChangeNotifier {
     if (result.status == Status.fail) {
       throw ('Something went wrong ${result.msg}');
     }
-
     return result.data;
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    RequestResult result = await service.deleteTask(taskId);
+    if (result.status == Status.fail) {
+      throw ('Something went wrong ${result.msg}');
+    }
   }
 
   Color getStateColor(ProjectStateModel state) {
@@ -148,6 +168,51 @@ class ProjectScreenController extends ChangeNotifier {
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       foregroundColor: Theme.of(context).colorScheme.onSecondary,
     );
+  }
+
+  Widget showAlertDialog(BuildContext context, String taskId) {
+    Widget cancelButton = FlatButton(
+      color: Theme.of(context).colorScheme.primary,
+      child: Text(
+        'Cancel',
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+      ),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+
+    Widget applyButton = FlatButton(
+      color: Theme.of(context).colorScheme.primary,
+      child: Text(
+        'Apply',
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+      ),
+      onPressed: () {
+        deleteTask(taskId);
+        Navigator.of(context, rootNavigator: true).pop();
+        context.read<ManageRouteState>().update(ManageRoute.project,
+            project: _project, initialState: _currenState);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      title: Text('Are you sure?',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      content: Text('The task will be lost forever.',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+      actions: [
+        applyButton,
+        cancelButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   @override

@@ -94,7 +94,7 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
             state.route == ManageRoute.task_details) {
           pages.add(MaterialPage(
             key: ValueKey('ProjectPage'),
-            child: ProjectScreen(state.project),
+            child: ProjectScreen(state.project, state: state.initialState),
           ));
 
           if (state.route == ManageRoute.task_details) {
