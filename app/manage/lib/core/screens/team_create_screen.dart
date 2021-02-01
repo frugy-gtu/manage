@@ -44,7 +44,7 @@ class TeamForm extends StatelessWidget {
           controller: controller.name,
           inputFormatters: [
             LengthLimitingTextFieldFormatterFixed(12),
-            FilteringTextInputFormatter.allow(RegExp('[a-z0-9A-Z\-]')),
+            FilteringTextInputFormatter.allow(RegExp('[a-z0-9 A-Z\-]')),
           ],
           cursorColor: Theme.of(context).colorScheme.secondaryVariant,
           autofocus: true,
