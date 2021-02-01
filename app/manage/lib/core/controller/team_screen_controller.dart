@@ -156,7 +156,7 @@ class TeamScreenController extends ChangeNotifier {
     }
   }
 
-  showAlertDialog(BuildContext context, TeamProjectModel project){
+  showAlertDialog(BuildContext context, TeamModel team, TeamProjectModel project){
     Widget cancelButton = FlatButton(
       color: Theme.of(context).colorScheme.primary,
       child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
@@ -170,7 +170,9 @@ class TeamScreenController extends ChangeNotifier {
       child: Text('Apply', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
       onPressed: (){
         deleteProject(project);
-        notifyListeners();
+        context
+          .read<ManageRouteState>()
+          .update(ManageRoute.team, team:team);
         Navigator.of(context, rootNavigator: true).pop();
       }, 
     );

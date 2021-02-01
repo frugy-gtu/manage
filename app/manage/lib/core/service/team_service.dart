@@ -76,8 +76,6 @@ Future<RequestResult> deleteProjectTags(String projectId) async =>
     ));
 
 Future<RequestResult> deleteProject(String projectId) async{
-//  await deleteProjectStates(projectId);
-//  await deleteProjectTags(projectId);
   return (await service.request(
       method: RequestMethod.del,
       url: '/projects/' + projectId,

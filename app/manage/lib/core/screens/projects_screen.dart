@@ -8,16 +8,14 @@ import 'package:provider/provider.dart';
 class ProjectsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProjectsController(),
-      child: Scaffold(
-        body: _ProjectsScreenBodyView(),
-      ),
-    );
+    return Scaffold(
+      body: _ProjectsScreenBodyView(),
+    ); 
   }
 }
 
 class _ProjectsScreenBodyView extends StatelessWidget {
+  final ProjectsController controller = ProjectsController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +33,12 @@ class _ProjectsScreenBodyView extends StatelessWidget {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: Consumer<ProjectsController>(
-          builder: (context, controller, snapshot) {
-            return HandledFutureBuilder(
-              future: controller.projects(),
-              onSuccess: (data) => _ProjectsView(
-                projects: data,
-                controller: controller,
-              ),
-            );
-          }
+        child: HandledFutureBuilder(
+          future: controller.projects(),
+          onSuccess: (data) => _ProjectsView(
+            projects: data,
+            controller: controller,
+          ),
         ),
       ),
     );

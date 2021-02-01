@@ -21,9 +21,11 @@ class TeamScreen extends StatefulWidget {
 class _TeamScreenState extends State<TeamScreen>
     with SingleTickerProviderStateMixin {
   final TeamScreenController _controller;
+  final TeamModel _team;
 
   _TeamScreenState(TeamModel team)
-      : _controller = TeamScreenController(team: team);
+      : _controller = TeamScreenController(team: team),
+      _team = team;
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _TeamScreenState extends State<TeamScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ChangeNotifierProvider.value(value: _controller, child:_TeamScreenBodyView(_controller),),
+      body: _TeamScreenBodyView(_controller, _team),
       floatingActionButton: ChangeNotifierProvider.value(
           value: _controller, child: _TeamScreenFloatingActionButton()),
     );
@@ -57,8 +59,9 @@ class _TeamScreenFloatingActionButton extends StatelessWidget {
 
 class _TeamScreenBodyView extends StatelessWidget {
   final TeamScreenController _controller;
+  final TeamModel _team;
 
-  _TeamScreenBodyView(this._controller);
+  _TeamScreenBodyView(this._controller, this._team);
 
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -84,16 +87,13 @@ class _TeamScreenBodyView extends StatelessWidget {
           SafeArea(
             top: false,
             bottom: false,
-            child: Consumer<TeamScreenController>(
-              builder: (context, controller, snapshot) {
-                return HandledFutureBuilder(
-                  future: controller.projects(),
-                  onSuccess: (data) => _TeamProjectsView(
-                    projects: data,
-                    controller: controller,
-                  ),
-                );
-              }
+            child: HandledFutureBuilder(
+              future: _controller.projects(),
+              onSuccess: (data) => _TeamProjectsView(
+                projects: data,
+                controller: _controller,
+                team: _team,
+              ),   
             ),
           ),
           SafeArea(
@@ -118,12 +118,15 @@ class _TeamProjectsView extends StatelessWidget {
     Key key,
     @required List<TeamProjectModel> projects,
     @required TeamScreenController controller,
+    @required TeamModel team,
   })  : _projects = projects,
         _controller = controller,
+        _team = team,
         super(key: key);
 
   final List<TeamProjectModel> _projects;
   final TeamScreenController _controller;
+  final TeamModel _team;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +144,7 @@ class _TeamProjectsView extends StatelessWidget {
               itemExtent: 50.0,
               delegate: SliverChildBuilderDelegate(
                 (context, index) => InkedContainer(
-                  onLongPress: () => _controller.showAlertDialog(context, _projects[index]),
+                  onLongPress: () => _controller.showAlertDialog(context, _team, _projects[index]),
                   onTap: () =>
                       _controller.onProjectTap(context, _projects[index]),
                   child: Center(

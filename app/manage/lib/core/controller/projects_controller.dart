@@ -42,11 +42,18 @@ class ProjectsController extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteProject(ProjectModel project) async{
+  Future<void> deleteProject(BuildContext context, ProjectModel project) async{
     RequestResult result = await service.deleteProject(project.id);
+    RequestResult teamResult = await service.teamWith(project.teamId);
     if(result.status == Status.fail) {
       throw('Something went wrong ${result.msg}');
     }
+    if(teamResult.status == Status.fail){
+      throw('Something went wrong ${result.msg}');
+    }
+    context
+      .read<ManageRouteState>()
+      .update(ManageRoute.projects, team: teamResult.data);
   }
 
   showAlertDialog(BuildContext context, ProjectModel project){
@@ -62,8 +69,8 @@ class ProjectsController extends ChangeNotifier {
       color: Theme.of(context).colorScheme.primary,
       child: Text('Apply', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
       onPressed: (){
-        deleteProject(project);
-        notifyListeners();
+        deleteProject(context, project);
+      //  notifyListeners();
         Navigator.of(context, rootNavigator: true).pop();
       }, 
     );
