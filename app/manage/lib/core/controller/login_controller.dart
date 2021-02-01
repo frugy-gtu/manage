@@ -23,10 +23,10 @@ class LoginController extends ChangeNotifier {
       RequestResult status;
       if (emailOrUName.text.contains('@')) {
         status = await service
-            .login(LoginModel(email: emailOrUName.text, password: password.text));
+            .login(LoginModel(email: emailOrUName.text.trim(), password: password.text));
       } else {
         status = await service
-            .login(LoginModel(username: emailOrUName.text, password: password.text));
+            .login(LoginModel(username: emailOrUName.text.trim(), password: password.text));
       }
       if (status.status == Status.success) {
         context.read<ManageRouteState>()

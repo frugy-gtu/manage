@@ -30,10 +30,10 @@ class SignUpScreenController extends ChangeNotifier {
   Future<void> onSignUp(BuildContext context) async {
     if (_checkStatus()) {
       RequestResult status = await service.signUp(SignUpModel(
-        username: uName.text,
-        name: fName.text,
-        surname: lName.text,
-        email: email.text,
+        username: uName.text.trim(),
+        name: fName.text.trim(),
+        surname: lName.text.trim(),
+        email: email.text.trim(),
         password: password.text,
       ));
 
