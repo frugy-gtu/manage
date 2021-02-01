@@ -1,0 +1,17 @@
+enum ManageRoute {
+  login,
+  signup,
+  teams,
+  team,
+  team_create,
+  projects,
+  project,
+  project_create,
+  team_invite,
+  profile,
+  member,
+  settings,
+  task_details,
+  task_create,
+  unknown,
+}
