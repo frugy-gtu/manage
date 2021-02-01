@@ -1,33 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:manage/core/controller/task_details_screen_controller.dart';
+import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_model.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   final TaskModel task;
+  final TaskDetailsScreenController controller = TaskDetailsScreenController();
   TaskDetailsScreen({this.task});
   
   @override
-  Widget build(context) {
-     return Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(task.name, style: TextStyle(fontSize: 20.0, color: Colors.black),),
+        title: Text(task.name, style: TextStyle(fontSize: 20.0, color: Theme.of(context).colorScheme.secondary),),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       ),
-      body: TaskDetailsBody(task: task),        
+      body: Center(child: TaskDetailsBody(task: task, controller: controller,)),   
+      floatingActionButton: RaisedButton(
+        color: Theme.of(context).colorScheme.secondary,
+        child: Text('Apply Changes', style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+        onPressed: () {
+          if(controller.stateModel == null){
+            controller.applyWithNoChange(context, task.projectId);
+          }else{
+            controller.applyChanges(context, task.projectId, task.id, controller.stateModel.id);
+          }  
+        },
+      ),
     );
   }
 }
 
-class TaskDetailsBody extends StatelessWidget {
-  final TaskDetailsScreenController _controller = TaskDetailsScreenController();
+class TaskDetailsBody extends StatefulWidget {
   final TaskModel task;
+  final TaskDetailsScreenController controller;
+  TaskDetailsBody({this.task, this.controller});
 
-  TaskDetailsBody({this.task});
+  @override
+  _TaskDetailsBodyState createState() => _TaskDetailsBodyState();
+}
+
+class _TaskDetailsBodyState extends State<TaskDetailsBody> {
+  bool isChange = false;
 
   @override
   Widget build(context) {
@@ -40,16 +59,35 @@ class TaskDetailsBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder(
-                future: Future.wait([_controller.group(task.projectId, task.taskGroupId), _controller.state(task.projectId, task.taskStateId)]),
+                future: Future.wait([widget.controller.group(widget.task.projectId, widget.task.taskGroupId), 
+                                    widget.controller.state(widget.task.projectId, widget.task.stateId), 
+                                    widget.controller.allStates(widget.task.projectId)]),
                 builder: (context, snapshot){
                   if(snapshot.hasData){
-                    final String _group = snapshot.data[0];
-                    final String _state = snapshot.data[1];
+                    String _group = snapshot.data[0].name;
+                  //  String _state = snapshot.data[1].name;
+                    List<ProjectStateModel> _allStates = snapshot.data[2];
                     return Row(
                       children: [
-                        Text(_group, style: TextStyle(fontSize: 20.0, color: Colors.black)),
+                        Text(_group, style: Theme.of(context).textTheme.bodyText1,),
                         Expanded(child: SizedBox()),
-                        Text(_state, style: TextStyle(fontSize: 20.0, color: Colors.black)),
+                      //  Text(_state, style: Theme.of(context).textTheme.bodyText1),
+                        DropdownButton<ProjectStateModel>(
+                          style: TextStyle(color: Theme.of(context).colorScheme.secondary), 
+                          value: isChange ? widget.controller.stateModel : snapshot.data[1],
+                          items: _allStates.map((states) => 
+                            DropdownMenuItem(
+                              child: Text(states.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
+                              value: states,
+                            )
+                          ).toList(),
+                          onChanged: (newState){
+                            setState(() {
+                              widget.controller.stateModel = newState;
+                              isChange = true;
+                            });
+                          }
+                        ),
                       ],
                     );
                   }else{
@@ -57,9 +95,9 @@ class TaskDetailsBody extends StatelessWidget {
                   }
                 },
               ),
-              Divider(color: Colors.black,),
+              Divider(color: Theme.of(context).colorScheme.secondary,),
               Card(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.secondary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -67,19 +105,34 @@ class TaskDetailsBody extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Flexible(child: Text(task.details)),
+                      Flexible(child: Details(details: widget.task.details,),),                  
                     ],
                   ),
                 )
               ),
               SizedBox(height: 10.0,),
-              DatePart(task: task,),
-              SizedBox(height: 10.0,),
+              DatePart(task: widget.task,),
+              SizedBox(height: 80.0,),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class Details extends StatelessWidget {
+  final String details;
+
+  Details({this.details});
+
+  @override
+  Widget build(BuildContext context) {
+    if(details == null || details == ''){
+      return Text('No details...', style: TextStyle(color: Theme.of(context).colorScheme.primary),);
+    }else{
+      return Text(details, style: TextStyle(color: Theme.of(context).colorScheme.primary),);
+    }
   }
 }
 
@@ -96,7 +149,7 @@ class DatePart extends StatelessWidget {
       children:[
         Expanded(
           child: Card(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.secondary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -104,20 +157,21 @@ class DatePart extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text('Sheculed time', style: TextStyle(fontSize: 20.0)),
-                  Divider(color: Colors.black),
+                  Text('Sheculed time', style: TextStyle(fontSize: 20.0, color: Theme.of(context).colorScheme.primary)),
+                  Divider(color: Theme.of(context).colorScheme.primary),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today),
+                      Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary,),
                       Expanded(child: SizedBox()),
-                      Text(dayFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0)),
+                      Text(dayFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0, color: Theme.of(context).colorScheme.primary)),
                     ],
                   ),
+                  SizedBox(height: 5.0,),
                   Row(
                     children: [
-                      Icon(Icons.timer),
+                      Icon(Icons.timer, color: Theme.of(context).colorScheme.primary,),
                       Expanded(child: SizedBox(),),
-                      Text(hourFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0)),
+                      Text(hourFormatter.format(DateTime.parse(task.schedule)), style: TextStyle(fontSize: 15.0, color: Theme.of(context).colorScheme.primary)),
                     ],
                   ),  
                 ],
@@ -127,7 +181,7 @@ class DatePart extends StatelessWidget {
         ),
         Expanded(
           child: Card(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.secondary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -135,20 +189,21 @@ class DatePart extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text('Deadine', style: TextStyle(fontSize: 20.0)),
-                  Divider(color: Colors.black),
+                  Text('Deadine', style: TextStyle(fontSize: 20.0, color: Theme.of(context).colorScheme.primary)),
+                  Divider(color: Theme.of(context).colorScheme.primary),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today),
+                      Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary,),
                       Expanded(child: SizedBox()),
-                      Text(dayFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0)),
+                      Text(dayFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0, color: Theme.of(context).colorScheme.primary)),
                     ],
                   ),
+                  SizedBox(height: 5.0,),
                   Row(
                     children: [
-                      Icon(Icons.timer),
+                      Icon(Icons.timer, color: Theme.of(context).colorScheme.primary,),
                       Expanded(child: SizedBox(),),
-                      Text(hourFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0)),
+                      Text(hourFormatter.format(DateTime.parse(task.deadline)), style: TextStyle(fontSize: 15.0, color: Theme.of(context).colorScheme.primary)),
                     ],
                   ),  
                 ],
