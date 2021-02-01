@@ -13,7 +13,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return GestureDetector(
+      onTap: () {
+        hideKeyboard(context);
+      },
+      child: ValueListenableBuilder(
         valueListenable: Settings.listenable(['themeMode']),
         builder: (context, box, widget) {
           return ChangeNotifierProvider.value(
@@ -27,6 +31,14 @@ class App extends StatelessWidget {
               routeInformationParser: _manageRouteInformationParser,
             ),
           );
-        });
+      }),
+    );
+  }
+
+  void hideKeyboard(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus.unfocus();
+    }
   }
 }
