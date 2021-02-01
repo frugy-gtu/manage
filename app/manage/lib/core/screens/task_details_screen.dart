@@ -59,7 +59,7 @@ class _TaskDetailsBodyState extends State<TaskDetailsBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder(
-                future: Future.wait([widget.controller.group(widget.task.projectId, widget.task.taskGroupId), 
+                future: Future.wait([widget.controller.group(widget.task.projectId, widget.task.taskGroupId),
                                     widget.controller.state(widget.task.projectId, widget.task.stateId), 
                                     widget.controller.allStates(widget.task.projectId)]),
                 builder: (context, snapshot){
@@ -105,7 +105,7 @@ class _TaskDetailsBodyState extends State<TaskDetailsBody> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Flexible(child: Details(details: widget.task.details,),),                  
+                      Flexible(child: Details(details: widget.task.details,),),
                     ],
                   ),
                 )

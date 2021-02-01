@@ -7,7 +7,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar:
-            AppBar(automaticallyImplyLeading: false, title: Text('Settings')),
+            AppBar(automaticallyImplyLeading: false, title: Text('Settings', style: TextStyle(color: Theme.of(context).colorScheme.secondary),)),
         body: Center(
             child: ChangeNotifierProvider(
                 create: (_) => SettingsController(),

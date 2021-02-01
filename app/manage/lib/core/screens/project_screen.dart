@@ -81,10 +81,11 @@ class _ProjectScreenBodyState extends State<_ProjectScreenBody>
         SliverOverlapAbsorber(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
-            title: Text(_controller.project.name),
+            title: Text(_controller.project.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
             expandedHeight: 120.0,
             forceElevated: innerBoxIsScrolled,
             bottom: TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
               tabs:
                   widget._states.map((state) => Tab(text: state.name)).toList(),
               isScrollable: true,

@@ -44,14 +44,46 @@ class Theme {
     );
   })();
 
-  static final _dark = ThemeData.dark().copyWith(
-    appBarTheme: AppBarTheme(
-      centerTitle: true,
-      elevation: 0,
+  static final _dark = ((){
+    ColorScheme colorScheme = ColorScheme(
       brightness: Brightness.dark,
-    ),
-    colorScheme: ColorScheme.dark().copyWith(),
-  );
+      primary: Colors.black,
+      onPrimary: Colors.white,
+      primaryVariant: Colors.black54,
+      secondary: Colors.white,
+      onSecondary: Colors.black,
+      secondaryVariant: Colors.white54,
+      background: Colors.black,
+      onBackground: Colors.white,
+      surface: Colors.white,
+      onSurface: Colors.black,
+      error: Colors.red,
+      onError: Colors.black,
+    );
+
+    TextTheme textTheme = TextTheme(
+      bodyText1: TextStyle(
+        color: colorScheme.secondary,
+      ),
+      button: TextStyle(
+        color: colorScheme.primary,
+      ),
+    );
+
+    return ThemeData.from(
+      colorScheme: colorScheme,
+      textTheme: textTheme,
+    ).copyWith(
+      scaffoldBackgroundColor: colorScheme.primary,
+      appBarTheme: AppBarTheme(
+        color: colorScheme.primary,
+        centerTitle: true,
+        elevation: 0,
+        brightness: Brightness.light,
+      ),
+    );
+
+  })();
 
   /// This method called accordingly to system's
   /// [Brightness]. Returns [ThemeMode.dark] only

@@ -24,7 +24,7 @@ class _ProjectsScreenBodyView extends StatelessWidget {
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           sliver: SliverAppBar(
             automaticallyImplyLeading: false,
-            title: Text('Projects'),
+            title: Text('Projects', style: TextStyle(color: Theme.of(context).colorScheme.secondary),),
             forceElevated: innerBoxIsScrolled,
           ),
         ),
