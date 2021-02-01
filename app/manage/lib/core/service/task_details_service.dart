@@ -1,5 +1,6 @@
 import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_group_model.dart';
+import 'package:manage/core/model/task_state_put_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/service/request_method.dart';
 import 'package:manage/core/service/request_result.dart';
@@ -30,8 +31,9 @@ Future<RequestResult<List<ProjectStateModel>>> statesOf(String projectID) async 
   ))
       .castTo<TeamProjectModel>();
 
-Future<RequestResult> updateTaskState(String taskID, String stateID) async =>
+Future<RequestResult> updateTaskState(String taskID, TaskStatePutModel model) async =>
   (await service.request(
     method: RequestMethod.put,
-    url: '/tasks/' + taskID + '/' + stateID,
+    url: '/tasks/' + taskID + '/state',
+    jsonData: model.toJson(),
     ));

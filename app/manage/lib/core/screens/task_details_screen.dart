@@ -11,7 +11,6 @@ class TaskDetailsScreen extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    print("task state id at task details screen: ${task.taskStateId}");
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       resizeToAvoidBottomInset: false,
@@ -61,7 +60,7 @@ class _TaskDetailsBodyState extends State<TaskDetailsBody> {
             children: [
               FutureBuilder(
                 future: Future.wait([widget.controller.group(widget.task.projectId, widget.task.taskGroupId), 
-                                    widget.controller.state(widget.task.projectId, widget.task.taskStateId), 
+                                    widget.controller.state(widget.task.projectId, widget.task.stateId), 
                                     widget.controller.allStates(widget.task.projectId)]),
                 builder: (context, snapshot){
                   if(snapshot.hasData){

@@ -10,7 +10,7 @@ class TaskModel extends ManageModel {
   final String projectId;
   final String createdAt;
   final String id;
-  final String taskStateId;
+  final String stateId;
   final String taskTagId;
   final String deadline;
   final String schedule;
@@ -22,7 +22,7 @@ class TaskModel extends ManageModel {
     @required this.projectId,
     @required this.createdAt,
     @required this.id,
-    @required this.taskStateId,
+    @required this.stateId,
     @required this.taskTagId,
     @required this.deadline,
     @required this.schedule,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:manage/core/model/project_state_model.dart';
 import 'package:manage/core/model/task_group_model.dart';
+import 'package:manage/core/model/task_state_put_model.dart';
 import 'package:manage/core/model/team_project_model.dart';
 import 'package:manage/core/service/request_result.dart';
 import 'package:manage/core/service/task_details_service.dart' as service;
@@ -55,8 +56,8 @@ class TaskDetailsScreenController extends ChangeNotifier{
     return result.data;
   }
   
-  Future<void> updateTaskState(String taskID, String stateID) async{
-    RequestResult result = await service.updateTaskState(taskID, stateID);
+  Future<void> updateTaskState(String taskID, TaskStatePutModel model) async{
+    RequestResult result = await service.updateTaskState(taskID, model);
     if(result.status == Status.fail) {
       throw('Something went wrong ${result.msg}');
     }
@@ -64,7 +65,7 @@ class TaskDetailsScreenController extends ChangeNotifier{
 
   Future<void> applyChanges(BuildContext context, String projectID, String taskID, String stateID) async{
     TeamProjectModel projectModel = await project(projectID);
-    updateTaskState(taskID, stateID);
+    updateTaskState(taskID, TaskStatePutModel(stateId: stateID));
     context
       .read<ManageRouteState>()
       .update(ManageRoute.project, project: projectModel);
