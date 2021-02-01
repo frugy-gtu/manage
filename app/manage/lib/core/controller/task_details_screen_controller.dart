@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 class TaskDetailsScreenController extends ChangeNotifier{
 
   ProjectStateModel stateModel;
+  ProjectStateModel chosen;
+  List<ProjectStateModel> states;
 
   Future<TaskGroupModel> group(String projectID, String groupID) async {
     RequestResult<List<TaskGroupModel>> result = await service.taskGroupsOf(projectID);
@@ -32,11 +34,14 @@ class TaskDetailsScreenController extends ChangeNotifier{
     if(result.status == Status.fail) {
       throw('Something went wrong ${result.msg}');
     }
+    states = result.data;
     for(ProjectStateModel wantedState in result.data){
       if(wantedState.id == stateID){
+        chosen = wantedState;
         return wantedState;
       }
     }
+    chosen = result.data[0];
     return result.data[0];
   }
   
@@ -65,10 +70,15 @@ class TaskDetailsScreenController extends ChangeNotifier{
 
   Future<void> applyChanges(BuildContext context, String projectID, String taskID, String stateID) async{
     TeamProjectModel projectModel = await project(projectID);
+    for(ProjectStateModel newState in states){
+      if(newState.id == stateID){
+        chosen = newState;
+      }
+    }
     updateTaskState(taskID, TaskStatePutModel(stateId: stateID));
     context
       .read<ManageRouteState>()
-      .update(ManageRoute.project, project: projectModel);
+      .update(ManageRoute.project, project: projectModel, initialState: chosen);
       return;
   }
 
@@ -76,7 +86,7 @@ class TaskDetailsScreenController extends ChangeNotifier{
     TeamProjectModel projectModel = await project(projectID);
     context
       .read<ManageRouteState>()
-      .update(ManageRoute.project, project: projectModel);
+      .update(ManageRoute.project, project: projectModel, initialState: chosen);
       return;
   }
 

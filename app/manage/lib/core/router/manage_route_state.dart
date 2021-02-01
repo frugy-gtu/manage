@@ -87,6 +87,7 @@ class ManageRouteState extends ChangeNotifier {
     if (route == ManageRoute.task_details) {
       assert(task != null);
       _task = task;
+      _initialState = initialState;
     }
 
     if (route == ManageRoute.task_create) {

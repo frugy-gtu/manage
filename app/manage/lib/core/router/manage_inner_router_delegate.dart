@@ -183,7 +183,8 @@ class ManageInnerRouterDelegate extends RouterDelegate<ManageRoutePath>
     switch (state.route) {
       case ManageRoute.task_details:
       case ManageRoute.task_create:
-        state.update(ManageRoute.project, project: state.project);
+        state.update(ManageRoute.project, project: state.project,
+          initialState: state.initialState);
         break;
       case ManageRoute.project_create:
       case ManageRoute.team_invite:

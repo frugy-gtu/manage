@@ -43,7 +43,8 @@ class ProjectScreenController extends ChangeNotifier {
   void onTaskTap(BuildContext context, TaskModel task) {
     context
         .read<ManageRouteState>()
-        .update(ManageRoute.task_details, task: task);
+        .update(ManageRoute.task_details, task: task,
+        initialState: _currenState);
   }
 
   Future<List<ProjectStateModel>> requestStates() async {
