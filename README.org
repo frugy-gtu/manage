@@ -15,20 +15,9 @@ This is a Software Engineering course project. It lacks its many features as it 
 - Delete tasks
 - Delete projects
 * Screenshots
-[[https://imgur.com/Sycdk3S]]
 
-[[https://imgur.com/BM5KEQr]]
+#+html: <p align="center"><img src="https://i.imgur.com/Sycdk3S.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/BM5KEQr.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/9C4SgPx.jpg" width="300"/></p>
 
-[[https://imgur.com/9C4SgPx]]
+#+html: <p align="center"><img src="https://i.imgur.com/2CWDzea.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/yyG8bxk.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/851KHof.jpg" width="300"/></p>
 
-[[https://imgur.com/2CWDzea]]
-
-[[https://imgur.com/yyG8bxk]]
-
-[[https://imgur.com/851KHof]]
-
-[[https://imgur.com/f9r2PUk]]
-
-[[https://imgur.com/1v4Fsrv]]
-
-[[https://imgur.com/j8Sgt2O]]
+#+html: <p align="center"><img src="https://i.imgur.com/f9r2PUk.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/1v4Fsrv.jpg" width="300"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/j8Sgt2O.jpg" width="300"/></p>
