@@ -1,0 +1,34 @@
+#+TITLE: Manage
+
+Manage is a simple task based management tool for teams with interactive use.
+
+This is a Software Engineering course project. It lacks its many features as it is intended for educational purposes and it will remain as is for that purpose for others.
+
+* Features
+- Sign up
+- Log in
+- Create teams
+- Invite users
+- Create projects
+- Create tasks
+- Update task states
+- Delete tasks
+- Delete projects
+* Screenshots
+[[https://imgur.com/Sycdk3S]]
+
+[[https://imgur.com/BM5KEQr]]
+
+[[https://imgur.com/9C4SgPx]]
+
+[[https://imgur.com/2CWDzea]]
+
+[[https://imgur.com/yyG8bxk]]
+
+[[https://imgur.com/851KHof]]
+
+[[https://imgur.com/f9r2PUk]]
+
+[[https://imgur.com/1v4Fsrv]]
+
+[[https://imgur.com/j8Sgt2O]]
